@@ -24,12 +24,12 @@
    ═══════════════════════════════════════════════════════════════ */
 
 /* ── Helper : résoudre le chemin relatif depuis n'importe quelle page ── */
-/* hk-data.js est dans le même dossier que les pages HTML */
-window.HK_BASE = '';
+/* hk-data.js est dans DOSSIER-DEMO-JEAN-LOUP/ — les HTML sont un niveau au-dessus */
+window.HK_BASE = 'DOSSIER-DEMO-JEAN-LOUP/';
 
 function hkImg(filename){
   /* Chemin relatif depuis les pages HTML (un niveau au-dessus du dossier) */
-  return '' + filename;
+  return 'DOSSIER-DEMO-JEAN-LOUP/' + filename;
 }
 
 /* ── Chemins images ── */
