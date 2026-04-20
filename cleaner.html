@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Cleaner · BALIAGENCIA</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Mono:wght@300;400&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F3ED;--bg2:#EDE8DF;--bg3:#E2DDD3;
+  --dark:#1A1F1C;--dark2:#2C3328;--dark3:#0A100A;
+  --text:#2C2C2C;--muted:#8A8A7A;--muted2:#B0A898;
+  --green:#27AE60;--green-soft:#E8F5EE;--green-mid:#A8D5B8;--green-dark:#1E8449;
+  --gold:#C9A84C;--gold-light:#E8C97A;
+  --orange:#E67E22;--orange-soft:#FEF0E3;
+  --red:#C0392B;--red-soft:#FDECEA;
+  --tropical:#00A693;--tropical-soft:#E0F4F2;
+  --rose:#FDF0F6;--rose-btn:#D4749A;--rose-dark:#A84870;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.05);
+  --shadow:0 2px 12px rgba(0,0,0,0.08);
+  --radius:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;max-width:430px;margin:0 auto;}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(247,243,237,0.97);border-bottom:1px solid var(--border);padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);}
+.tb-logo{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;}
+.tb-right{display:flex;align-items:center;gap:10px;}
+.tb-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#E8D5C0,#D4B896);border:2px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;font-size:17px;}
+.tb-name strong{font-size:12px;font-weight:800;color:var(--dark);display:block;text-align:right;}
+.tb-name span{font-size:10px;color:var(--muted);display:block;text-align:right;}
+
+/* HERO */
+.hero{background:linear-gradient(160deg,var(--dark2) 0%,#1A2318 100%);padding:28px 22px 0;position:relative;overflow:hidden;}
+.hero-leaf{position:absolute;right:-20px;top:-20px;font-size:120px;opacity:0.06;transform:rotate(-20deg);pointer-events:none;}
+.hero-leaf2{position:absolute;left:-10px;bottom:20px;font-size:90px;opacity:0.04;transform:rotate(30deg);pointer-events:none;}
+.hero-date{font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.35);margin-bottom:10px;text-transform:uppercase;font-family:'DM Mono',monospace;}
+.hero-greeting{font-size:26px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:6px;}
+.hero-greeting em{color:var(--gold);font-style:italic;font-family:'Playfair Display',serif;font-size:28px;font-weight:400;}
+.hero-mission{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;max-width:300px;margin-bottom:18px;}
+.hero-villa-card{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:14px;margin-bottom:28px;}
+.hvc-icon{font-size:28px;}
+.hvc-name{font-size:15px;font-weight:800;color:#fff;}
+.hvc-meta{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;}
+.hvc-tags{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+.hvc-tag{font-size:9px;padding:3px 8px;border-radius:20px;font-weight:700;}
+.tag-checkout{background:rgba(52,152,219,0.2);color:#5DADE2;border:1px solid rgba(52,152,219,0.3);}
+.tag-rooms{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);border:1px solid rgba(255,255,255,0.1);}
+.tag-new{background:rgba(0,166,147,0.2);color:var(--tropical);border:1px solid rgba(0,166,147,0.3);}
+
+/* ── ORBITAL CLOCK ── */
+.clock-section{background:linear-gradient(180deg,#1A2318 0%,var(--dark3) 100%);padding:24px 20px 28px;display:flex;flex-direction:column;align-items:center;}
+.clock-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.2);margin-bottom:18px;font-family:'DM Mono',monospace;}
+.clock-wrap{position:relative;width:280px;height:280px;}
+#orbitCanvas{position:absolute;top:0;left:0;width:280px;height:280px;}
+.clock-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:74px;height:74px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.12),rgba(201,168,76,0.02));border:1.5px solid rgba(201,168,76,0.4);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;box-shadow:0 0 32px rgba(201,168,76,0.08);}
+.clock-center-emoji{font-size:26px;line-height:1;}
+.clock-center-lbl{font-size:7px;color:var(--gold-light);font-family:'DM Mono',monospace;letter-spacing:0.8px;margin-top:3px;text-transform:uppercase;opacity:0.8;text-align:center;max-width:64px;}
+.clock-tagline{font-size:11px;color:rgba(255,255,255,0.28);margin-top:16px;text-align:center;max-width:260px;line-height:1.75;font-style:italic;}
+.clock-tagline em{color:var(--gold-light);font-style:normal;font-weight:800;}
+
+/* MODE */
+.mode-switch{margin:18px 20px 0;display:grid;grid-template-columns:1fr 1fr;background:var(--bg3);border-radius:12px;padding:4px;gap:4px;}
+.mode-btn{padding:10px;border:none;border-radius:9px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .25s;color:var(--muted);background:transparent;}
+.mode-btn.active{background:#fff;color:var(--dark);box-shadow:var(--shadow);}
+
+/* GUIDE */
+.guide-banner{margin:14px 20px 0;padding:16px;background:linear-gradient(135deg,var(--tropical-soft),#FDF6E3);border:1px solid rgba(0,166,147,0.2);border-radius:var(--radius);display:none;}
+.guide-banner.show{display:block;}
+.guide-head{font-size:12px;font-weight:800;color:var(--tropical);margin-bottom:10px;}
+.guide-item{font-size:12px;color:var(--dark2);padding:7px 0;border-bottom:1px solid rgba(0,0,0,0.06);line-height:1.55;}
+.guide-item:last-of-type{border-bottom:none;}
+.guide-item strong{color:var(--dark);display:block;font-size:10px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;}
+.guide-note{margin-top:10px;padding:10px 12px;background:rgba(201,168,76,0.12);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;font-size:11px;color:var(--dark2);font-style:italic;}
+
+/* PROGRESS */
+.progress-wrap{padding:18px 20px 0;}
+.progress-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.progress-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.progress-pct{font-family:'DM Mono',monospace;font-size:13px;color:var(--green);}
+.progress-track{height:7px;background:var(--bg3);border-radius:4px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--green-dark),var(--green));border-radius:4px;transition:width .5s cubic-bezier(.4,0,.2,1);width:0%;}
+
+/* CATS */
+.cats{padding:16px 20px 0;display:flex;flex-direction:column;gap:10px;}
+.cat-block{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;border:1.5px solid transparent;transition:border-color .25s;}
+.cat-block.done{border-color:var(--green-mid);}
+.cat-header{display:flex;align-items:center;gap:12px;padding:16px 18px;cursor:pointer;user-select:none;transition:background .15s;}
+.cat-header:active{background:rgba(0,0,0,0.02);}
+.cat-check{width:32px;height:32px;border-radius:50%;flex-shrink:0;border:2px solid var(--bg3);background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .3s cubic-bezier(.175,.885,.32,1.275);position:relative;}
+.cat-block.done .cat-check{background:var(--green);border-color:var(--green);box-shadow:0 0 0 4px rgba(39,174,96,0.15);}
+.cat-tick{opacity:0;font-size:14px;color:#fff;position:absolute;transition:opacity .2s;}
+.cat-block.done .cat-tick{opacity:1;}
+.cat-emoji{transition:opacity .2s;}
+.cat-block.done .cat-emoji{opacity:0;}
+.cat-info{flex:1;}
+.cat-name{font-size:14px;font-weight:800;color:var(--dark);}
+.cat-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.cat-badge{font-size:10px;font-weight:700;padding:4px 9px;border-radius:20px;background:var(--bg2);color:var(--muted);white-space:nowrap;transition:all .2s;}
+.cat-block.done .cat-badge{background:var(--green-soft);color:var(--green);}
+.cat-detail{display:none;padding:0 18px 16px;border-top:1px solid var(--border2);}
+.cat-detail.show{display:block;}
+.cat-di{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border2);font-size:12px;color:var(--dark2);line-height:1.55;}
+.cat-di:last-child{border-bottom:none;padding-bottom:0;}
+.cat-dot{width:6px;height:6px;border-radius:50%;background:var(--tropical);flex-shrink:0;margin-top:5px;}
+.cat-special{margin-top:8px;padding:8px 12px;background:var(--orange-soft);border-left:3px solid var(--orange);border-radius:0 8px 8px 0;font-size:11px;color:var(--dark2);}
+.cat-special strong{color:var(--orange);display:block;margin-bottom:2px;}
+.checkout-extra{background:rgba(52,152,219,0.05);border-top:1px solid rgba(52,152,219,0.12);padding:12px 18px;}
+.co-title{font-size:11px;font-weight:800;color:#3498DB;margin-bottom:8px;}
+.co-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,0.04);cursor:pointer;}
+.co-item:last-child{border-bottom:none;}
+.co-box{width:20px;height:20px;border-radius:5px;border:1.5px solid rgba(52,152,219,0.35);display:flex;align-items:center;justify-content:center;font-size:11px;color:#3498DB;flex-shrink:0;transition:all .2s;}
+.co-item.checked .co-box{background:#3498DB;border-color:#3498DB;color:#fff;}
+.co-lbl{font-size:12px;color:var(--dark2);}
+.co-item.checked .co-lbl{text-decoration:line-through;color:var(--muted);}
+
+/* BLOCK */
+.block{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin:12px 20px 0;}
+.block-title{font-size:13px;font-weight:800;color:var(--dark);margin-bottom:3px;display:flex;align-items:center;gap:7px;}
+.block-sub{font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.5;}
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.opt{padding:12px 10px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);cursor:pointer;transition:all .2s;text-align:center;}
+.opt.sel{border-color:var(--tropical);background:var(--tropical-soft);}
+.opt-icon{font-size:20px;margin-bottom:4px;}
+.opt-label{font-size:11px;font-weight:700;color:var(--dark);}
+.opt-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+.cond-label{font-size:11px;color:var(--muted);margin-bottom:8px;margin-top:4px;}
+
+/* SUPPLIES */
+.supply-all-ok{width:100%;padding:12px;border-radius:10px;border:1.5px solid var(--green);background:var(--green-soft);color:var(--green);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;margin-bottom:14px;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.supply-all-ok.on{background:var(--green);color:#fff;box-shadow:0 3px 12px rgba(39,174,96,0.25);}
+.supply-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border2);}
+.supply-row:last-child{border-bottom:none;padding-bottom:0;}
+.supply-icon{font-size:22px;width:30px;text-align:center;}
+.supply-info{flex:1;}
+.supply-name{font-size:12px;font-weight:700;color:var(--dark);}
+.supply-hint{font-size:10px;color:var(--muted);margin-top:1px;}
+.supply-btns{display:flex;gap:4px;}
+.s-btn{padding:5px 8px;border-radius:20px;font-size:10px;font-weight:700;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif;white-space:nowrap;}
+.s-btn.ok{border-color:var(--green);color:var(--green);background:var(--green-soft);}
+.s-btn.replaced{border-color:var(--tropical);color:var(--tropical);background:var(--tropical-soft);}
+.s-btn.low{border-color:var(--orange);color:var(--orange);background:var(--orange-soft);}
+
+/* ── 3-TIER CONDITION ── */
+.condition-wrap{margin:12px 20px 0;}
+.condition-head{font-size:13px;font-weight:800;color:var(--dark);margin-bottom:4px;}
+.condition-sub{font-size:11px;color:var(--muted);line-height:1.55;margin-bottom:12px;}
+
+/* Tier 1 green */
+.tier-green{background:var(--green-soft);border:2px solid var(--green-mid);border-radius:14px;padding:18px 20px;cursor:pointer;transition:all .25s;margin-bottom:8px;display:flex;align-items:center;gap:14px;}
+.tier-green.on{background:var(--green);border-color:var(--green);box-shadow:0 4px 18px rgba(39,174,96,0.3);}
+.tg-icon{font-size:28px;flex-shrink:0;}
+.tg-label{font-size:15px;font-weight:800;color:var(--green-dark);}
+.tier-green.on .tg-label{color:#fff;}
+.tg-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.tier-green.on .tg-sub{color:rgba(255,255,255,0.7);}
+
+/* Tier 2 orange */
+.tier-accordion{border-radius:12px;margin-bottom:8px;overflow:hidden;transition:border-color .25s;}
+.tier-accordion.t-orange{background:#fff;border:1.5px solid rgba(230,126,34,0.25);}
+.tier-accordion.t-orange.open{border-color:var(--orange);}
+.tier-accordion.t-red{background:var(--dark2);border:1.5px solid rgba(192,57,43,0.3);}
+.tier-accordion.t-red.open{border-color:var(--red);}
+.tier-acc-header{padding:13px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none;}
+.tier-acc-icon{font-size:20px;flex-shrink:0;}
+.tier-acc-info{flex:1;}
+.tier-acc-label{font-size:13px;font-weight:800;}
+.t-orange .tier-acc-label{color:var(--dark);}
+.t-red .tier-acc-label{color:#fff;}
+.tier-acc-sub{font-size:10px;margin-top:2px;}
+.t-orange .tier-acc-sub{color:var(--muted);}
+.t-red .tier-acc-sub{color:rgba(255,255,255,0.35);}
+.tier-acc-arrow{font-size:10px;transition:transform .25s;}
+.t-orange .tier-acc-arrow{color:var(--muted);}
+.t-red .tier-acc-arrow{color:rgba(255,255,255,0.3);}
+.tier-accordion.open .tier-acc-arrow{transform:rotate(180deg);}
+.tier-acc-body{display:none;padding:0 18px 18px;}
+.t-orange .tier-acc-body{border-top:1px solid rgba(230,126,34,0.1);}
+.t-red .tier-acc-body{border-top:1px solid rgba(255,255,255,0.06);}
+.tier-accordion.open .tier-acc-body{display:block;}
+
+/* chips */
+.chip-lbl{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin:12px 0 7px;}
+.t-orange .chip-lbl{color:var(--muted);}
+.t-red .chip-lbl{color:rgba(255,255,255,0.3);}
+.chips{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{padding:6px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;}
+.chip-light{border:1.5px solid var(--border);background:var(--bg);color:var(--muted);}
+.chip-light.on{border-color:var(--orange);background:var(--orange-soft);color:var(--orange);}
+.chip-dark{border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.4);}
+.chip-dark.on{border-color:var(--red);background:rgba(192,57,43,0.18);color:#ff9090;}
+.rinput{width:100%;padding:12px;border-radius:10px;font-family:'Nunito',sans-serif;font-size:13px;outline:none;resize:none;min-height:68px;margin-top:10px;transition:border-color .2s;}
+.rinput-light{background:var(--bg);border:1.5px solid var(--border);color:var(--text);}
+.rinput-light:focus{border-color:var(--orange);}
+.rinput-light::placeholder{color:var(--muted2);}
+.rinput-dark{background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);}
+.rinput-dark:focus{border-color:rgba(192,57,43,0.5);}
+.rinput-dark::placeholder{color:rgba(255,255,255,0.2);}
+.urgency-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px;}
+.urg{padding:10px 6px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);cursor:pointer;text-align:center;transition:all .2s;}
+.urg-icon{font-size:18px;margin-bottom:3px;}
+.urg-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);}
+.urg.on-low{border-color:var(--tropical);background:rgba(0,166,147,0.15);}
+.urg.on-low .urg-label{color:var(--tropical);}
+.urg.on-med{border-color:var(--orange);background:rgba(230,126,34,0.15);}
+.urg.on-med .urg-label{color:var(--orange);}
+.urg.on-high{border-color:var(--red);background:rgba(192,57,43,0.2);}
+.urg.on-high .urg-label{color:#ff9090;}
+
+/* photo */
+.pu{padding:12px;border-radius:10px;text-align:center;cursor:pointer;margin-top:10px;transition:all .2s;}
+.pu-light{border:1.5px dashed rgba(0,0,0,0.14);background:var(--bg);}
+.pu-light:hover{border-color:var(--tropical);background:var(--tropical-soft);}
+.pu-dark{border:1.5px dashed rgba(255,255,255,0.12);background:rgba(255,255,255,0.03);}
+.pu-dark:hover{border-color:rgba(192,57,43,0.4);}
+.pu-ico{font-size:20px;margin-bottom:4px;}
+.pu-txt-l strong{display:block;font-size:11px;color:var(--dark);margin-bottom:2px;}
+.pu-txt-l span{font-size:10px;color:var(--muted);}
+.pu-txt-d strong{display:block;font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:2px;}
+.pu-txt-d span{font-size:10px;color:rgba(255,255,255,0.25);}
+input[type=file]{display:none;}
+.photos-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.pm{width:60px;height:60px;border-radius:8px;overflow:hidden;border:1px solid var(--border);background:var(--bg2);display:flex;align-items:center;justify-content:center;position:relative;}
+.pm img{width:100%;height:100%;object-fit:cover;}
+.pm-rm{position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:50%;background:rgba(231,76,60,0.85);color:#fff;font-size:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+
+/* ── WELLBEING (rose) ── */
+.wellbeing-wrap{margin:12px 20px 0;background:var(--rose);border-radius:var(--radius);padding:20px;border:1.5px solid rgba(212,116,154,0.2);}
+.wb-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(168,72,112,0.5);margin-bottom:10px;font-family:'DM Mono',monospace;}
+.wb-title{font-size:15px;font-weight:800;color:var(--rose-dark);margin-bottom:4px;}
+.wb-sub{font-size:12px;color:rgba(168,72,112,0.6);line-height:1.6;margin-bottom:16px;}
+.wb-choices{display:flex;flex-direction:column;gap:10px;}
+
+/* Good btn — rose sombre chaleureux */
+.wb-good{padding:16px 18px;border-radius:12px;border:2px solid rgba(212,116,154,0.3);background:linear-gradient(135deg,#F2C4D8,#EAA8C4);cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:12px;}
+.wb-good.on{background:linear-gradient(135deg,var(--rose-btn),var(--rose-dark));border-color:var(--rose-dark);box-shadow:0 4px 16px rgba(168,72,112,0.25);}
+.wb-good-icon{font-size:24px;}
+.wb-good-text{font-size:14px;font-weight:800;color:#fff;}
+.wb-good-sub{font-size:11px;color:rgba(255,255,255,0.7);margin-top:2px;}
+
+/* Report btn — dark */
+.wb-report{padding:14px 18px;border-radius:12px;border:1.5px solid rgba(0,0,0,0.12);background:#1A1F1C;cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:12px;}
+.wb-report.on{border-color:rgba(255,255,255,0.2);}
+.wb-report-icon{font-size:22px;}
+.wb-report-text{font-size:13px;font-weight:800;color:rgba(255,255,255,0.8);}
+.wb-report-sub{font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px;}
+
+/* QCM section */
+.wb-qcm{display:none;margin-top:14px;padding:16px;background:#1A1F1C;border-radius:12px;border:1px solid rgba(255,255,255,0.08);}
+.wb-qcm.show{display:block;}
+.wb-qcm-step{display:none;}
+.wb-qcm-step.active{display:block;}
+.wb-q{font-size:13px;font-weight:800;color:rgba(255,255,255,0.85);margin-bottom:12px;line-height:1.5;}
+.wb-opts{display:flex;flex-direction:column;gap:7px;}
+.wb-opt{padding:11px 14px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);cursor:pointer;font-size:12px;font-weight:700;color:rgba(255,255,255,0.6);transition:all .2s;display:flex;align-items:center;gap:10px;}
+.wb-opt:hover{border-color:rgba(212,116,154,0.4);background:rgba(212,116,154,0.06);}
+.wb-opt.sel{border-color:rgba(212,116,154,0.6);background:rgba(212,116,154,0.1);color:rgba(255,255,255,0.9);}
+.wb-opt-icon{font-size:16px;flex-shrink:0;}
+
+/* Stars */
+.wb-stars{display:flex;gap:8px;justify-content:center;margin:12px 0;}
+.star{font-size:28px;cursor:pointer;transition:transform .2s;filter:grayscale(1);opacity:0.3;}
+.star.on{filter:none;opacity:1;transform:scale(1.1);}
+.wb-stars-label{font-size:11px;color:rgba(255,255,255,0.35);text-align:center;margin-bottom:10px;}
+.wb-note{font-size:11px;color:rgba(255,255,255,0.3);margin:10px 0 6px;font-style:italic;line-height:1.6;}
+.wb-textarea{width:100%;padding:12px;border-radius:10px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);color:#fff;font-family:'Nunito',sans-serif;font-size:12px;outline:none;resize:none;min-height:72px;margin-top:8px;transition:border-color .2s;}
+.wb-textarea:focus{border-color:rgba(212,116,154,0.4);}
+.wb-textarea::placeholder{color:rgba(255,255,255,0.18);}
+.wb-alert-note{margin-top:12px;padding:10px 14px;background:rgba(212,116,154,0.1);border:1px solid rgba(212,116,154,0.25);border-radius:8px;font-size:11px;color:rgba(212,116,154,0.9);line-height:1.6;display:none;}
+.wb-alert-note.show{display:block;}
+.wb-back{background:transparent;border:none;color:rgba(255,255,255,0.3);font-family:'Nunito',sans-serif;font-size:11px;cursor:pointer;margin-top:8px;padding:4px 0;text-decoration:underline;}
+
+/* NOTE + SUBMIT */
+.note-wrap{padding:14px 20px 0;}
+.note-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+.note-area{width:100%;padding:14px;border-radius:12px;background:#fff;border:1.5px solid var(--border);font-family:'Nunito',sans-serif;font-size:13px;color:var(--text);resize:none;outline:none;min-height:72px;transition:border-color .2s;}
+.note-area:focus{border-color:var(--tropical);}
+.note-area::placeholder{color:var(--muted2);}
+.submit-wrap{padding:14px 20px 48px;}
+.submit-warn{padding:10px 14px;border-radius:10px;background:var(--orange-soft);border:1px solid rgba(230,126,34,0.2);font-size:11px;color:var(--orange);margin-bottom:10px;display:none;text-align:center;font-weight:700;}
+.submit-btn{width:100%;padding:18px;border-radius:14px;background:linear-gradient(135deg,var(--green-dark),var(--green));color:#fff;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 6px 20px rgba(39,174,96,0.3);transition:all .3s;position:relative;overflow:hidden;}
+.submit-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.08),transparent);}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(39,174,96,0.4);}
+.submit-btn:active{transform:translateY(0);}
+
+/* SUCCESS */
+.success{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;background:linear-gradient(160deg,var(--dark2) 0%,var(--dark3) 100%);}
+.success.show{display:flex;}
+.success-burst{font-size:80px;margin-bottom:20px;animation:burst .5s cubic-bezier(.175,.885,.32,1.275);}
+@keyframes burst{0%{transform:scale(0) rotate(-20deg);opacity:0;}100%{transform:scale(1) rotate(0);opacity:1;}}
+.success-h{font-size:28px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:10px;}
+.success-h em{color:var(--gold);font-style:italic;font-family:'Playfair Display',serif;}
+.success-p{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.8;max-width:300px;margin:0 auto 24px;}
+.success-stats{display:flex;gap:12px;margin-bottom:24px;}
+.ss{padding:14px 18px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);min-width:78px;}
+.ss-num{font-family:'DM Mono',monospace;font-size:24px;color:var(--green);}
+.ss-label{font-size:10px;color:rgba(255,255,255,0.35);margin-top:4px;}
+.success-notify{padding:12px 20px;border-radius:10px;background:rgba(0,166,147,0.1);border:1px solid rgba(0,166,147,0.25);font-size:12px;color:var(--tropical);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.success-quote{font-size:13px;font-style:italic;color:rgba(255,255,255,0.28);max-width:280px;margin:0 auto 28px;font-family:'Playfair Display',serif;line-height:1.7;}
+.success-next{padding:13px 28px;border-radius:10px;background:transparent;border:1.5px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;}
+.success-next:hover{border-color:var(--gold);color:var(--gold);}
+
+.spacer{height:12px;}
+.fi{opacity:0;transform:translateY(14px);transition:all .35s ease;}
+.fi.v{opacity:1;transform:translateY(0);}
+/* ← BACK BUTTON */
+.tb-back{font-size:11px;font-weight:800;color:var(--muted);padding:5px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border);cursor:pointer;text-decoration:none;transition:all .2s;}
+.tb-back:hover{border-color:var(--tropical);color:var(--tropical);}
+/* ── XENDIT PAYMENT ── */
+.pay-block{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin:12px 20px 0;overflow:hidden;border-left:3px solid var(--tropical);}
+.pay-header{padding:14px 16px 10px;display:flex;align-items:center;gap:10px;}
+.pay-icon{font-size:22px;}
+.pay-title{font-size:13px;font-weight:800;color:var(--dark);}
+.pay-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.pay-salary-row{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 14px;}
+.pay-salary-lbl{font-size:12px;color:var(--muted);}
+.pay-salary-amt{font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--tropical);}
+.pay-btns{padding:0 16px 16px;display:flex;flex-direction:column;gap:8px;}
+.pay-btn-advance{width:100%;padding:12px 16px;border-radius:10px;background:linear-gradient(135deg,rgba(41,128,185,0.12),rgba(41,128,185,0.06));border:1.5px solid rgba(41,128,185,0.3);color:var(--blue);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .25s;}
+.pay-btn-advance.sent{background:rgba(39,174,96,0.1);border-color:var(--green-mid);color:var(--green-dark);cursor:default;}
+.pay-btn-reimb{width:100%;padding:12px 16px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.06));border:1.5px solid rgba(201,168,76,0.3);color:var(--gold);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .25s;}
+.pay-btn-reimb.sent{background:rgba(39,174,96,0.1);border-color:var(--green-mid);color:var(--green-dark);cursor:default;}
+.pay-receipt-area{padding:0 16px 16px;display:none;}
+.pay-receipt-area.show{display:block;}
+.pay-receipt-label{font-size:11px;color:var(--muted);margin-bottom:8px;}
+.pay-receipt-upload{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;border:1.5px dashed rgba(201,168,76,0.4);background:rgba(201,168,76,0.04);cursor:pointer;}
+.pay-receipt-upload input{display:none;}
+.pay-receipt-thumb{width:48px;height:48px;border-radius:8px;object-fit:cover;display:none;}
+.pay-confirm-btn{margin-top:10px;width:100%;padding:12px;border-radius:10px;background:var(--green);border:none;color:#fff;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;display:none;}
+.pay-confirm-btn.show{display:block;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tb-logo">BALI<span style="color:var(--gold)">.</span>AGENCIA</div>
+  <div class="tb-right">
+    <a class="tb-back" href="manager.html">← Manager</a>
+    <div class="tb-name"><strong>Putu Sari</strong><span>Cleaner · Seminyak</span></div>
+    <div class="tb-avatar">🌸</div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero fi">
+  <div class="hero-leaf">🌿</div><div class="hero-leaf2">🌺</div>
+  <div class="hero-date">Tuesday · April 1, 2026</div>
+  <div class="hero-greeting">Good morning,<br><em>Putu.</em> 🌴</div>
+  <div class="hero-mission" id="hero-txt">Your mission today — Villa Surya is waiting for you. You know this villa well, as always you'll make it perfect. Thank you Putu 🙏</div>
+  <div class="hero-villa-card">
+    <div class="hvc-icon">🏡</div>
+    <div>
+      <div class="hvc-name">Villa Surya</div>
+      <div class="hvc-meta">Seminyak · 7 bedrooms · Checkout day</div>
+      <div class="hvc-tags" id="villa-tags">
+        <span class="hvc-tag tag-checkout">🔄 Checkout</span>
+        <span class="hvc-tag tag-rooms">🛏 7 rooms</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ORBITAL CLOCK -->
+<div class="clock-section fi" style="transition-delay:.04s">
+  <div class="clock-lbl">Your constellation · Villa Surya</div>
+  <div class="clock-wrap">
+    <canvas id="orbitCanvas" width="280" height="280"></canvas>
+    <div class="clock-center">
+      <div class="clock-center-emoji">🧳</div>
+      <div class="clock-center-lbl">Sophie & Tom</div>
+    </div>
+  </div>
+  <div class="clock-tagline">
+    You are one of the most <em>intimate</em> parts of their stay.<br>
+    They feel you — even without knowing your name. 🌸
+  </div>
+</div>
+
+<!-- XENDIT — MODE SALAIRE FIXE (cleaner) -->
+<div class="pay-block fi" style="transition-delay:.06s" id="pay-block">
+  <div class="pay-header">
+    <div class="pay-icon">💸</div>
+    <div>
+      <div class="pay-title">Pembayaran · Rex</div>
+      <div class="pay-sub">Gaji bulanan tetap · Mode salary fisso</div>
+    </div>
+  </div>
+  <div class="pay-salary-row">
+    <span class="pay-salary-lbl">Gaji bulan ini</span>
+    <span class="pay-salary-amt" id="pay-salary-amt">Rp 4.200.000</span>
+  </div>
+  <div class="pay-btns">
+    <button class="pay-btn-advance" id="btn-advance" onclick="requestAdvance()">
+      💳 Perlu uang muka untuk beli produk?
+    </button>
+    <button class="pay-btn-reimb" id="btn-reimb" onclick="openReimb()">
+      🧾 Minta penggantian biaya (upload struk)
+    </button>
+  </div>
+  <div class="pay-receipt-area" id="reimb-area">
+    <div class="pay-receipt-label">Upload foto struk / nota pembelian</div>
+    <label class="pay-receipt-upload">
+      <span>📸 Foto struk</span>
+      <input type="file" accept="image/*" capture="environment" onchange="reimbPhoto(this)">
+      <img class="pay-receipt-thumb" id="reimb-thumb">
+    </label>
+    <button class="pay-confirm-btn" id="reimb-confirm-btn" onclick="confirmReimb()">✅ Kirim ke Rex untuk diproses</button>
+  </div>
+</div>
+
+<!-- MODE -->
+<div class="mode-switch fi" style="transition-delay:.07s">
+  <button class="mode-btn active" onclick="setMode('known')">✅ I know this villa</button>
+  <button class="mode-btn" onclick="setMode('new')">🗺 First time here</button>
+</div>
+
+<!-- GUIDE -->
+<div class="guide-banner fi" id="guide" style="transition-delay:.09s">
+  <div class="guide-head">🗺 Villa Surya — Quick guide</div>
+  <div class="guide-item"><strong>Keys & Access</strong>Spare key in the black box near the garage. Code: 4782. Pool gate opens from inside only.</div>
+  <div class="guide-item"><strong>7 Rooms — Order</strong>Master suite (2nd floor) → 3 right → 3 left. Room 4 AC: turn on first, it's slow.</div>
+  <div class="guide-item"><strong>🌿 Plants</strong>Water the pot in the main salon — every time!</div>
+  <div class="guide-item"><strong>Linens</strong>Spare sheets: ground floor storeroom (blue door). Amenities: bottom shelf.</div>
+  <div class="guide-item"><strong>Pool man</strong>I Made arrives with you — coordinate timing.</div>
+  <div class="guide-note">💛 Everything is in the checklist. Call the manager anytime.</div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap fi" style="transition-delay:.11s">
+  <div class="progress-row">
+    <span class="progress-label">Mission progress</span>
+    <span class="progress-pct" id="prog-pct">0%</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+</div>
+
+<!-- CATS -->
+<div class="cats">
+  <div class="cat-block fi" style="transition-delay:.13s" data-cat="bedrooms">
+    <div class="cat-header" onclick="toggleCat(this)">
+      <div class="cat-check"><span class="cat-emoji">🛏</span><span class="cat-tick">✓</span></div>
+      <div class="cat-info"><div class="cat-name">Bedrooms</div><div class="cat-sub">Sheets, dust, AC, floor — all 7</div></div>
+      <div class="cat-badge">Tap to done</div>
+    </div>
+    <div class="cat-detail" id="detail-bedrooms">
+      <div class="cat-di"><div class="cat-dot"></div>Change ALL sheets & pillowcases — 7 rooms</div>
+      <div class="cat-di"><div class="cat-dot"></div>Towels — fan or flower shape, 2 sets per room</div>
+      <div class="cat-di"><div class="cat-dot"></div>Dust all surfaces including behind wardrobes</div>
+      <div class="cat-di"><div class="cat-dot"></div>Vacuum, mop, check corners</div>
+      <div class="cat-di"><div class="cat-dot"></div>Check lamps & outlets — report if broken</div>
+      <div class="cat-special"><strong>⚠️ Special — Villa Surya</strong>Room 4 AC: turn on first (5 min slow). 🌿 Water pot plant in main salon!</div>
+    </div>
+    <div class="checkout-extra" id="co-bedrooms" style="display:none;">
+      <div class="co-title">🔄 Checkout check</div>
+      <div class="co-item" onclick="this.classList.toggle('checked')"><div class="co-box">✓</div><div class="co-lbl">All keys returned by guests</div></div>
+      <div class="co-item" onclick="this.classList.toggle('checked')"><div class="co-box">✓</div><div class="co-lbl">TV remotes present — all rooms</div></div>
+      <div class="co-item" onclick="this.classList.toggle('checked')"><div class="co-box">✓</div><div class="co-lbl">No personal items left in safes</div></div>
+    </div>
+  </div>
+
+  <div class="cat-block fi" style="transition-delay:.15s" data-cat="bathrooms">
+    <div class="cat-header" onclick="toggleCat(this)">
+      <div class="cat-check"><span class="cat-emoji">🚿</span><span class="cat-tick">✓</span></div>
+      <div class="cat-info"><div class="cat-name">Bathrooms</div><div class="cat-sub">Clean, refill amenities, fresh towels</div></div>
+      <div class="cat-badge">Tap to done</div>
+    </div>
+    <div class="cat-detail" id="detail-bathrooms">
+      <div class="cat-di"><div class="cat-dot"></div>Clean toilet, sink and mirror — all 7</div>
+      <div class="cat-di"><div class="cat-dot"></div>Refill: soap, shampoo, conditioner, dental kit, cotton buds</div>
+      <div class="cat-di"><div class="cat-dot"></div>Replace bath mat and floor mat</div>
+      <div class="cat-di"><div class="cat-dot"></div>Check drains & taps — no leaks</div>
+      <div class="cat-special"><strong>⚠️ Special — Villa Surya</strong>Frangipani flower on master suite sink 🌸</div>
+    </div>
+  </div>
+
+  <div class="cat-block fi" style="transition-delay:.17s" data-cat="common">
+    <div class="cat-header" onclick="toggleCat(this)">
+      <div class="cat-check"><span class="cat-emoji">🏊</span><span class="cat-tick">✓</span></div>
+      <div class="cat-info"><div class="cat-name">Common areas & pool</div><div class="cat-sub">Kitchen, pool, windows, bins</div></div>
+      <div class="cat-badge">Tap to done</div>
+    </div>
+    <div class="cat-detail" id="detail-common">
+      <div class="cat-di"><div class="cat-dot"></div>Kitchen: stove, fridge, microwave, countertop</div>
+      <div class="cat-di"><div class="cat-dot"></div>Pool area: sun loungers, cushions, table</div>
+      <div class="cat-di"><div class="cat-dot"></div>All glass & windows — no fingerprints</div>
+      <div class="cat-di"><div class="cat-dot"></div>Empty all bins — rooms + outdoor</div>
+    </div>
+  </div>
+
+  <div class="cat-block fi" style="transition-delay:.19s" data-cat="lostfound">
+    <div class="cat-header" onclick="toggleCat(this)">
+      <div class="cat-check"><span class="cat-emoji">🔍</span><span class="cat-tick">✓</span></div>
+      <div class="cat-info"><div class="cat-name">Lost & found</div><div class="cat-sub">Under beds, drawers, wardrobes</div></div>
+      <div class="cat-badge">Tap to done</div>
+    </div>
+    <div class="cat-detail" id="detail-lostfound">
+      <div class="cat-di"><div class="cat-dot"></div>Check under beds, behind doors, in drawers</div>
+      <div class="cat-di"><div class="cat-dot"></div>Found something? Photo → manager handles it</div>
+      <label>
+        <div class="pu pu-light" style="margin-top:8px;"><div class="pu-ico">📸</div><div class="pu-txt-l"><strong>Photo of found item</strong><span>Only if you found something</span></div></div>
+        <input type="file" accept="image/*" capture="environment" onchange="addPhoto(this,'lost-photos')">
+      </label>
+      <div class="photos-row" id="lost-photos"></div>
+    </div>
+  </div>
+</div>
+
+<div class="spacer"></div>
+
+<!-- LAUNDRY -->
+<div class="block fi" style="transition-delay:.21s">
+  <div class="block-title">👕 Laundry</div>
+  <div class="block-sub">Sheets and towels — status?</div>
+  <div class="opt-grid">
+    <div class="opt" onclick="sel(this,'laundry','delivered')"><div class="opt-icon">📦</div><div class="opt-label">Delivered</div><div class="opt-sub">Service came</div></div>
+    <div class="opt" onclick="sel(this,'laundry','self')"><div class="opt-icon">🛵</div><div class="opt-label">I'll bring it</div><div class="opt-sub">You drop off</div></div>
+  </div>
+  <div class="cond-label">Condition:</div>
+  <div class="opt-grid">
+    <div class="opt" onclick="selCond(this,'good')"><div class="opt-icon">✅</div><div class="opt-label">All good</div><div class="opt-sub">No damage</div></div>
+    <div class="opt" onclick="selCond(this,'damage')"><div class="opt-icon">⚠️</div><div class="opt-label">Some damage</div><div class="opt-sub">Tear or stain</div></div>
+  </div>
+  <label>
+    <div class="pu pu-light" id="laundry-dmg" style="display:none;"><div class="pu-ico">📷</div><div class="pu-txt-l"><strong>Photo of the damage</strong><span>Tap to take</span></div></div>
+    <input type="file" accept="image/*" capture="environment" onchange="addPhoto(this,'laundry-photos')">
+  </label>
+  <div class="photos-row" id="laundry-photos"></div>
+</div>
+
+<!-- SUPPLIES -->
+<div class="block fi" style="transition-delay:.23s">
+  <div class="block-title">📦 Supplies</div>
+  <div class="block-sub">Quick check — manager gets a ping if anything is low</div>
+  <button class="supply-all-ok" id="all-ok-btn" onclick="supplyAllOk()">✅ All supplies OK</button>
+  <div class="supply-row">
+    <div class="supply-icon">💧</div>
+    <div class="supply-info"><div class="supply-name">Water gallons</div><div class="supply-hint">~3 remaining · ~2/day</div></div>
+    <div class="supply-btns" id="cb-water">
+      <button class="s-btn" onclick="setSupply('water','ok',this)">OK</button>
+      <button class="s-btn" onclick="setSupply('water','replaced',this)">↺ Replaced</button>
+      <button class="s-btn" onclick="setSupply('water','low',this)">Low ⚠️</button>
+    </div>
+  </div>
+  <div class="supply-row">
+    <div class="supply-icon">🔥</div>
+    <div class="supply-info"><div class="supply-name">Gas LPG</div><div class="supply-hint">Kitchen & BBQ</div></div>
+    <div class="supply-btns" id="cb-gas">
+      <button class="s-btn" onclick="setSupply('gas','ok',this)">OK</button>
+      <button class="s-btn" onclick="setSupply('gas','replaced',this)">↺ Replaced</button>
+      <button class="s-btn" onclick="setSupply('gas','low',this)">Low ⚠️</button>
+    </div>
+  </div>
+  <div class="supply-row">
+    <div class="supply-icon">🧴</div>
+    <div class="supply-info"><div class="supply-name">Bathroom amenities</div><div class="supply-hint">Soap, shampoo, conditioner</div></div>
+    <div class="supply-btns" id="cb-amenities">
+      <button class="s-btn" onclick="setSupply('amenities','ok',this)">OK</button>
+      <button class="s-btn" onclick="setSupply('amenities','replaced',this)">↺ Refilled</button>
+      <button class="s-btn" onclick="setSupply('amenities','low',this)">Low ⚠️</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── 3-TIER CONDITION ── -->
+<div class="condition-wrap fi" style="transition-delay:.25s">
+  <div class="condition-head">🏠 Villa condition</div>
+  <div class="condition-sub">You see things no one else sees. Your eyes protect this villa and its guests.</div>
+
+  <div class="tier-green" id="tier-green" onclick="tierGreenToggle()">
+    <div class="tg-icon">✅</div>
+    <div><div class="tg-label">All good — nothing to report</div><div class="tg-sub">Villa in perfect condition</div></div>
+  </div>
+
+  <div class="tier-accordion t-orange" id="tier-orange">
+    <div class="tier-acc-header" onclick="tierToggle('orange')">
+      <div class="tier-acc-icon">🪑</div>
+      <div class="tier-acc-info">
+        <div class="tier-acc-label">Object or furniture damage</div>
+        <div class="tier-acc-sub">Broken lamp, stained sofa, damaged blind — replacement or insurance</div>
+      </div>
+      <div class="tier-acc-arrow">▼</div>
+    </div>
+    <div class="tier-acc-body">
+      <div class="chip-lbl">Which room?</div>
+      <div class="chips">
+        <div class="chip chip-light" onclick="this.classList.toggle('on')">Master suite</div>
+        <div class="chip chip-light" onclick="this.classList.toggle('on')">Room 2–4</div>
+        <div class="chip chip-light" onclick="this.classList.toggle('on')">Kitchen</div>
+        <div class="chip chip-light" onclick="this.classList.toggle('on')">Living room</div>
+        <div class="chip chip-light" onclick="this.classList.toggle('on')">Pool area</div>
+        <div class="chip chip-light" onclick="this.classList.toggle('on')">Bathroom</div>
+        <div class="chip chip-light" onclick="this.classList.toggle('on')">Garden</div>
+        <div class="chip chip-light" onclick="this.classList.toggle('on')">Other</div>
+      </div>
+      <div class="chip-lbl" style="margin-top:12px;">What is it?</div>
+      <div class="chips">
+        <div class="chip chip-light" onclick="this.classList.toggle('on')">Broken object</div>
+        <div class="chip chip-light" onclick="this.classList.toggle('on')">Stain on sofa / bed</div>
+        <div class="chip chip-light" onclick="this.classList.toggle('on')">Vomit</div>
+        <div class="chip chip-light" onclick="this.classList.toggle('on')">Broken glass</div>
+        <div class="chip chip-light" onclick="this.classList.toggle('on')">Damaged furniture</div>
+        <div class="chip chip-light" onclick="this.classList.toggle('on')">Curtains / blinds</div>
+        <div class="chip chip-light" onclick="this.classList.toggle('on')">Electronics</div>
+        <div class="chip chip-light" onclick="this.classList.toggle('on')">Other</div>
+      </div>
+      <textarea class="rinput rinput-light" placeholder="Describe briefly — which object, how bad..."></textarea>
+      <label>
+        <div class="pu pu-light"><div class="pu-ico">📸</div><div class="pu-txt-l"><strong>Photo / video</strong><span>Important for insurance</span></div></div>
+        <input type="file" accept="image/*,video/*" capture="environment" multiple onchange="addPhoto(this,'orange-photos')">
+      </label>
+      <div class="photos-row" id="orange-photos"></div>
+    </div>
+  </div>
+
+  <div class="tier-accordion t-red" id="tier-red">
+    <div class="tier-acc-header" onclick="tierToggle('red')">
+      <div class="tier-acc-icon">🔧</div>
+      <div class="tier-acc-info">
+        <div class="tier-acc-label">Needs tukang — repair needed</div>
+        <div class="tier-acc-sub">Leak, broken door, shattered glass, lost key, electrical issue...</div>
+      </div>
+      <div class="tier-acc-arrow">▼</div>
+    </div>
+    <div class="tier-acc-body">
+      <div class="chip-lbl">What type?</div>
+      <div class="chips">
+        <div class="chip chip-dark" onclick="this.classList.toggle('on')">💧 Leak / water damage</div>
+        <div class="chip chip-dark" onclick="this.classList.toggle('on')">🚪 Broken door / lock</div>
+        <div class="chip chip-dark" onclick="this.classList.toggle('on')">🪟 Shattered glass</div>
+        <div class="chip chip-dark" onclick="this.classList.toggle('on')">🔑 Lost key</div>
+        <div class="chip chip-dark" onclick="this.classList.toggle('on')">⚡ Electrical issue</div>
+        <div class="chip chip-dark" onclick="this.classList.toggle('on')">❄️ AC / fan broken</div>
+        <div class="chip chip-dark" onclick="this.classList.toggle('on')">🌿 Garden / tree urgent</div>
+        <div class="chip chip-dark" onclick="this.classList.toggle('on')">🏊 Pool / pump</div>
+        <div class="chip chip-dark" onclick="this.classList.toggle('on')">🏚️ Roof / ceiling</div>
+        <div class="chip chip-dark" onclick="this.classList.toggle('on')">Other</div>
+      </div>
+      <textarea class="rinput rinput-dark" placeholder="What did you see? Even small — better to say it now..."></textarea>
+      <div class="chip-lbl" style="margin-top:12px;">How urgent?</div>
+      <div class="urgency-row">
+        <div class="urg" onclick="setUrg(this,'low')"><div class="urg-icon">🟢</div><div class="urg-label">Not urgent</div></div>
+        <div class="urg" onclick="setUrg(this,'med')"><div class="urg-icon">🟠</div><div class="urg-label">This week</div></div>
+        <div class="urg" onclick="setUrg(this,'high')"><div class="urg-icon">🔴</div><div class="urg-label">Right now</div></div>
+      </div>
+      <label>
+        <div class="pu pu-dark"><div class="pu-ico">📷</div><div class="pu-txt-d"><strong>Photo or video</strong><span>Helps the tukang know what to bring</span></div></div>
+        <input type="file" accept="image/*,video/*" capture="environment" multiple onchange="addPhoto(this,'red-photos')">
+      </label>
+      <div class="photos-row" id="red-photos"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── WELLBEING ── -->
+<div class="wellbeing-wrap fi" style="transition-delay:.28s">
+  <div class="wb-label">For you · Confidential · Manager only</div>
+  <div class="wb-title">How was your day? 🌸</div>
+  <div class="wb-sub">This is just between you and the team. You matter to us.</div>
+  <div class="wb-choices">
+
+    <div class="wb-good" id="wb-good" onclick="selWbGood()">
+      <div class="wb-good-icon">😊</div>
+      <div>
+        <div class="wb-good-text">All good — lovely day!</div>
+        <div class="wb-good-sub">Everything was fine, nothing to say</div>
+      </div>
+    </div>
+
+    <div class="wb-report" id="wb-report" onclick="selWbReport()">
+      <div class="wb-report-icon">😢</div>
+      <div>
+        <div class="wb-report-text">I have something to tell you</div>
+        <div class="wb-report-sub">Something made me uncomfortable today</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- QCM -->
+  <div class="wb-qcm" id="wb-qcm">
+
+    <!-- Step 0: who -->
+    <div class="wb-qcm-step active" id="wb-step-0">
+      <div class="wb-q">Who made you feel this way?</div>
+      <div class="wb-opts">
+        <div class="wb-opt" onclick="wbNext(1,'guest')"><div class="wb-opt-icon">🧳</div>A guest</div>
+        <div class="wb-opt" onclick="wbNext(1,'staff')"><div class="wb-opt-icon">👥</div>Another staff member</div>
+        <div class="wb-opt" onclick="wbNext(1,'neighbor')"><div class="wb-opt-icon">🏘️</div>A neighbor</div>
+        <div class="wb-opt" onclick="wbNext(1,'banjar')"><div class="wb-opt-icon">🤝</div>Banjar / community</div>
+        <div class="wb-opt" onclick="wbNext(1,'other')"><div class="wb-opt-icon">❓</div>Other</div>
+      </div>
+    </div>
+
+    <!-- Step 1: what happened -->
+    <div class="wb-qcm-step" id="wb-step-1">
+      <div class="wb-q" id="wb-q1">What happened?</div>
+      <div class="wb-opts" id="wb-opts1"></div>
+      <button class="wb-back" onclick="wbBack(0)">← Back</button>
+    </div>
+
+    <!-- Step 2: how bad -->
+    <div class="wb-qcm-step" id="wb-step-2">
+      <div class="wb-q">How did it make you feel?</div>
+      <div class="wb-opts">
+        <div class="wb-opt" onclick="wbNext(3,'uncomfortable')"><div class="wb-opt-icon">😟</div>Uncomfortable, a bit upset</div>
+        <div class="wb-opt" onclick="wbNext(3,'bad')"><div class="wb-opt-icon">😔</div>Really bad, I felt disrespected</div>
+        <div class="wb-opt" onclick="wbNext(3,'serious')"><div class="wb-opt-icon">😨</div>Scared or in danger</div>
+      </div>
+      <button class="wb-back" onclick="wbBack(1)">← Back</button>
+    </div>
+
+    <!-- Step 3: stars + note -->
+    <div class="wb-qcm-step" id="wb-step-3">
+      <div class="wb-q">Thank you for telling us 🫂</div>
+      <div class="wb-stars-label">How would you rate this experience overall?<br><span style="font-size:10px;opacity:0.5;">1 = very bad · 5 = not too bad</span></div>
+      <div class="wb-stars" id="wb-stars">
+        <span class="star" onclick="setStar(1)">⭐</span>
+        <span class="star" onclick="setStar(2)">⭐</span>
+        <span class="star" onclick="setStar(3)">⭐</span>
+        <span class="star" onclick="setStar(4)">⭐</span>
+        <span class="star" onclick="setStar(5)">⭐</span>
+      </div>
+      <div class="wb-note">Add anything you want to say — in any language, in your own words. Or leave it blank — your manager will call you.</div>
+      <textarea class="wb-textarea" id="wb-text" placeholder="..."></textarea>
+      <div class="wb-alert-note show" id="wb-alert">
+        🌸 Your manager will be notified and will call you personally. You don't have to handle this alone.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="spacer"></div>
+
+<div class="note-wrap fi" style="transition-delay:.30s">
+  <div class="note-label">General note for manager (optional)</div>
+  <textarea class="note-area" placeholder="Anything else to pass on..."></textarea>
+</div>
+
+<div class="submit-wrap fi" style="transition-delay:.32s">
+  <div class="submit-warn" id="submit-warn"></div>
+  <button class="submit-btn" onclick="doSubmit()">✅ Done — Send report</button>
+</div>
+
+<!-- SUCCESS -->
+<div class="success" id="success">
+  <div class="success-burst">🌺</div>
+  <div class="success-h">Incredible,<br><em>Putu!</em></div>
+  <div class="success-p">Villa Surya is perfect ✨<br>Report sent to manager Ketut.<br>Next guests arrive at 3pm — all ready.</div>
+  <div class="success-stats">
+    <div class="ss"><div class="ss-num" id="s-areas">0</div><div class="ss-label">Areas done</div></div>
+    <div class="ss"><div class="ss-num" id="s-photos">0</div><div class="ss-label">Photos</div></div>
+    <div class="ss"><div class="ss-num" id="s-time">—</div><div class="ss-label">Duration</div></div>
+  </div>
+  <div class="success-notify">📲 Report sent to Manager Ketut Rai</div>
+  <div class="success-quote">"Thank you for everything, Putu.<br>Bali is lucky to have you." 🌴</div>
+  <button class="success-next" onclick="location.reload()">← Next mission</button>
+</div>
+
+<script>
+const S={cats:new Set(),laundry:null,condition:null,supplies:{},allOk:false,tierGreen:false,wbStatus:null,wbSource:null,wbRating:0,photos:0,start:Date.now(),mode:'known'};
+const TOTAL=4;
+const IS_CHECKOUT=true;
+if(IS_CHECKOUT) document.getElementById('co-bedrooms').style.display='block';
+
+// MODE
+function setMode(m){
+  S.mode=m;
+  document.querySelectorAll('.mode-btn').forEach((b,i)=>b.classList.toggle('active',i===(m==='known'?0:1)));
+  document.getElementById('guide').classList.toggle('show',m==='new');
+  document.querySelectorAll('.cat-detail').forEach(d=>d.classList.toggle('show',m==='new'));
+  document.getElementById('hero-txt').textContent=m==='new'
+    ?"First time at Villa Surya? No worries — the guide below has everything you need 🙏"
+    :"Your mission today — Villa Surya is waiting for you. You know this villa well, as always you'll make it perfect. Thank you Putu 🙏";
+  if(m==='new'&&!document.getElementById('villa-tags').querySelector('.tag-new')){
+    const t=document.createElement('span');t.className='hvc-tag tag-new';t.textContent='🗺 First visit';
+    document.getElementById('villa-tags').appendChild(t);
+  }
+}
+
+// CATS
+function toggleCat(header){
+  const block=header.closest('.cat-block'),cat=block.dataset.cat;
+  if(block.classList.contains('done')){block.classList.remove('done');S.cats.delete(cat);block.querySelector('.cat-badge').textContent='Tap to done';}
+  else{block.classList.add('done');S.cats.add(cat);block.querySelector('.cat-badge').textContent='✓ Done';if('vibrate'in navigator)navigator.vibrate(40);}
+  const pct=Math.round(S.cats.size/TOTAL*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-pct').textContent=pct+'%';
+}
+
+// LAUNDRY
+function sel(card,key,val){card.closest('.opt-grid').querySelectorAll('.opt').forEach(c=>c.classList.remove('sel'));card.classList.add('sel');S[key]=val;}
+function selCond(card,val){card.closest('.opt-grid').querySelectorAll('.opt').forEach(c=>c.classList.remove('sel'));card.classList.add('sel');S.condition=val;document.getElementById('laundry-dmg').style.display=val==='damage'?'block':'none';}
+
+// SUPPLIES
+function supplyAllOk(){
+  S.allOk=!S.allOk;
+  document.getElementById('all-ok-btn').classList.toggle('on',S.allOk);
+  if(S.allOk){['water','gas','amenities'].forEach(n=>{document.getElementById('cb-'+n).querySelectorAll('.s-btn').forEach(b=>b.classList.remove('ok','replaced','low'));document.getElementById('cb-'+n).querySelector('.s-btn').classList.add('ok');S.supplies[n]='ok';});}
+}
+function setSupply(n,s,btn){S.allOk=false;document.getElementById('all-ok-btn').classList.remove('on');btn.closest('.supply-btns').querySelectorAll('.s-btn').forEach(b=>b.classList.remove('ok','replaced','low'));btn.classList.add(s);S.supplies[n]=s;}
+
+// CONDITION
+function tierGreenToggle(){
+  S.tierGreen=!S.tierGreen;
+  document.getElementById('tier-green').classList.toggle('on',S.tierGreen);
+  if(S.tierGreen){document.getElementById('tier-orange').classList.remove('open');document.getElementById('tier-red').classList.remove('open');}
+  if('vibrate'in navigator)navigator.vibrate(30);
+}
+function tierToggle(c){
+  const el=document.getElementById('tier-'+c);
+  el.classList.toggle('open');
+  if(el.classList.contains('open')){S.tierGreen=false;document.getElementById('tier-green').classList.remove('on');}
+}
+function setUrg(btn,l){document.querySelectorAll('.urg').forEach(b=>{b.className='urg';});btn.classList.add('on-'+l);}
+
+// WELLBEING
+const WB_OPTS={
+  guest:["They spoke rudely or raised their voice","They ignored me or treated me as invisible","They made comments about my appearance","They entered my personal space in an unwanted way","They proposed something that made me uncomfortable","They touched me without my consent","Other"],
+  staff:["Rude words or attitude","Disrespect in front of guests","Unwanted pressure or manipulation","Physical contact I didn't want","Other"],
+  neighbor:["Aggressive words or attitude","Complaints or accusations","Other"],
+  banjar:["Pressure or demands","Disrespectful attitude","Other"],
+  other:["I'm not sure how to describe it","Something else happened","I prefer to explain verbally"]
+};
+function selWbGood(){document.getElementById('wb-good').classList.toggle('on');document.getElementById('wb-report').classList.remove('on');document.getElementById('wb-qcm').classList.remove('show');S.wbStatus='good';}
+function selWbReport(){document.getElementById('wb-report').classList.toggle('on');document.getElementById('wb-good').classList.remove('on');const show=document.getElementById('wb-report').classList.contains('on');document.getElementById('wb-qcm').classList.toggle('show',show);S.wbStatus=show?'report':null;resetWbSteps();}
+function resetWbSteps(){document.querySelectorAll('.wb-qcm-step').forEach(s=>s.classList.remove('active'));document.getElementById('wb-step-0').classList.add('active');}
+function wbNext(step,source){
+  if(source) S.wbSource=source;
+  document.querySelectorAll('.wb-qcm-step').forEach(s=>s.classList.remove('active'));
+  if(step===1){
+    const opts=WB_OPTS[source]||WB_OPTS.other;
+    document.getElementById('wb-q1').textContent='What happened exactly?';
+    const cont=document.getElementById('wb-opts1');
+    cont.innerHTML='';
+    opts.forEach(o=>{const d=document.createElement('div');d.className='wb-opt';d.innerHTML=`<div class="wb-opt-icon">•</div>${o}`;d.onclick=()=>{d.classList.toggle('sel');};cont.appendChild(d);});
+    document.getElementById('wb-step-1').classList.add('active');
+  } else {
+    document.getElementById('wb-step-'+step).classList.add('active');
+  }
+}
+function wbBack(step){document.querySelectorAll('.wb-qcm-step').forEach(s=>s.classList.remove('active'));document.getElementById('wb-step-'+step).classList.add('active');}
+function setStar(n){
+  S.wbRating=n;
+  document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('on',i<n));
+}
+
+// PHOTOS
+function addPhoto(input,id){Array.from(input.files).forEach(file=>{const r=new FileReader();r.onload=e=>{const el=document.createElement('div');el.className='pm';el.innerHTML=`<img src="${e.target.result}"><div class="pm-rm" onclick="this.parentElement.remove();S.photos=Math.max(0,S.photos-1)">✕</div>`;document.getElementById(id).appendChild(el);S.photos++;};r.readAsDataURL(file);});input.value='';}
+
+// SUBMIT
+function doSubmit(){
+  const warn=document.getElementById('submit-warn');
+  const issues=[];
+  if(S.cats.size<TOTAL)issues.push(`${TOTAL-S.cats.size} area(s) not checked`);
+  if(!S.laundry)issues.push('laundry status missing');
+  if(!S.condition)issues.push('linen condition missing');
+  if(!S.tierGreen&&!document.getElementById('tier-orange').classList.contains('open')&&!document.getElementById('tier-red').classList.contains('open'))issues.push('villa condition not confirmed');
+  if(issues.length&&!warn.dataset.w){warn.style.display='block';warn.textContent='⚠️ '+issues.join(' · ')+' — tap again to send anyway';warn.dataset.w='1';return;}
+  const mins=Math.round((Date.now()-S.start)/60000);
+  const h=Math.floor(mins/60),m=mins%60;
+  document.getElementById('s-time').textContent=h>0?`${h}h${m}m`:`${mins}m`;
+  document.getElementById('s-areas').textContent=S.cats.size;
+  document.getElementById('s-photos').textContent=S.photos;
+  document.querySelectorAll('body>*:not(#success)').forEach(el=>el.style.display='none');
+  document.getElementById('success').classList.add('show');
+  window.scrollTo(0,0);
+  if('vibrate'in navigator)navigator.vibrate([80,40,80,40,120]);
+}
+
+// ── ORBITAL CLOCK — PNG logos ──
+var CREW_C=[
+  {key:'cleaner',  label:'Cleaner', big:true,  color:'rgba(0,166,147,.9)',   fb:'🧹'},
+  {key:'poolman',  label:'Pool',    big:false, color:'rgba(41,128,185,.8)',  fb:'🌊'},
+  {key:'gardener', label:'Garden',  big:false, color:'rgba(39,174,96,.8)',   fb:'🌿'},
+  {key:'driver',   label:'Driver',  big:false, color:'rgba(93,173,226,.8)',  fb:'🚗'},
+  {key:'tukang',   label:'Tukang',  big:false, color:'rgba(230,126,34,.8)',  fb:'🔧'},
+  {key:'massage',  label:'Massage', big:false, color:'rgba(212,116,154,.7)', fb:'💆'},
+  {key:'cooker',   label:'Cooker',  big:false, color:'rgba(201,168,76,.8)',  fb:'👨‍🍳'},
+  {key:'internet', label:'Internet',big:false, color:'rgba(0,166,147,.6)',   fb:'📶'}
+];
+var LOGOS_C={
+  cleaner:'clener_girl_logo_2__340.png',poolman:'pool_man_logo_1_340.png',
+  gardener:'garrdener_logo_1_340.png',driver:'driver_logo_1_340.png',
+  tukang:'worker_handy_man_logo_1_340.png',massage:'massage_girl_logo_1_340.png',
+  cooker:'cooker_logo_1_340.png',internet:'internet_man_logo_1_340.png'
+};
+var IMGS_C={};
+function preloadC(cb){var n=0;CREW_C.forEach(function(c){var img=new Image();img.onload=img.onerror=function(){IMGS_C[c.key]=(img.complete&&img.naturalWidth>0)?img:null;n++;if(n===CREW_C.length&&cb)cb();};img.src=LOGOS_C[c.key];});}
+const canvas=document.getElementById('orbitCanvas');
+const ctx=canvas.getContext('2d');
+const DPR=window.devicePixelRatio||1;
+canvas.width=280*DPR;canvas.height=280*DPR;
+canvas.style.width='280px';canvas.style.height='280px';
+ctx.scale(DPR,DPR);
+const CX=140,CY=140,R_ORB=100,R_SEC=120,R_MIN=Math.round(R_SEC*0.9),R_HR=Math.round(R_SEC*0.5),R_OUT=130;
+
+function drawOrbit(){
+  const now=new Date(),ms=now.getMilliseconds();
+  const sec=now.getSeconds()+ms/1000,min=now.getMinutes()+sec/60,hr=(now.getHours()%12)+min/60;
+  ctx.clearRect(0,0,280,280);
+  // rings
+  ctx.beginPath();ctx.arc(CX,CY,R_ORB,0,Math.PI*2);ctx.strokeStyle='rgba(0,166,147,0.12)';ctx.lineWidth=1;ctx.setLineDash([3,8]);ctx.stroke();ctx.setLineDash([]);
+  ctx.beginPath();ctx.arc(CX,CY,R_OUT,0,Math.PI*2);ctx.strokeStyle='rgba(201,168,76,0.10)';ctx.lineWidth=1;ctx.stroke();
+  // ticks
+  for(var i=0;i<12;i++){var a=(i/12)*Math.PI*2-Math.PI/2,tl=i%3===0?9:4;ctx.beginPath();ctx.moveTo(CX+Math.cos(a)*(R_OUT-1),CY+Math.sin(a)*(R_OUT-1));ctx.lineTo(CX+Math.cos(a)*(R_OUT-1-tl),CY+Math.sin(a)*(R_OUT-1-tl));ctx.strokeStyle=i%3===0?'rgba(201,168,76,0.4)':'rgba(201,168,76,0.12)';ctx.lineWidth=i%3===0?1.5:1;ctx.stroke();}
+  // hands
+  ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+Math.cos((hr/12)*Math.PI*2-Math.PI/2)*R_HR,CY+Math.sin((hr/12)*Math.PI*2-Math.PI/2)*R_HR);ctx.strokeStyle='rgba(232,220,200,.95)';ctx.lineWidth=3;ctx.lineCap='round';ctx.stroke();
+  ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+Math.cos((min/60)*Math.PI*2-Math.PI/2)*R_MIN,CY+Math.sin((min/60)*Math.PI*2-Math.PI/2)*R_MIN);ctx.strokeStyle='rgba(232,220,200,.75)';ctx.lineWidth=1.8;ctx.lineCap='round';ctx.stroke();
+  ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+Math.cos((sec/60)*Math.PI*2-Math.PI/2)*R_SEC,CY+Math.sin((sec/60)*Math.PI*2-Math.PI/2)*R_SEC);ctx.strokeStyle='rgba(0,166,147,.95)';ctx.lineWidth=1;ctx.lineCap='round';ctx.stroke();
+  ctx.beginPath();ctx.arc(CX,CY,3.5,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,.9)';ctx.fill();
+  // crew PNG bubbles
+  const t=Date.now()/1000,step=Math.PI*2/CREW_C.length,drift=-(sec/60)*Math.PI*2*0.5;
+  CREW_C.forEach(function(c,i){
+    const angle=i*step+drift,x=CX+Math.cos(angle)*R_ORB,y=CY+Math.sin(angle)*R_ORB,bubR=c.big?22:14;
+    if(c.big){var g=ctx.createRadialGradient(x,y,0,x,y,bubR+8);g.addColorStop(0,'rgba(0,166,147,0.2)');g.addColorStop(1,'transparent');ctx.beginPath();ctx.arc(x,y,bubR+8,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();}
+    ctx.beginPath();ctx.arc(x,y,bubR,0,Math.PI*2);ctx.fillStyle=c.big?'rgba(10,30,28,.95)':'rgba(242,247,246,.92)';ctx.fill();
+    ctx.strokeStyle=c.color;ctx.lineWidth=c.big?2:1.5;ctx.stroke();
+    var img=IMGS_C[c.key];
+    if(img){ctx.save();ctx.beginPath();ctx.arc(x,y,bubR-2,0,Math.PI*2);ctx.clip();ctx.drawImage(img,x-(bubR-2),y-(bubR-2),(bubR-2)*2,(bubR-2)*2);ctx.restore();}
+    else{ctx.font=(c.big?14:10)+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle=c.big?'#fff':'#333';ctx.fillText(c.fb,x,y);}
+    ctx.font=(c.big?9:7)+'px Nunito,sans-serif';ctx.textAlign='center';ctx.textBaseline='top';
+    ctx.fillStyle=c.big?'rgba(0,166,147,.9)':'rgba(30,50,46,.5)';ctx.fillText(c.label,x,y+bubR+3);
+  });
+  requestAnimationFrame(drawOrbit);
+}
+preloadC(null);
+drawOrbit();
+
+// ── XENDIT FUNCTIONS ──
+function requestAdvance(){var btn=document.getElementById('btn-advance');if(btn.classList.contains('sent'))return;btn.classList.add('sent');btn.innerHTML='⏳ Rex sedang proses transfer...';setTimeout(function(){btn.innerHTML='✅ Transfer dikirim ke rekening kamu — cek HP';if('vibrate' in navigator)navigator.vibrate([60,30,60]);},2000);}
+function openReimb(){document.getElementById('reimb-area').classList.toggle('show');}
+function reimbPhoto(input){if(!input.files[0])return;var r=new FileReader();r.onload=function(e){var t=document.getElementById('reimb-thumb');t.src=e.target.result;t.style.display='block';document.getElementById('reimb-confirm-btn').classList.add('show');};r.readAsDataURL(input.files[0]);}
+function confirmReimb(){var btn=document.getElementById('reimb-confirm-btn');btn.textContent='⏳ Rex sedang review...';btn.style.background='var(--muted)';btn.onclick=null;setTimeout(function(){btn.textContent='✅ Penggantian disetujui — akan ditransfer hari ini';btn.style.background='var(--green)';document.getElementById('btn-reimb').classList.add('sent');document.getElementById('btn-reimb').innerHTML='✅ Penggantian biaya dikirim';if('vibrate' in navigator)navigator.vibrate([60,30,60]);},2000);}
+
+// REVEAL
+const obs=new IntersectionObserver(ee=>ee.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v');}),{threshold:.05});
+document.querySelectorAll('.fi').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

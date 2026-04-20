@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Settings agence — Hidden Keys Bali</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#8B6914;--cream:#F5F0E8;--cream2:#EDE8DC;--cream3:#E5DED0;
+  --border:rgba(139,105,20,0.18);--text:#1A1208;--muted:#6B5B3E;
+  --green:#2ECC71;--green-d:#1A7A3C;--red:#C0392B;--orange:#B7590A;--blue:#3498DB;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cream);color:var(--text);font-family:"DM Mono",monospace;min-height:100vh;}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:200;background:rgba(245,240,232,.97);border-bottom:1px solid var(--border);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);}
+.back-btn{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);cursor:pointer;padding:6px 12px;border:1px solid var(--border);border-radius:20px;transition:all .2s;background:transparent;font-family:"DM Mono",monospace;}
+.back-btn:hover{border-color:var(--gold);color:var(--gold);}
+.topbar-sep{width:1px;height:24px;background:var(--border);margin:0 12px;}
+.topbar-title{font-family:"Playfair Display",serif;font-size:15px;}
+.topbar-title em{color:var(--gold);font-style:italic;}
+
+/* LAYOUT */
+.main{max-width:780px;margin:0 auto;padding:44px 24px 120px;}
+.page-title{font-family:"Playfair Display",serif;font-size:28px;font-weight:400;margin-bottom:6px;}
+.page-title em{color:var(--gold);font-style:italic;}
+.page-sub{font-size:11px;color:var(--muted);margin-bottom:36px;letter-spacing:.5px;}
+
+/* CARDS */
+.card{background:var(--cream2);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;}
+.card-hd{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.card-hd-icon{font-size:16px;}
+.card-hd-title{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600;}
+.card-hd-badge{margin-left:auto;font-size:10px;padding:3px 10px;border-radius:10px;}
+.badge-ok{background:rgba(46,204,113,.1);color:var(--green-d);border:1px solid rgba(46,204,113,.25);}
+.badge-ko{background:rgba(192,57,43,.08);color:var(--red);border:1px solid rgba(192,57,43,.2);}
+.badge-wait{background:rgba(139,105,20,.08);color:var(--gold);border:1px solid var(--border);}
+.card-bd{padding:22px;}
+
+/* FORM */
+.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.fl{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:600;}
+.fhint{font-size:10px;color:var(--muted);line-height:1.7;margin-top:2px;}
+.fi{padding:11px 14px;border:1px solid var(--border);border-radius:8px;font-family:"DM Mono",monospace;font-size:12px;background:var(--cream);color:var(--text);outline:none;transition:border-color .15s;width:100%;}
+.fi:focus{border-color:var(--gold);}
+.fi-row{display:flex;gap:10px;align-items:center;}
+.fi-row .fi{flex:1;}
+
+/* API KEY FIELD */
+.api-field{display:flex;gap:8px;align-items:center;}
+.api-input{flex:1;padding:11px 14px;border:1px solid var(--border);border-radius:8px;font-family:"DM Mono",monospace;font-size:12px;background:var(--cream);color:var(--text);outline:none;transition:border-color .15s;letter-spacing:.5px;}
+.api-input:focus{border-color:var(--gold);}
+.api-input.connected{border-color:rgba(46,204,113,.4);background:rgba(46,204,113,.04);}
+.btn-test{padding:11px 16px;border-radius:8px;border:1px solid var(--border);background:transparent;font-family:"DM Mono",monospace;font-size:10px;color:var(--muted);cursor:pointer;white-space:nowrap;transition:all .2s;letter-spacing:.5px;}
+.btn-test:hover{border-color:var(--gold);color:var(--gold);}
+.btn-test.loading{opacity:.5;cursor:not-allowed;}
+.btn-save-api{padding:11px 16px;border-radius:8px;border:none;background:var(--gold);font-family:"DM Mono",monospace;font-size:10px;color:white;cursor:pointer;white-space:nowrap;transition:all .2s;letter-spacing:.5px;}
+.btn-save-api:hover{background:#7A5D11;}
+
+/* STATUS LINE */
+.status-line{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:11px;}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.dot-ok{background:var(--green-d);}
+.dot-ko{background:var(--red);}
+.dot-wait{background:var(--gold);}
+
+/* TOGGLE */
+.trow{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--border);}
+.trow:last-child{border-bottom:none;}
+.trow-ico{font-size:15px;width:22px;text-align:center;flex-shrink:0;}
+.trow-lbl{flex:1;}
+.trow-lbl-main{font-size:12px;}
+.trow-lbl-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+.tog{position:relative;width:38px;height:21px;flex-shrink:0;}
+.tog input{opacity:0;width:0;height:0;}
+.tsl{position:absolute;cursor:pointer;inset:0;background:var(--cream3);border:1px solid var(--border);border-radius:20px;transition:.2s;}
+.tsl:before{position:absolute;content:"";height:15px;width:15px;left:2px;top:2px;background:var(--muted);border-radius:50%;transition:.2s;}
+.tog input:checked+.tsl{background:var(--green-d);border-color:var(--green-d);}
+.tog input:checked+.tsl:before{transform:translateX(17px);background:white;}
+
+/* FROW */
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:560px){.frow{grid-template-columns:1fr;}}
+
+/* SAVE BAR */
+.save-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(245,240,232,.97);border-top:1px solid var(--border);padding:14px 32px;display:flex;justify-content:flex-end;align-items:center;gap:12px;backdrop-filter:blur(12px);z-index:100;transform:translateY(100%);transition:transform .25s;}
+.save-bar.visible{transform:translateY(0);}
+.btn-discard{padding:10px 18px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:"DM Mono",monospace;font-size:10px;cursor:pointer;}
+.btn-primary{padding:10px 22px;border-radius:8px;border:none;background:var(--gold);color:white;font-family:"DM Mono",monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.btn-primary:hover{background:#7A5D11;}
+
+/* SECTION SEP */
+.ssep{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:18px 0 12px;display:flex;align-items:center;gap:10px;}
+.ssep::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div style="display:flex;align-items:center;">
+    <button class="back-btn" onclick="window.location.href='agency.html'">← Agence</button>
+    <div class="topbar-sep"></div>
+    <div class="topbar-title">Settings <em>agence</em></div>
+  </div>
+  <span style="font-family:'Playfair Display',serif;font-size:13px;color:var(--gold);letter-spacing:2px;">HIDDEN KEYS</span>
+</nav>
+
+<div class="main">
+
+  <div class="page-title">Settings <em>agence</em></div>
+  <div class="page-sub">Connexions API · Automatisation · Commissions · Compte agence</div>
+
+  <!-- ══ CONNEXIONS API ══ -->
+  <div class="card">
+    <div class="card-hd">
+      <span class="card-hd-icon">🔌</span>
+      <span class="card-hd-title">Connexions API</span>
+      <span class="card-hd-badge badge-wait" id="badge-apis">0 / 3 connectées</span>
+    </div>
+    <div class="card-bd">
+
+      <!-- PRICELABS -->
+      <div class="ssep">Pricelabs</div>
+      <div class="fg">
+        <div class="fl">Clé API Pricelabs</div>
+        <div class="api-field">
+          <input class="api-input" type="password" id="key-pricelabs" placeholder="pl_live_xxxxxxxxxxxxxxxx" oninput="markDirty()">
+          <button class="btn-test" id="btn-test-pricelabs" onclick="testApi('pricelabs')">Tester</button>
+          <button class="btn-save-api" onclick="saveApi('pricelabs')">Sauver</button>
+        </div>
+        <div class="fhint">Compte Pricelabs → Account → API Key · Une seule clé pour toutes tes villas</div>
+        <div class="status-line" id="status-pricelabs" style="display:none;">
+          <div class="status-dot dot-wait" id="dot-pricelabs"></div>
+          <span id="msg-pricelabs">—</span>
+        </div>
+      </div>
+
+      <!-- AIRDNA -->
+      <div class="ssep">AirDNA <span style="font-size:10px;color:var(--orange);margin-left:8px;">Payant — optionnel</span></div>
+      <div class="fg">
+        <div class="fl">Clé API AirDNA</div>
+        <div class="api-field">
+          <input class="api-input" type="password" id="key-airdna" placeholder="airdna_xxxxxxxxxxxxxxxx" oninput="markDirty()">
+          <button class="btn-test" id="btn-test-airdna" onclick="testApi('airdna')">Tester</button>
+          <button class="btn-save-api" onclick="saveApi('airdna')">Sauver</button>
+        </div>
+        <div class="fhint">AirDNA → Settings → API → Generate key · Historique marché Bali par zone</div>
+        <div class="status-line" id="status-airdna" style="display:none;">
+          <div class="status-dot dot-wait" id="dot-airdna"></div>
+          <span id="msg-airdna">—</span>
+        </div>
+      </div>
+
+      <!-- HOSTAWAY -->
+      <div class="ssep">Hostaway</div>
+      <div class="fg">
+        <div class="fl">Client ID Hostaway</div>
+        <input class="fi" type="text" id="key-hostaway-id" placeholder="12345" oninput="markDirty()">
+        <div class="fl" style="margin-top:10px;">Client Secret Hostaway</div>
+        <div class="api-field">
+          <input class="api-input" type="password" id="key-hostaway-secret" placeholder="xxxxxxxxxxxxxxxxxxxxxxxx" oninput="markDirty()">
+          <button class="btn-test" id="btn-test-hostaway" onclick="testApi('hostaway')">Tester</button>
+          <button class="btn-save-api" onclick="saveApi('hostaway')">Sauver</button>
+        </div>
+        <div class="fhint">Hostaway Dashboard → Settings → API → Générer credentials</div>
+        <div class="status-line" id="status-hostaway" style="display:none;">
+          <div class="status-dot dot-wait" id="dot-hostaway"></div>
+          <span id="msg-hostaway">—</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ AUTOMATISATION ══ -->
+  <div class="card">
+    <div class="card-hd">
+      <span class="card-hd-icon">🤖</span>
+      <span class="card-hd-title">Automatisation Sofia</span>
+    </div>
+    <div class="card-bd">
+      <div class="trow">
+        <div class="trow-ico">💬</div>
+        <div class="trow-lbl">
+          <div class="trow-lbl-main">Sofia répond aux guests</div>
+          <div class="trow-lbl-sub">Toutes villas — overridable par villa dans Settings villa</div>
+        </div>
+        <label class="tog"><input type="checkbox" checked onchange="markDirty()"><span class="tsl"></span></label>
+      </div>
+      <div class="trow">
+        <div class="trow-ico">📊</div>
+        <div class="trow-lbl">
+          <div class="trow-lbl-main">Rapport hebdo auto envoyé clients</div>
+          <div class="trow-lbl-sub">Chaque lundi matin selon langue du client</div>
+        </div>
+        <label class="tog"><input type="checkbox" checked onchange="markDirty()"><span class="tsl"></span></label>
+      </div>
+      <div class="trow">
+        <div class="trow-ico">💹</div>
+        <div class="trow-lbl">
+          <div class="trow-lbl-main">Suggestions Pricelabs actives</div>
+          <div class="trow-lbl-sub">Sofia propose ajustements pricing selon marché</div>
+        </div>
+        <label class="tog"><input type="checkbox" checked onchange="markDirty()"><span class="tsl"></span></label>
+      </div>
+      <div class="trow">
+        <div class="trow-ico">🏦</div>
+        <div class="trow-lbl">
+          <div class="trow-lbl-main">Virement mensuel automatique Xendit</div>
+          <div class="trow-lbl-sub">Déclenché le jour configuré dans chaque fiche client</div>
+        </div>
+        <label class="tog"><input type="checkbox" onchange="markDirty()"><span class="tsl"></span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ COMMISSIONS & TARIFS ══ -->
+  <div class="card">
+    <div class="card-hd">
+      <span class="card-hd-icon">💰</span>
+      <span class="card-hd-title">Commissions & tarifs par défaut</span>
+    </div>
+    <div class="card-bd">
+      <div class="fhint" style="margin-bottom:16px;">Ces valeurs s'appliquent à tous les nouveaux clients. Overridable par client dans Settings client.</div>
+      <div class="frow">
+        <div class="fg">
+          <div class="fl">Commission agence (%)</div>
+          <input class="fi" type="number" value="15" min="0" max="50" oninput="markDirty()">
+        </div>
+        <div class="fg">
+          <div class="fl">Abonnement / villa / mois (IDR)</div>
+          <input class="fi" type="number" value="100000" oninput="markDirty()">
+        </div>
+      </div>
+      <div class="frow" style="margin-top:4px;">
+        <div class="fg">
+          <div class="fl">Seuil orange par défaut (IDR)</div>
+          <input class="fi" type="number" value="500000" oninput="markDirty()">
+          <div class="fhint">Dépense nécessitant validation agence</div>
+        </div>
+        <div class="fg">
+          <div class="fl">Seuil rouge par défaut (IDR)</div>
+          <input class="fi" type="number" value="5000000" oninput="markDirty()">
+          <div class="fhint">Dépense nécessitant validation propriétaire</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ COMPTE AGENCE ══ -->
+  <div class="card">
+    <div class="card-hd">
+      <span class="card-hd-icon">🏢</span>
+      <span class="card-hd-title">Compte agence</span>
+    </div>
+    <div class="card-bd">
+      <div class="frow">
+        <div class="fg">
+          <div class="fl">Nom agence</div>
+          <input class="fi" type="text" value="Hidden Keys Bali" oninput="markDirty()">
+        </div>
+        <div class="fg">
+          <div class="fl">Email agence</div>
+          <input class="fi" type="email" placeholder="contact@hiddenkeys.bali" oninput="markDirty()">
+        </div>
+      </div>
+      <div class="frow">
+        <div class="fg">
+          <div class="fl">WhatsApp agence</div>
+          <input class="fi" type="tel" placeholder="+62 812 ..." oninput="markDirty()">
+        </div>
+        <div class="fg">
+          <div class="fl">Timezone</div>
+          <select class="fi" onchange="markDirty()">
+            <option selected>Asia/Makassar (WITA — Bali)</option>
+            <option>Asia/Jakarta (WIB)</option>
+            <option>Europe/Paris (CET)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SAVE BAR -->
+<div class="save-bar" id="save-bar">
+  <span style="font-size:11px;color:var(--muted);margin-right:auto;" id="save-hint">Modifications non sauvegardées</span>
+  <button class="btn-discard" onclick="discardChanges()">Annuler</button>
+  <button class="btn-primary" onclick="saveAll()">Enregistrer</button>
+</div>
+
+<script>
+let dirty = false;
+
+function markDirty(){
+  dirty = true;
+  document.getElementById('save-bar').classList.add('visible');
+}
+
+function discardChanges(){
+  dirty = false;
+  document.getElementById('save-bar').classList.remove('visible');
+}
+
+function saveAll(){
+  document.getElementById('save-hint').textContent = '✓ Enregistré';
+  setTimeout(()=>{
+    document.getElementById('save-bar').classList.remove('visible');
+    document.getElementById('save-hint').textContent = 'Modifications non sauvegardées';
+    dirty = false;
+  }, 1800);
+}
+
+// ── API SAVE (stockage local pour l'instant) ──
+function saveApi(service){
+  let val = '';
+  if(service === 'hostaway'){
+    val = document.getElementById('key-hostaway-secret').value.trim();
+  } else {
+    val = document.getElementById('key-'+service).value.trim();
+  }
+  if(!val){ alert('Saisis la clé d\'abord'); return; }
+  try{ localStorage.setItem('api_'+service, val); }catch(e){}
+  showStatus(service, 'ok', 'Clé sauvegardée — clique Tester pour vérifier la connexion');
+}
+
+// ── API TEST (placeholder — brancher vraie API au sprint suivant) ──
+function testApi(service){
+  const btn = document.getElementById('btn-test-'+service);
+  btn.textContent = '⏳';
+  btn.classList.add('loading');
+  showStatus(service, 'wait', 'Test en cours…');
+
+  setTimeout(()=>{
+    btn.textContent = 'Tester';
+    btn.classList.remove('loading');
+    // Placeholder : on simule une réponse positive si une clé est saisie
+    const inp = document.getElementById(service==='hostaway'?'key-hostaway-secret':'key-'+service);
+    if(inp && inp.value.trim().length > 6){
+      showStatus(service, 'ok', 'Connexion réussie ✓');
+      inp.classList.add('connected');
+      updateApiBadge();
+    } else {
+      showStatus(service, 'ko', 'Clé invalide ou vide');
+    }
+  }, 1400);
+}
+
+function showStatus(service, state, msg){
+  const line = document.getElementById('status-'+service);
+  const dot  = document.getElementById('dot-'+service);
+  const txt  = document.getElementById('msg-'+service);
+  line.style.display = 'flex';
+  dot.className = 'status-dot ' + (state==='ok'?'dot-ok':state==='ko'?'dot-ko':'dot-wait');
+  txt.textContent = msg;
+}
+
+function updateApiBadge(){
+  const connected = ['pricelabs','airdna','hostaway'].filter(s=>{
+    const inp = document.getElementById(s==='hostaway'?'key-hostaway-secret':'key-'+s);
+    return inp && inp.classList.contains('connected');
+  }).length;
+  const badge = document.getElementById('badge-apis');
+  badge.textContent = connected + ' / 3 connectées';
+  badge.className = 'card-hd-badge ' + (connected===3?'badge-ok':connected>0?'badge-wait':'badge-ko');
+}
+
+// ── RESTORE SAVED KEYS ──
+['pricelabs','airdna','hostaway'].forEach(s=>{
+  try{
+    const saved = localStorage.getItem('api_'+s);
+    if(saved){
+      const inp = document.getElementById(s==='hostaway'?'key-hostaway-secret':'key-'+s);
+      if(inp){ inp.value = saved; inp.classList.add('connected'); }
+      showStatus(s, 'ok', 'Clé chargée depuis la session précédente');
+    }
+  }catch(e){}
+});
+updateApiBadge();
+</script>
+</body>
+</html>

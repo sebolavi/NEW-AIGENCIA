@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Comptabilité Villa — Hidden Keys</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#8B6914;--gold-light:#C9A84C;
+  --cream:#F5F0E8;--cream2:#EDE8DC;
+  --border:rgba(139,105,20,0.18);
+  --text:#1A1208;--muted:#6B5B3E;
+  --green:#2ECC71;--green-d:#1A7A3C;
+  --blue:#3498DB;--blue-d:#1A5A8A;
+  --violet:#6B2D8B;--orange:#B7590A;
+  --red:#CD5C5C;--rose:#A0125E;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cream);color:var(--text);font-family:"DM Mono",monospace;min-height:100vh;}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:56px;background:var(--cream2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;}
+.topbar-left{display:flex;align-items:center;gap:14px;}
+.hk-logo{width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:"Playfair Display",serif;font-size:10px;font-weight:700;color:var(--cream);flex-shrink:0;}
+.topbar-back{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .15s;}
+.topbar-back:hover{color:var(--gold);}
+.t-sep{width:1px;height:18px;background:var(--border);}
+.topbar-title{font-family:"Playfair Display",serif;font-size:18px;font-weight:700;}
+.topbar-sub{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+
+/* MONTH NAV */
+.month-strip{display:flex;align-items:center;justify-content:space-between;padding:14px 28px 0;}
+.month-nav{display:flex;align-items:center;border:1.5px solid var(--border);border-radius:8px;background:var(--cream2);overflow:hidden;}
+.month-arrow{background:none;border:none;cursor:pointer;font-size:15px;color:var(--gold);padding:5px 11px;transition:background .15s;}
+.month-arrow:hover{background:rgba(139,105,20,.1);}
+.month-label{padding:5px 16px;border-left:1px solid var(--border);border-right:1px solid var(--border);font-family:"Playfair Display",serif;font-size:14px;font-weight:700;min-width:130px;text-align:center;}
+.period-tabs{display:flex;gap:0;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.ptab{background:none;border:none;cursor:pointer;font-size:9px;padding:5px 12px;color:var(--muted);font-family:"DM Mono",monospace;letter-spacing:1px;text-transform:uppercase;transition:background .12s;}
+.ptab.active{background:var(--gold);color:white;}
+
+/* PAGE */
+.page{max-width:1200px;margin:0 auto;padding:24px 24px 80px;}
+
+/* P&L HEADER */
+.pnl-block{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px;}
+.pnl-card{background:var(--cream2);border-radius:10px;border:1px solid var(--border);padding:16px 18px;position:relative;overflow:hidden;}
+.pnl-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;}
+.pnl-rev::before{background:linear-gradient(90deg,var(--green-d),var(--green));}
+.pnl-charges::before{background:linear-gradient(90deg,var(--orange),#e67e22);}
+.pnl-taxes::before{background:linear-gradient(90deg,var(--violet),#9b59b6);}
+.pnl-net::before{background:linear-gradient(90deg,var(--blue-d),var(--blue));}
+.pnl-lbl{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.pnl-val{font-family:"Playfair Display",serif;font-size:28px;font-weight:700;line-height:1;}
+.pnl-sub{font-size:9px;color:var(--muted);margin-top:4px;}
+.pnl-delta{font-size:9px;margin-top:3px;}
+.delta-up{color:var(--green-d);}
+.delta-dn{color:var(--red);}
+
+/* NET WATERFALL */
+.waterfall{background:var(--cream2);border-radius:10px;border:1px solid var(--border);padding:16px 20px;margin-bottom:32px;}
+.wf-title{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.wf-title::after{content:"";flex:1;height:1px;background:var(--border);}
+.wf-row{display:flex;align-items:center;gap:0;margin-bottom:4px;}
+.wf-label{font-size:11px;width:200px;flex-shrink:0;}
+.wf-bar-wrap{flex:1;height:22px;background:rgba(0,0,0,.04);border-radius:4px;overflow:hidden;margin:0 12px;}
+.wf-bar{height:100%;border-radius:4px;transition:width .4s ease;}
+.wf-amt{font-family:"Playfair Display",serif;font-size:13px;font-weight:700;width:90px;text-align:right;flex-shrink:0;}
+.wf-pct{font-size:9px;color:var(--muted);width:40px;text-align:right;flex-shrink:0;}
+
+/* SECTION */
+.section-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;margin-top:28px;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);}
+
+/* TABLE CHARGES */
+.charges-table{background:var(--cream2);border-radius:10px;border:1px solid var(--border);overflow:hidden;margin-bottom:20px;}
+.ct-head{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 90px;gap:0;background:rgba(139,105,20,.07);border-bottom:1px solid var(--border);padding:8px 16px;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.ct-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 90px;gap:0;padding:10px 16px;border-bottom:1px solid var(--border);font-size:11px;cursor:pointer;transition:background .12s;align-items:center;}
+.ct-row:last-child{border-bottom:none;}
+.ct-row:hover{background:rgba(139,105,20,.05);}
+.ct-row.expanded{background:rgba(139,105,20,.06);border-bottom:none;}
+.ct-detail{padding:0 16px 12px;background:rgba(139,105,20,.03);border-bottom:1px solid var(--border);display:none;}
+.ct-detail.open{display:block;}
+.ct-cat{display:flex;align-items:center;gap:8px;}
+.cat-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.ct-name{font-weight:500;}
+.ct-sub{font-size:9px;color:var(--muted);}
+.ct-amount{font-family:"Playfair Display",serif;font-weight:700;}
+.ct-who{font-size:10px;color:var(--muted);}
+.ct-date{font-size:10px;color:var(--muted);}
+.ct-proof{font-size:9px;}
+.proof-yes{color:var(--green-d);}
+.proof-no{color:var(--muted);opacity:.5;}
+.ct-actions{display:flex;gap:4px;justify-content:flex-end;}
+.ct-btn{padding:3px 8px;border-radius:4px;border:1px solid var(--border);background:var(--cream);font-size:8px;cursor:pointer;font-family:"DM Mono",monospace;color:var(--muted);transition:all .12s;}
+.ct-btn:hover{background:var(--cream2);color:var(--text);}
+.ct-btn.approve{border-color:var(--green);color:var(--green-d);}
+.ct-btn.approve:hover{background:rgba(46,204,113,.1);}
+
+/* DETAIL PANE */
+.detail-inner{background:var(--cream);border-radius:8px;border:1px solid var(--border);padding:12px 14px;margin-top:2px;}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:8px;}
+.dg-item{}
+.dg-lbl{font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:2px;}
+.dg-val{font-size:11px;font-weight:500;}
+.detail-note{font-size:10px;color:var(--muted);border-top:1px solid var(--border);padding-top:8px;margin-top:4px;}
+.receipt-thumb{width:48px;height:48px;border-radius:6px;border:1px solid var(--border);background:var(--cream2);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;}
+
+/* TOTALS ROW */
+.ct-total{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 90px;gap:0;padding:10px 16px;background:rgba(139,105,20,.07);border-top:2px solid var(--border);font-size:12px;font-weight:700;}
+.ct-total .ct-amount{color:#C0392B;}
+
+/* ADD FORM */
+.add-form{background:var(--cream2);border-radius:10px;border:1.5px dashed var(--border);padding:16px 18px;margin-bottom:20px;}
+.af-title{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+.af-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;align-items:end;}
+.af-field{}
+.af-lbl{font-size:8px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
+.af-input{width:100%;padding:6px 9px;border:1px solid var(--border);border-radius:5px;font-family:"DM Mono",monospace;font-size:10px;background:var(--cream);color:var(--text);}
+.af-select{width:100%;padding:6px 9px;border:1px solid var(--border);border-radius:5px;font-family:"DM Mono",monospace;font-size:10px;background:var(--cream);color:var(--text);cursor:pointer;}
+.af-btn{padding:8px 16px;border-radius:6px;border:none;background:var(--orange);color:white;font-size:10px;cursor:pointer;font-family:"DM Mono",monospace;white-space:nowrap;}
+.af-btn:hover{background:#a04e09;}
+
+/* SALAIRES */
+.salary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:20px;}
+.salary-card{background:var(--cream2);border-radius:8px;border:1px solid var(--border);padding:12px 14px;display:flex;align-items:center;gap:10px;}
+.salary-avatar{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.salary-info{flex:1;min-width:0;}
+.salary-name{font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.salary-role{font-size:9px;color:var(--muted);}
+.salary-amt{font-family:"Playfair Display",serif;font-size:14px;font-weight:700;color:var(--orange);white-space:nowrap;}
+.salary-idr{font-size:8px;color:var(--muted);}
+.salary-status{display:flex;align-items:center;gap:4px;margin-top:3px;}
+.s-paid{font-size:8px;color:var(--green-d);background:rgba(46,204,113,.1);padding:1px 6px;border-radius:10px;}
+.s-pending{font-size:8px;color:var(--orange);background:rgba(183,89,10,.1);padding:1px 6px;border-radius:10px;}
+
+/* TAXES BLOCK */
+.taxes-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:11px;}
+.taxes-row:last-child{border-bottom:none;}
+.tax-name{display:flex;align-items:center;gap:6px;}
+.tax-dot{width:6px;height:6px;border-radius:50%;}
+.tax-rate{font-size:9px;color:var(--muted);}
+.tax-amt{font-family:"Playfair Display",serif;font-size:13px;font-weight:700;color:var(--violet);}
+.tax-status{font-size:8px;padding:2px 7px;border-radius:10px;}
+.ts-ok{background:rgba(46,204,113,.1);color:var(--green-d);}
+.ts-due{background:rgba(183,89,10,.1);color:var(--orange);}
+
+/* MODAL REÇU */
+.modal-overlay{position:fixed;inset:0;background:rgba(26,18,8,.55);z-index:800;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;}
+.receipt-modal{background:var(--cream);border-radius:14px;border:1px solid var(--border);width:min(500px,94vw);max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.22);}
+.rm-head{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.rm-title{font-family:"Playfair Display",serif;font-size:16px;font-weight:700;}
+.rm-close{background:none;border:none;cursor:pointer;font-size:20px;color:var(--muted);line-height:1;}
+.rm-body{padding:20px 22px;}
+.rm-receipt-area{width:100%;height:180px;background:rgba(0,0,0,.04);border:2px dashed var(--border);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;margin-bottom:14px;transition:all .15s;}
+.rm-receipt-area:hover{border-color:var(--gold);background:rgba(139,105,20,.04);}
+.rm-receipt-area .icon{font-size:32px;margin-bottom:6px;}
+.rm-receipt-area .hint{font-size:10px;color:var(--muted);}
+.rm-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.rmf-lbl{font-size:8px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
+.rmf-input{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:5px;font-family:"DM Mono",monospace;font-size:11px;background:var(--cream);}
+.rm-submit{width:100%;margin-top:14px;padding:10px;border-radius:7px;border:none;background:var(--gold);color:white;font-size:11px;cursor:pointer;font-family:"Playfair Display",serif;font-size:14px;}
+.rm-submit:hover{background:var(--gold-light);}
+
+/* FADE */
+.fade-in{opacity:0;transform:translateY(6px);transition:opacity .35s ease,transform .35s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* EXPORT BAR */
+.export-bar{display:flex;gap:8px;margin-top:32px;padding-top:24px;border-top:1px solid var(--border);}
+.exp-btn{padding:7px 14px;border-radius:6px;border:1px solid var(--border);background:var(--cream2);font-family:"DM Mono",monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--muted);transition:all .15s;}
+.exp-btn:hover{background:var(--cream);color:var(--text);}
+
+@media(max-width:700px){
+  .pnl-block{grid-template-columns:1fr 1fr;}
+  .ct-head,.ct-row,.ct-total{grid-template-columns:2fr 1fr 80px;}
+  .ct-who,.ct-date{display:none;}
+  .af-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="hk-logo">HK</div>
+    <div class="t-sep"></div>
+    <a href="javascript:history.back()" class="topbar-back">← Villa</a>
+    <div class="t-sep"></div>
+    <div>
+      <div class="topbar-title" id="tb-villa-name">Villa Surya</div>
+      <div class="topbar-sub">Comptabilité</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <div id="net-owner-topbar" style="text-align:right;">
+      <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--blue);" id="tb-net">—</div>
+      <div style="font-size:8px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Net propriétaire</div>
+    </div>
+  </div>
+</div>
+
+<!-- MONTH NAV -->
+<div class="month-strip">
+  <div class="month-nav">
+    <button class="month-arrow" onclick="changeMonth(-1)">‹</button>
+    <div class="month-label" id="month-label">Avril 2026</div>
+    <button class="month-arrow" onclick="changeMonth(1)">›</button>
+  </div>
+  <div class="period-tabs">
+    <button class="ptab active" id="ptab-month" onclick="setPeriod('month')">Mois</button>
+    <button class="ptab" id="ptab-year" onclick="setPeriod('year')">Année</button>
+  </div>
+</div>
+
+<!-- PAGE -->
+<div class="page">
+
+<!-- P&L CARDS -->
+<div class="pnl-block fade-in" id="pnl-block">
+  <div class="pnl-card pnl-rev">
+    <div class="pnl-lbl">Revenus nets</div>
+    <div class="pnl-val" id="pnl-rev" style="color:var(--green-d);">$0</div>
+    <div class="pnl-sub" id="pnl-rev-sub">— nuits · ADR $—</div>
+    <div class="pnl-delta" id="pnl-rev-delta"></div>
+  </div>
+  <div class="pnl-card pnl-charges">
+    <div class="pnl-lbl">Charges totales</div>
+    <div class="pnl-val" id="pnl-charges" style="color:var(--orange);">$0</div>
+    <div class="pnl-sub" id="pnl-charges-sub">Opérationnel + exceptionnel</div>
+    <div class="pnl-delta" id="pnl-charges-delta"></div>
+  </div>
+  <div class="pnl-card pnl-taxes">
+    <div class="pnl-lbl">Taxes estimées</div>
+    <div class="pnl-val" id="pnl-taxes" style="color:var(--violet);">$0</div>
+    <div class="pnl-sub">PBJT 10% + PPh</div>
+    <div class="pnl-delta" id="pnl-taxes-delta"></div>
+  </div>
+  <div class="pnl-card pnl-net">
+    <div class="pnl-lbl">Net propriétaire</div>
+    <div class="pnl-val" id="pnl-net" style="color:var(--blue-d);">$0</div>
+    <div class="pnl-sub" id="pnl-net-sub">Après charges &amp; taxes</div>
+    <div class="pnl-delta" id="pnl-net-delta"></div>
+  </div>
+</div>
+
+<!-- WATERFALL -->
+<div class="waterfall fade-in" id="wf-block">
+  <div class="wf-title">Répartition du revenu brut</div>
+  <div id="wf-rows"></div>
+</div>
+
+<!-- SECTION SALAIRES STAFF -->
+<div class="section-title">Salaires staff · <span id="salary-month-lbl">avril 2026</span></div>
+<div class="salary-grid fade-in" id="salary-grid"></div>
+
+<!-- SECTION CHARGES OPÉRATIONNELLES -->
+<div class="section-title">Charges opérationnelles</div>
+<div class="charges-table fade-in" id="op-table">
+  <div class="ct-head">
+    <div>Poste</div><div>Montant</div><div>Responsable</div><div>Date</div><div>Preuve</div>
+  </div>
+  <div id="op-rows"></div>
+  <div class="ct-total" id="op-total">
+    <div>Total opérationnel</div><div class="ct-amount" id="op-total-amt">$0</div><div></div><div></div><div></div>
+  </div>
+</div>
+
+<!-- SECTION CHARGES EXCEPTIONNELLES -->
+<div class="section-title">Charges exceptionnelles · réparations &amp; achats</div>
+<div class="charges-table fade-in" id="exc-table">
+  <div class="ct-head">
+    <div>Poste</div><div>Montant</div><div>Responsable</div><div>Date</div><div>Preuve</div>
+  </div>
+  <div id="exc-rows"></div>
+  <div class="ct-total" id="exc-total">
+    <div>Total exceptionnel</div><div class="ct-amount" id="exc-total-amt">$0</div><div></div><div></div><div></div>
+  </div>
+</div>
+
+<!-- AJOUTER UNE CHARGE -->
+<div class="section-title">Ajouter une charge</div>
+<div class="add-form fade-in">
+  <div class="af-title">Nouvelle dépense</div>
+  <div class="af-grid">
+    <div class="af-field">
+      <div class="af-lbl">Description</div>
+      <input type="text" class="af-input" id="af-desc" placeholder="ex: Recharge pool chlore…"/>
+    </div>
+    <div class="af-field">
+      <div class="af-lbl">Montant ($)</div>
+      <input type="number" class="af-input" id="af-amt" placeholder="0"/>
+    </div>
+    <div class="af-field">
+      <div class="af-lbl">Catégorie</div>
+      <select class="af-select" id="af-cat">
+        <option value="pool">🌊 Piscine</option>
+        <option value="elec">⚡ Électricité</option>
+        <option value="internet">📶 Internet</option>
+        <option value="garden">🌿 Jardinage</option>
+        <option value="laundry">🧺 Laundry</option>
+        <option value="repair">🔧 Réparation</option>
+        <option value="purchase">🛒 Achat matériel</option>
+        <option value="banjar">🏘 Banjar</option>
+        <option value="other">📦 Autre</option>
+      </select>
+    </div>
+    <div class="af-field">
+      <div class="af-lbl">Responsable</div>
+      <select class="af-select" id="af-who">
+        <option value="manager">Sophie (Manager)</option>
+        <option value="tukang">Nyoman (Tukang)</option>
+        <option value="poolman">Made (Pool)</option>
+        <option value="cleaner">Putu (Cleaner)</option>
+        <option value="gardener">Wayan (Garden)</option>
+        <option value="driver">Ketut (Driver)</option>
+        <option value="owner">Jean-Luc (Owner)</option>
+      </select>
+    </div>
+    <div class="af-field">
+      <div class="af-lbl">&nbsp;</div>
+      <button class="af-btn" onclick="addCharge()">+ Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION TAXES -->
+<div class="section-title">Taxes &amp; obligations fiscales</div>
+<div class="charges-table fade-in" style="padding:0;">
+  <div style="padding:14px 16px;" id="taxes-rows"></div>
+  <div style="padding:10px 16px;background:rgba(139,105,20,.07);border-top:2px solid var(--border);display:flex;justify-content:space-between;font-size:12px;font-weight:700;">
+    <span>Total taxes estimées</span>
+    <span style="color:var(--violet);" id="taxes-total-amt">$0</span>
+  </div>
+</div>
+
+<!-- EXPORT -->
+<div class="export-bar fade-in">
+  <button class="exp-btn" onclick="exportCSV()">⬇ CSV charges</button>
+  <button class="exp-btn" onclick="exportPDF()">⬇ Rapport PDF</button>
+  <button class="exp-btn" onclick="window.location.href='taxes.html?villa='+VID">→ Page taxes complète</button>
+  <button class="exp-btn" onclick="window.location.href='settings-villa.html?id='+VID+'&tab=finances'">⚙ Paramètres fiscaux</button>
+</div>
+
+</div><!-- /page -->
+
+<!-- MODAL REÇU -->
+<div class="modal-overlay" id="receipt-modal" onclick="if(event.target===this)closeReceiptModal()">
+  <div class="receipt-modal">
+    <div class="rm-head">
+      <div class="rm-title" id="rm-title">Détail dépense</div>
+      <button class="rm-close" onclick="closeReceiptModal()">×</button>
+    </div>
+    <div class="rm-body">
+      <div class="rm-receipt-area" onclick="document.getElementById('receipt-file').click()">
+        <div class="icon">📎</div>
+        <div class="hint">Ajouter photo du reçu</div>
+        <div class="hint" style="margin-top:3px;">Glisser-déposer ou cliquer</div>
+        <input type="file" id="receipt-file" accept="image/*,application/pdf" style="display:none;" onchange="onReceiptFile(this)"/>
+      </div>
+      <div id="receipt-preview" style="display:none;margin-bottom:12px;"></div>
+      <div class="rm-fields">
+        <div>
+          <div class="rmf-lbl">Fournisseur</div>
+          <input type="text" class="rmf-input" id="rm-vendor" placeholder="ex: Toko Bangunan Canggu"/>
+        </div>
+        <div>
+          <div class="rmf-lbl">Montant reçu (IDR)</div>
+          <input type="number" class="rmf-input" id="rm-idr" placeholder="0"/>
+        </div>
+        <div>
+          <div class="rmf-lbl">Date paiement</div>
+          <input type="date" class="rmf-input" id="rm-date"/>
+        </div>
+        <div>
+          <div class="rmf-lbl">Mode paiement</div>
+          <select class="rmf-input" id="rm-mode">
+            <option>Cash</option>
+            <option>Transfer BCA</option>
+            <option>Avance Xendit</option>
+            <option>GoPay / OVO</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:10px;">
+        <div class="rmf-lbl">Notes</div>
+        <textarea class="rmf-input" id="rm-notes" rows="2" placeholder="Détails, numéro de référence…" style="width:100%;resize:none;"></textarea>
+      </div>
+      <button class="rm-submit" onclick="saveReceipt()">✓ Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══ CONFIG ══ */
+var VID = (new URLSearchParams(window.location.search).get("id")) || "surya";
+var VILLA_NAMES = {surya:"Villa Surya",karma:"Villa Karma",serenity:"Villa Serenity",indah:"Villa Indah",bulan:"Villa Bulan"};
+var MONTHS_FR = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+var _NOW = new Date();
+var currentMonthOffset = 0; // 0 = mois courant
+var currentPeriod = "month"; // month | year
+var _activeChargeIdx = null;
+var _chargeStore = "op"; // op | exc
+
+/* ══ DONNÉES DEMO ══ */
+/* 1 USD = 16000 IDR */
+
+var SALARY_STAFF = [
+  {key:"manager", name:"Sophie",   role:"Manager",   emoji:"👩‍💼", amt_usd:350, paid:true},
+  {key:"cleaner", name:"Putu Sari",role:"Cleaner",   emoji:"🧹", amt_usd:180, paid:true},
+  {key:"poolman", name:"Made Yasa",role:"Pool",       emoji:"🌊", amt_usd:160, paid:false},
+  {key:"gardener",name:"Wayan Arta",role:"Garden",   emoji:"🌿", amt_usd:140, paid:true},
+  {key:"tukang",  name:"Nyoman Budi",role:"Tukang",  emoji:"🔧", amt_usd:200, paid:false},
+  {key:"massage", name:"Ayu Dewi", role:"Massage",   emoji:"💆", amt_usd:120, paid:true},
+  {key:"driver",  name:"Ketut Putra",role:"Driver",  emoji:"🚗", amt_usd:150, paid:true}
+];
+
+/* Charges opérationnelles — base mensuelle */
+var OP_CHARGES = [
+  {id:"op1", cat:"elec",    icon:"⚡", name:"Électricité",       sub:"PLN Bali · compteur villa", amt:180, who:"Sophie",   date:"01 avr", proof:true,  note:"Facture PLN #PLN-0412-7734",  idr:2880000},
+  {id:"op2", cat:"internet",icon:"📶", name:"Internet Fiber",    sub:"IndiHome 50Mbps",           amt:40,  who:"Sophie",   date:"01 avr", proof:true,  note:"Facture IndiHome mensuelle",  idr:640000},
+  {id:"op3", cat:"pool",    icon:"🌊", name:"Traitement piscine",sub:"Chlore + pH balance",       amt:100, who:"Made",     date:"04 avr", proof:false, note:"Produits Toko Pool Canggu",   idr:1600000},
+  {id:"op4", cat:"garden",  icon:"🌿", name:"Entretien jardin",  sub:"Hebdomadaire · 4 passages", amt:80,  who:"Wayan",    date:"15 avr", proof:false, note:"",                            idr:1280000},
+  {id:"op5", cat:"laundry", icon:"🧺", name:"Laundry guests",    sub:"Laverie Canggu Central",    amt:60,  who:"Putu",     date:"10 avr", proof:true,  note:"Reçu Laverie Central x3",     idr:960000},
+  {id:"op6", cat:"banjar",  icon:"🏘", name:"Banjar local",      sub:"Contribution communautaire", amt:35, who:"Sophie",   date:"01 avr", proof:false, note:"Paiement mensuel Banjar Berawa",idr:560000}
+];
+
+/* Charges exceptionnelles */
+var EXC_CHARGES = [
+  {id:"ex1", cat:"repair",  icon:"❄️", name:"Réparation clim ch.2", sub:"Technicien + pièces",     amt:320, who:"Nyoman",   date:"14 avr", proof:false, note:"Devis verbal $120 confirmé $320 à la fin. En attente reçu.",  idr:5120000, alert:true},
+  {id:"ex2", cat:"repair",  icon:"🔧", name:"Fuite robinet cuisine", sub:"Joint + main d'œuvre",   amt:45,  who:"Nyoman",   date:"10 avr", proof:true,  note:"Pièce: joint silicone IDR 85k. Coût total avec déplacement.", idr:720000},
+  {id:"ex3", cat:"purchase",icon:"🛒", name:"Mini-bar reconstitué",  sub:"Boissons + snacks guests",amt:85,  who:"Sophie",   date:"12 avr", proof:true,  note:"Superindo Canggu · facture en archive.",                      idr:1360000}
+];
+
+/* Revenus du mois courant (normalement lu depuis villa_light/calcRevFromDays) */
+var REVENUE_MONTH = 1900; /* net done */
+var REVENUE_BOOKED = 400; /* confirmé pas encore encaissé */
+var REVENUE_ADR = 100;
+var REVENUE_NIGHTS_DONE = 19;
+var REVENUE_NIGHTS_BOOKED = 4;
+
+/* ══ CALCULS ══ */
+function calcTotals(){
+  var salTotal = SALARY_STAFF.reduce(function(s,x){return s+x.amt_usd;},0);
+  var opTotal  = OP_CHARGES.reduce(function(s,x){return s+x.amt;},0);
+  var excTotal = EXC_CHARGES.reduce(function(s,x){return s+x.amt;},0);
+  var charges  = salTotal + opTotal + excTotal;
+  var revBrut  = REVENUE_MONTH + REVENUE_BOOKED;
+  var pbjt     = Math.round(revBrut * 0.10);
+  var pph      = Math.round(revBrut * 0.10 / 12); /* annual / 12 */
+  var taxTotal = pbjt + pph;
+  var net      = revBrut - charges - taxTotal;
+  return {salTotal,opTotal,excTotal,charges,revBrut,pbjt,pph,taxTotal,net};
+}
+
+/* ══ RENDER ══ */
+function fmt(n){if(!n&&n!==0)return"—";return"$"+n.toLocaleString("fr-FR").replace(/\s/g," ");}
+function fmtIDR(n){return(n/1000000).toFixed(1)+" jt IDR";}
+
+function render(){
+  var t = calcTotals();
+
+  /* Topbar */
+  document.getElementById("tb-villa-name").textContent = VILLA_NAMES[VID]||("Villa "+VID.charAt(0).toUpperCase()+VID.slice(1));
+  document.getElementById("tb-net").textContent = fmt(t.net);
+
+  /* Month label */
+  var d = new Date(_NOW.getFullYear(), _NOW.getMonth()+currentMonthOffset, 1);
+  var lbl = MONTHS_FR[d.getMonth()]+" "+d.getFullYear();
+  document.getElementById("month-label").textContent = lbl;
+  document.getElementById("salary-month-lbl").textContent = lbl.toLowerCase();
+
+  /* P&L cards */
+  document.getElementById("pnl-rev").textContent = fmt(t.revBrut);
+  document.getElementById("pnl-rev-sub").textContent = REVENUE_NIGHTS_DONE+"n done + "+REVENUE_NIGHTS_BOOKED+"n booké · ADR "+fmt(REVENUE_ADR);
+  document.getElementById("pnl-charges").textContent = fmt(t.charges);
+  document.getElementById("pnl-charges-sub").innerHTML = "Staff "+fmt(t.salTotal)+" + Op "+fmt(t.opTotal)+" + Exc "+fmt(t.excTotal);
+  document.getElementById("pnl-taxes").textContent = fmt(t.taxTotal);
+  document.getElementById("pnl-net").textContent = fmt(t.net);
+  document.getElementById("pnl-net-sub").innerHTML = t.net >= 0
+    ? '<span style="color:var(--green-d);">▲ Positif</span>'
+    : '<span style="color:var(--red);">▼ Négatif</span>';
+
+  /* Waterfall */
+  var wfData = [
+    {label:"Revenus bruts",   val:t.revBrut, color:"var(--green-d)"},
+    {label:"Salaires staff",  val:-t.salTotal,color:"var(--orange)"},
+    {label:"Charges opér.",   val:-t.opTotal, color:"#e67e22"},
+    {label:"Charges except.", val:-t.excTotal,color:t.excTotal>200?"var(--red)":"#e67e22"},
+    {label:"Taxes",           val:-t.taxTotal,color:"var(--violet)"},
+    {label:"Net propriétaire",val:t.net,      color:t.net>=0?"var(--blue-d)":"var(--red)"}
+  ];
+  var maxAbs = Math.max.apply(null, wfData.map(function(x){return Math.abs(x.val);}));
+  document.getElementById("wf-rows").innerHTML = wfData.map(function(row){
+    var pct = Math.round(Math.abs(row.val)/maxAbs*100);
+    var isNeg = row.val < 0;
+    return '<div class="wf-row">'
+      +'<div class="wf-label" style="font-size:11px;">'+row.label+'</div>'
+      +'<div class="wf-bar-wrap">'
+        +'<div class="wf-bar" style="width:'+pct+'%;background:'+(isNeg?'rgba('+row.color.replace('var(--','').replace(')','')+',.6':row.color)+';"></div>'
+        +'<div class="wf-bar" style="width:'+pct+'%;background:'+row.color+';"></div>'
+      +'</div>'
+      +'<div class="wf-amt" style="color:'+row.color+';">'+(isNeg?'−':'')+fmt(Math.abs(row.val))+'</div>'
+      +'<div class="wf-pct">'+(row.label==="Net propriétaire"?Math.round(row.val/t.revBrut*100)+"%":isNeg?Math.round(Math.abs(row.val)/t.revBrut*100)+"%":"")+'</div>'
+    +'</div>';
+  }).join("");
+
+  /* Salaires */
+  document.getElementById("salary-grid").innerHTML = SALARY_STAFF.map(function(s,i){
+    var idr = s.amt_usd * 16000;
+    return '<div class="salary-card">'
+      +'<div class="salary-avatar" style="background:rgba(139,105,20,.1);">'+s.emoji+'</div>'
+      +'<div class="salary-info">'
+        +'<div class="salary-name">'+s.name+'</div>'
+        +'<div class="salary-role">'+s.role+'</div>'
+        +'<div class="salary-status"><span class="'+(s.paid?"s-paid":"s-pending")+'">'+(s.paid?"✓ Payé":"⏳ En attente")+'</span></div>'
+      +'</div>'
+      +'<div style="text-align:right;">'
+        +'<div class="salary-amt">'+fmt(s.amt_usd)+'</div>'
+        +'<div class="salary-idr">'+fmtIDR(idr)+'</div>'
+        +'<button onclick="togglePaid('+i+')" style="margin-top:4px;font-size:8px;padding:2px 7px;border-radius:4px;border:1px solid var(--border);background:var(--cream);cursor:pointer;font-family:\'DM Mono\',monospace;">'+(s.paid?"Annuler":"Marquer payé")+'</button>'
+      +'</div>'
+    +'</div>';
+  }).join("");
+
+  /* Charges opérationelles */
+  renderChargeTable("op-rows","op-total-amt",OP_CHARGES);
+  /* Charges exceptionnelles */
+  renderChargeTable("exc-rows","exc-total-amt",EXC_CHARGES);
+
+  /* Taxes */
+  var taxLines = [
+    {name:"PBJT (Pajak Barang & Jasa Tertentu)",dot:"#9b59b6",rate:"10%",base:"sur rev. brut "+fmt(t.revBrut),amt:t.pbjt,due:true},
+    {name:"PPh Final art.4(2)",dot:"#8e44ad",rate:"10% / an ÷ 12",base:"provision mensuelle",amt:t.pph,due:false},
+    {name:"PPN",dot:"#bdc3c7",rate:"11% — désactivée",base:"si PKP enregistré",amt:0,due:false}
+  ];
+  document.getElementById("taxes-rows").innerHTML = taxLines.map(function(tx){
+    return '<div class="taxes-row">'
+      +'<div class="tax-name"><div class="tax-dot" style="background:'+tx.dot+';"></div><div><div>'+tx.name+'</div><div style="font-size:9px;color:var(--muted);">'+tx.rate+' · '+tx.base+'</div></div></div>'
+      +'<div style="display:flex;align-items:center;gap:8px;">'
+        +'<div class="tax-amt">'+(tx.amt>0?fmt(tx.amt):"—")+'</div>'
+        +'<span class="tax-status '+(tx.due?"ts-due":"ts-ok")+'">'+(tx.due?"À déclarer":"Provision")+'</span>'
+      +'</div>'
+    +'</div>';
+  }).join("");
+  document.getElementById("taxes-total-amt").textContent = fmt(t.taxTotal);
+}
+
+function renderChargeTable(rowsId, totalId, data){
+  var total = 0;
+  var html = data.map(function(c,i){
+    total += c.amt;
+    var alertStyle = c.alert ? "background:rgba(192,57,43,.04);" : "";
+    return '<div class="ct-row" id="row-'+c.id+'" style="'+alertStyle+'" onclick="toggleDetail(\''+c.id+'\',\''+rowsId+'\')">'
+      +'<div class="ct-cat"><div class="cat-dot" style="background:'+catColor(c.cat)+';"></div><div><div class="ct-name">'+(c.alert?"⚠ ":"")+c.name+'</div><div class="ct-sub">'+c.sub+'</div></div></div>'
+      +'<div class="ct-amount" style="color:'+(c.alert?"var(--red)":"var(--text)")+';">'+fmt(c.amt)+'</div>'
+      +'<div class="ct-who">'+c.who+'</div>'
+      +'<div class="ct-date">'+c.date+'</div>'
+      +'<div class="ct-proof"><span class="'+(c.proof?"proof-yes":"proof-no")+'">'+(c.proof?"✓ Reçu":"— manquant")+'</span></div>'
+    +'</div>'
+    +'<div class="ct-detail" id="detail-'+c.id+'">'
+      +'<div class="detail-inner">'
+        +'<div class="detail-grid">'
+          +'<div class="dg-item"><div class="dg-lbl">Montant IDR</div><div class="dg-val">'+fmtIDR(c.idr)+'</div></div>'
+          +'<div class="dg-item"><div class="dg-lbl">Responsable</div><div class="dg-val">'+c.who+'</div></div>'
+          +'<div class="dg-item"><div class="dg-lbl">Statut preuve</div><div class="dg-val '+(c.proof?"proof-yes":"proof-no")+'">'+(c.proof?"✓ Reçu enregistré":"Reçu manquant")+'</div></div>'
+        +'</div>'
+        +(c.note?'<div class="detail-note">'+c.note+'</div>':'')
+        +'<div style="display:flex;gap:8px;margin-top:10px;">'
+          +'<button class="ct-btn approve" onclick="markApproved(\''+c.id+'\')">✓ Approuver</button>'
+          +'<button class="ct-btn" onclick="openReceiptModal(\''+c.id+'\',\''+c.name+'\')">📎 Ajouter reçu</button>'
+          +'<button class="ct-btn" onclick="reportToSofia(\''+c.id+'\')">→ Sofia</button>'
+        +'</div>'
+      +'</div>'
+    +'</div>';
+  }).join("");
+  document.getElementById(rowsId).innerHTML = html;
+  document.getElementById(totalId).textContent = fmt(total);
+}
+
+function catColor(cat){
+  var cols={elec:"#f39c12",internet:"#3498db",pool:"#2980b9",garden:"#27ae60",laundry:"#8e44ad",repair:"#e74c3c",purchase:"#e67e22",banjar:"#8B6914",other:"#95a5a6"};
+  return cols[cat]||"#95a5a6";
+}
+
+function toggleDetail(id, ctx){
+  var d = document.getElementById("detail-"+id);
+  var r = document.getElementById("row-"+id);
+  if(!d)return;
+  var open = d.classList.contains("open");
+  /* Close all in this table */
+  var tbl = r.closest(".charges-table")||r.parentElement;
+  tbl.querySelectorAll(".ct-detail.open").forEach(function(el){el.classList.remove("open");});
+  tbl.querySelectorAll(".ct-row.expanded").forEach(function(el){el.classList.remove("expanded");});
+  if(!open){ d.classList.add("open"); r.classList.add("expanded"); }
+}
+
+function togglePaid(idx){
+  SALARY_STAFF[idx].paid = !SALARY_STAFF[idx].paid;
+  render();
+}
+
+function markApproved(id){
+  var all = OP_CHARGES.concat(EXC_CHARGES);
+  var c = all.find(function(x){return x.id===id;});
+  if(c){ c.proof = true; render(); }
+}
+
+function reportToSofia(id){
+  alert("→ Sofia notifiée · dépense "+id+" envoyée en validation au manager.");
+}
+
+/* ADD CHARGE */
+function addCharge(){
+  var desc = document.getElementById("af-desc").value.trim();
+  var amt  = parseFloat(document.getElementById("af-amt").value)||0;
+  var cat  = document.getElementById("af-cat").value;
+  var who  = document.getElementById("af-who").options[document.getElementById("af-who").selectedIndex].text;
+  if(!desc||!amt){alert("Remplir description et montant.");return;}
+  var today = new Date();
+  var dateStr = today.getDate()+" "+MONTHS_FR[today.getMonth()].toLowerCase().slice(0,3);
+  var newId = "custom"+Date.now();
+  var icons = {pool:"🌊",elec:"⚡",internet:"📶",garden:"🌿",laundry:"🧺",repair:"🔧",purchase:"🛒",banjar:"🏘",other:"📦"};
+  var isExc = (cat==="repair"||cat==="purchase");
+  var arr = isExc ? EXC_CHARGES : OP_CHARGES;
+  arr.push({id:newId,cat:cat,icon:icons[cat]||"📦",name:desc,sub:"Ajouté manuellement",amt:amt,who:who.split(" ")[0],date:dateStr,proof:false,note:"",idr:amt*16000});
+  document.getElementById("af-desc").value="";document.getElementById("af-amt").value="";
+  render();
+}
+
+/* RECEIPT MODAL */
+var _receiptTarget = null;
+function openReceiptModal(id, name){
+  _receiptTarget = id;
+  document.getElementById("rm-title").textContent = "Reçu · "+name;
+  document.getElementById("rm-date").value = new Date().toISOString().split("T")[0];
+  document.getElementById("receipt-preview").style.display="none";
+  document.getElementById("receipt-modal").classList.add("open");
+}
+function closeReceiptModal(){document.getElementById("receipt-modal").classList.remove("open");}
+function onReceiptFile(inp){
+  var f = inp.files[0];if(!f)return;
+  var prev = document.getElementById("receipt-preview");
+  if(f.type.startsWith("image/")){
+    var r=new FileReader();r.onload=function(e){
+      prev.innerHTML='<img src="'+e.target.result+'" style="max-width:100%;max-height:160px;border-radius:6px;border:1px solid var(--border);">';
+      prev.style.display="block";
+    };r.readAsDataURL(f);
+  } else {
+    prev.innerHTML='<div style="padding:10px;font-size:10px;color:var(--muted);">📄 '+f.name+'</div>';
+    prev.style.display="block";
+  }
+}
+function saveReceipt(){
+  if(!_receiptTarget){closeReceiptModal();return;}
+  var all = OP_CHARGES.concat(EXC_CHARGES);
+  var c = all.find(function(x){return x.id===_receiptTarget;});
+  if(c){
+    c.proof = true;
+    var vendor = document.getElementById("rm-vendor").value;
+    var notes  = document.getElementById("rm-notes").value;
+    var idr    = parseFloat(document.getElementById("rm-idr").value)||0;
+    if(vendor) c.note = "Fournisseur: "+vendor+(c.note?" · "+c.note:"");
+    if(notes)  c.note += (c.note?" · ":"")+notes;
+    if(idr>0)  c.idr = idr;
+  }
+  closeReceiptModal();
+  render();
+  alert("✓ Reçu enregistré — dépense marquée prouvée.");
+}
+
+/* NAVIGATION */
+function changeMonth(delta){
+  currentMonthOffset += delta;
+  render();
+}
+function setPeriod(p){
+  currentPeriod = p;
+  document.getElementById("ptab-month").classList.toggle("active",p==="month");
+  document.getElementById("ptab-year").classList.toggle("active",p==="year");
+  render();
+}
+
+/* EXPORT */
+function exportCSV(){
+  var rows = [["Type","Poste","Montant USD","Montant IDR","Responsable","Date","Preuve"]];
+  SALARY_STAFF.forEach(function(s){rows.push(["Salaire",s.name+" ("+s.role+")",s.amt_usd,s.amt_usd*16000,"—","mensuel",s.paid?"Payé":"En attente"]);});
+  OP_CHARGES.forEach(function(c){rows.push(["Opérationnel",c.name,c.amt,c.idr,c.who,c.date,c.proof?"Oui":"Non"]);});
+  EXC_CHARGES.forEach(function(c){rows.push(["Exceptionnel",c.name,c.amt,c.idr,c.who,c.date,c.proof?"Oui":"Non"]);});
+  var t = calcTotals();
+  rows.push(["Taxes","PBJT 10%",t.pbjt,t.pbjt*16000,"—","mensuel","—"]);
+  rows.push(["Taxes","PPh provision",t.pph,t.pph*16000,"—","annuel","—"]);
+  var csv = rows.map(function(r){return r.map(function(c){return'"'+String(c).replace(/"/g,'""')+'"';}).join(",");}).join("\n");
+  var a = document.createElement("a");
+  a.href = "data:text/csv;charset=utf-8,"+encodeURIComponent(csv);
+  a.download = "compta_"+VID+"_"+new Date().toISOString().slice(0,7)+".csv";
+  a.click();
+}
+function exportPDF(){alert("Export PDF — connecter jsPDF ou wkhtmltopdf.");}
+
+/* INIT */
+window.addEventListener("DOMContentLoaded",function(){
+  render();
+  /* Lire revenus depuis villa_light via sessionStorage si disponibles */
+  try{
+    var raw = sessionStorage.getItem("compta_rev_"+VID);
+    if(raw){var d=JSON.parse(raw);REVENUE_MONTH=d.net||REVENUE_MONTH;REVENUE_BOOKED=d.booked||REVENUE_BOOKED;REVENUE_ADR=d.adr||REVENUE_ADR;REVENUE_NIGHTS_DONE=d.nights_done||REVENUE_NIGHTS_DONE;REVENUE_NIGHTS_BOOKED=d.nights_booked||REVENUE_NIGHTS_BOOKED;render();}
+  }catch(e){}
+  /* Lire lm_price depuis settings */
+  try{var lm=localStorage.getItem("hk_lm_"+VID);if(lm)console.log("lm_price pour "+VID+": $"+lm);}catch(e){}
+  setTimeout(function(){document.querySelectorAll(".fade-in").forEach(function(el){el.classList.add("visible");});},80);
+});
+</script>
+</body>
+</html>

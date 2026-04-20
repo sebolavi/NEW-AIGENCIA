@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Massage · Hidden Keys</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FDF5F9;--bg2:#F5E8F2;--bg3:#EDD5E8;
+  --dark:#1A1020;--dark2:#221028;--dark3:#0D0510;
+  --text:#221028;--muted:#8A6A88;
+  --green:#27AE60;--green-soft:#E8F5EE;--green-dark:#1E8449;
+  --gold:#C9A84C;--gold-light:#E8C97A;
+  --rose-light:#FDF0F6;--rose:#D4749A;--rose-dark:#A84870;
+  --orange:#E67E22;--orange-soft:#FEF0E3;
+  --blue:#2980B9;--blue-dark:#1A5F8A;
+  --border:rgba(0,0,0,.08);--shadow:0 2px 14px rgba(0,0,0,.09);--r:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:"Nunito",sans-serif;min-height:100vh;max-width:430px;margin:0 auto;}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(253,245,249,.97);border-bottom:1px solid var(--border);padding:0 16px;height:54px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);}
+.tb-logo{font-family:"DM Mono",monospace;font-size:10px;color:var(--gold);letter-spacing:2px;}
+.tb-right{display:flex;align-items:center;gap:8px;}
+.tb-av{width:36px;height:36px;border-radius:50%;overflow:hidden;border:2px solid rgba(212,116,154,.4);}
+.tb-av img{width:100%;height:100%;object-fit:cover;}
+.tb-name strong{font-size:11px;font-weight:800;color:var(--dark);display:block;text-align:right;}
+.tb-name span{font-size:10px;color:var(--muted);display:block;text-align:right;cursor:pointer;text-decoration:underline;}
+
+/* HERO */
+.hero{background:linear-gradient(160deg,#2A0A28 0%,#1A0520 60%,#0E0018 100%);padding:28px 22px 0;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:"🌸";position:absolute;right:-20px;top:-20px;font-size:100px;opacity:.04;pointer-events:none;}
+.hero::after{content:"💆";position:absolute;left:-10px;bottom:20px;font-size:80px;opacity:.04;pointer-events:none;}
+.sofia-hero{display:flex;flex-direction:column;align-items:center;margin-bottom:14px;}
+.sofia-photo{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,rgba(212,116,154,.22),rgba(212,116,154,.06));border:2px solid rgba(212,116,154,.45);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:7px;box-shadow:0 0 24px rgba(212,116,154,.15);}
+.sofia-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(212,116,154,.8);font-family:"DM Mono",monospace;}
+.hero-greeting{font-size:27px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:5px;}
+.hero-greeting em{color:var(--gold);font-style:italic;font-family:"Playfair Display",serif;font-size:29px;font-weight:400;}
+.hero-tagline{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:18px;line-height:1.6;}
+
+/* MISSION CARD */
+.mission-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px;text-align:left;margin-bottom:0;}
+.mc-top{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
+@keyframes pp{0%,100%{box-shadow:0 0 8px rgba(212,116,154,.7);}50%{box-shadow:0 0 16px rgba(212,116,154,1);}}
+.mc-dot{width:9px;height:9px;border-radius:50%;background:var(--rose);animation:pp 2s infinite;flex-shrink:0;}
+.mc-villa{font-size:14px;font-weight:800;color:#fff;flex:1;}
+.mc-pill{font-size:10px;padding:3px 9px;border-radius:20px;background:rgba(212,116,154,.2);color:rgba(212,116,154,.9);border:1px solid rgba(212,116,154,.35);font-weight:700;}
+.mc-detail{font-size:12px;color:rgba(255,255,255,.7);line-height:1.6;padding:9px 11px;background:rgba(255,255,255,.04);border-radius:8px;border-left:2px solid rgba(212,116,154,.5);margin-bottom:8px;}
+.mc-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.mc-tag{font-size:10px;padding:3px 9px;border-radius:20px;font-weight:700;background:rgba(212,116,154,.15);color:rgba(212,116,154,.9);border:1px solid rgba(212,116,154,.25);}
+
+/* PRIX + ADRESSE */
+.info-row{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.info-box{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:10px;padding:12px;}
+.info-box-lbl{font-size:9px;color:rgba(255,255,255,.4);letter-spacing:1px;text-transform:uppercase;font-family:"DM Mono",monospace;margin-bottom:4px;}
+.info-box-val{font-size:18px;font-weight:800;font-family:"DM Mono",monospace;}
+.info-box.salary .info-box-val{color:var(--gold-light);}
+.info-box.address .info-box-val{font-size:12px;font-weight:700;color:rgba(255,255,255,.8);line-height:1.4;}
+.info-box-note{font-size:9px;color:rgba(255,255,255,.3);margin-top:3px;}
+
+/* ACCEPT ACTIONS */
+.mission-actions{display:grid;grid-template-columns:1fr auto;gap:8px;padding:14px 22px 20px;}
+.accept-btn{padding:14px;border-radius:12px;background:linear-gradient(135deg,var(--rose-dark),var(--rose));color:#fff;border:none;cursor:pointer;font-family:"Nunito",sans-serif;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 16px rgba(168,72,112,.3);transition:all .25s;}
+.accept-btn.on{background:rgba(168,72,112,.12);border:1.5px solid var(--rose);box-shadow:none;color:var(--rose);cursor:default;}
+.accept-sub{font-size:9px;color:rgba(255,255,255,.3);text-align:center;padding-bottom:14px;font-style:italic;}
+.decline-btn{padding:14px 16px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);cursor:pointer;font-family:"Nunito",sans-serif;font-size:13px;font-weight:700;}
+
+/* MISSION BODY (après accept) */
+.mbody{display:none;}
+.mbody.show{display:block;}
+
+/* ORBIT */
+.clock-section{background:linear-gradient(180deg,#1A0520 0%,var(--dark3) 100%);padding:20px 20px 22px;display:flex;flex-direction:column;align-items:center;}
+.clock-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.18);margin-bottom:14px;font-family:"DM Mono",monospace;}
+.clock-wrap{position:relative;width:280px;height:280px;}
+#orbitCanvas{position:absolute;top:0;left:0;width:280px;height:280px;}
+.clock-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:62px;height:62px;border-radius:50%;overflow:hidden;border:2px solid rgba(212,116,154,.5);z-index:10;}
+.clock-center img{width:100%;height:100%;object-fit:cover;}
+.clock-tagline{font-size:11px;color:rgba(255,255,255,.22);margin-top:12px;text-align:center;max-width:260px;line-height:1.75;font-style:italic;}
+.clock-tagline em{color:rgba(212,116,154,.8);font-style:normal;font-weight:800;}
+
+/* CHECKLIST */
+.block{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:18px;margin:12px 18px 0;}
+.block-title{font-size:13px;font-weight:800;color:var(--dark);margin-bottom:3px;}
+.block-sub{font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.5;}
+.checklist{display:flex;flex-direction:column;gap:6px;}
+.check-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:var(--bg2);border:1.5px solid var(--border);cursor:pointer;transition:all .18s;}
+.check-item.done{background:var(--green-soft);border-color:rgba(39,174,96,.3);}
+.check-box{width:20px;height:20px;border-radius:6px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;}
+.check-item.done .check-box{background:var(--green);border-color:var(--green);color:#fff;}
+.check-label{font-size:12px;font-weight:700;flex:1;}
+.check-item.done .check-label{color:var(--muted);text-decoration:line-through;}
+.prog{height:4px;background:var(--bg2);border-radius:2px;margin-top:10px;overflow:hidden;}
+.prog-bar{height:100%;background:var(--green);border-radius:2px;transition:width .4s;}
+
+/* SOFIA REPORT */
+.sofia-block{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:18px;margin:12px 18px 0;}
+.sofia-opts{display:flex;flex-direction:column;gap:8px;}
+.sopt{padding:12px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg2);cursor:pointer;display:flex;align-items:center;gap:11px;transition:all .18s;}
+.sopt.green{border-color:rgba(39,174,96,.3);background:var(--green-soft);}
+.sopt.rose{border-color:rgba(212,116,154,.3);background:var(--rose-light);}
+.sopt-icon{font-size:20px;flex-shrink:0;}
+.sopt-lbl{font-size:12px;font-weight:800;color:var(--dark);}
+.sopt-sub{font-size:10px;color:var(--muted);margin-top:1px;}
+
+/* WELLBEING */
+.wb-wrap{margin:12px 18px 0;background:var(--rose-light);border-radius:var(--r);padding:18px;border:1.5px solid rgba(212,116,154,.2);}
+.wb-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(168,72,112,.5);margin-bottom:10px;font-family:"DM Mono",monospace;}
+.wb-row{display:flex;gap:8px;}
+.wb-btn{flex:1;padding:13px 12px;border-radius:12px;border:none;cursor:pointer;font-family:"Nunito",sans-serif;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .22s;}
+.wb-good{background:linear-gradient(135deg,#F2C4D8,#EAA8C4);color:#fff;}
+.wb-good.on{background:linear-gradient(135deg,var(--rose),var(--rose-dark));}
+.wb-rep{background:rgba(22,10,28,.85);color:rgba(255,255,255,.7);border:1.5px solid rgba(255,255,255,.1);}
+.sp{height:14px;}
+
+/* TOAST */
+.toast{display:none;position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:12px 20px;border-radius:12px;font-size:12px;font-weight:700;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.4);white-space:nowrap;}
+.toast.show{display:block;}
+.fi{opacity:0;transform:translateY(12px);transition:all .35s ease;}
+.fi.v{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tb-logo">HIDDEN<span style="color:var(--gold)">.</span>KEYS</div>
+  <div class="tb-right">
+    <div class="tb-name"><strong>Ayu Dewi</strong><span onclick="location.href='staff.html'">change role</span></div>
+    <div class="tb-av"><img id="tb-av-img" src="" alt="Ayu"></div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero fi">
+  <div class="sofia-hero">
+    <div class="sofia-photo">✨</div>
+    <div class="sofia-lbl">Sofia · Hidden Keys</div>
+  </div>
+  <div class="hero-greeting" id="hero-g">—</div>
+  <div class="hero-tagline">Your hands hold the power to <em style="color:rgba(212,116,154,.7);font-style:normal;">transform their day.</em> 💆</div>
+
+  <div class="mission-card">
+    <div class="mc-top">
+      <div class="mc-dot"></div>
+      <div class="mc-villa">Villa Indah · Session</div>
+      <div class="mc-pill">💆 60 min</div>
+    </div>
+    <div class="mc-detail">Couple session — Chen & Wei Li. Traditional Balinese. Oils & towels in storage room. Arrive 15min early to set up.</div>
+    <div class="mc-tags">
+      <span class="mc-tag">💆 2 guests</span>
+      <span class="mc-tag">⏰ 16:00</span>
+      <span class="mc-tag">🏡 Villa Indah</span>
+    </div>
+
+    <!-- PRIX + ADRESSE -->
+    <div class="info-row">
+      <div class="info-box salary">
+        <div class="info-box-lbl">Mission fee</div>
+        <div class="info-box-val">Rp 200.000</div>
+        <div class="info-box-note">Rex paie après confirmation</div>
+      </div>
+      <div class="info-box address">
+        <div class="info-box-lbl">Address</div>
+        <div class="info-box-val">Jl. Petitenget 12<br>Seminyak · Code 3821</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mission-actions">
+    <button class="accept-btn" id="acc-btn" onclick="acceptMission()">✅ Accept mission</button>
+    <button class="decline-btn" onclick="toast('✨ Sofia will find someone else.')">✗ Pass</button>
+  </div>
+  <div class="accept-sub">By accepting, Sofia notifies the guest of your arrival time.</div>
+</div>
+
+<!-- MISSION BODY -->
+<div class="mbody" id="mbody">
+
+  <!-- ORBIT (décoratif) -->
+  <div class="clock-section fi" style="transition-delay:.03s">
+    <div class="clock-lbl">Your constellation · Villa Indah</div>
+    <div class="clock-wrap">
+      <canvas id="orbitCanvas" width="280" height="280"></canvas>
+      <div class="clock-center"><img id="clk-av" src="" alt="Ayu"></div>
+    </div>
+    <div class="clock-tagline">They came far for this moment — <em>make it sacred.</em> 🌸</div>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div class="block fi" style="transition-delay:.05s">
+    <div class="block-title">Ayu's Checklist</div>
+    <div class="block-sub">Tap each item as you go.</div>
+    <div class="checklist" id="checklist">
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-label">Oils & towels prepared</div></div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-label">Room ambiance set (light, scent)</div></div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-label">Guest preferences confirmed</div></div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-label">Session completed</div></div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-label">Room restored after</div></div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-label">Guest feedback noted</div></div>
+    </div>
+    <div class="prog"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+  </div>
+
+  <!-- SOFIA -->
+  <div class="sofia-block fi" style="transition-delay:.07s">
+    <div class="block-title">✨ Report to Sofia</div>
+    <div class="block-sub">Sofia routes your message to the right person.</div>
+    <div class="sofia-opts">
+      <div class="sopt green" onclick="toast('✅ Mission complete → Sofia → Manager')">
+        <div class="sopt-icon">✅</div>
+        <div><div class="sopt-lbl">Mission complete</div><div class="sopt-sub">Session done — all good</div></div>
+      </div>
+      <div class="sopt" onclick="toast('⚠️ Issue sent → Sofia → Manager')" style="border-color:rgba(230,126,34,.3);background:var(--orange-soft)">
+        <div class="sopt-icon">⚠️</div>
+        <div><div class="sopt-lbl">Report an issue</div><div class="sopt-sub">Something needs attention</div></div>
+      </div>
+      <div class="sopt rose" onclick="toast('🛒 Supplies alert → Manager')">
+        <div class="sopt-icon">🛒</div>
+        <div><div class="sopt-lbl">Supplies needed</div><div class="sopt-sub">Oils, towels, candles…</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WELLBEING -->
+  <div class="wb-wrap fi" style="transition-delay:.09s">
+    <div class="wb-lbl">How are you today?</div>
+    <div class="wb-row">
+      <button class="wb-btn wb-good" id="wb-good" onclick="wbGood()">🌸 All good!</button>
+      <button class="wb-btn wb-rep" onclick="toast('💬 Sofia will check in with you.')">💬 Need to talk</button>
+    </div>
+  </div>
+
+  <div class="sp"></div><div class="sp"></div>
+</div>
+
+<div class="toast" id="toast-el">✨</div>
+
+<script>
+var LOGOS={
+  driver:"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCAAwADADASIAAhEBAxEB/8QAGwAAAQUBAQAAAAAAAAAAAAAAAQAEBQYHAgP/xAAqEAACAQQBAgYCAgMAAAAAAAABAgMABAUREiExBhNBUmGBMnFRkRWx4f/EABYBAQEBAAAAAAAAAAAAAAAAAAIBAP/EAB4RAQEBAAIBBQAAAAAAAAAAAAEAEQIhEhMxUWGR/9oADAMBAAIRAxEAPwDRUUcR3/uiwVVJY6A6kk9qKfiKb5Czjv7Ce0l2EmQodHR61rVel8cYhclHaQtJMpbi04Oo1+dk9fqrOhSRFdGDKw2GVtg1neBwtlLBIkEdtd3UTeXIC3NAQSOQ6dAe/wBVokKCKFEAVQqgaUaA/VDjz8lM9pPHAduuI+f7ogapUqcblPxFQHirOWtjib6FLlBeeUVVAdsCRr677p/kcgMdA08nJowAqxoNu7k6AFQdpHi8jeSxXuIS3uXBlIkIkEg3okMDrYPcVQjyfizvCZiXDX0d1CFcr0KMTphrXXX7rVcf4nsrqyjuncpE7cefAgJ/HLfYb6b7fNV7xZ4aSextkwuPgWRZCZPLVUJGunU/NP8AHOuD8JpLf2SpNawmNkBDGTZ7b9NkjpVTe6DnVbgQQCDsHsRRqq4/N363kFtkLe2gS4JSNrdyfKcDYVgfj+KslpL5sOy4cg6JAovTkh2a5HFw5K34uzRyjRSRSdowOwQO2wahm8LXEl3HcTZEuYwQEjTylIJ2QQp31PfrVnCEDXI0eJ9xqjlHiND/AOF33FsP0jH/AG1CTARSRsji2ZWGiDB/2pnifcaXE+41fJj6Z9/rQMWAS1iaWeV7+WJSIVnAZU+vU/J61NW0SwwqiRpH6lUUAb+q9OJ9xoga9Sai7MMv/9k=",
+  cleaner:"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCAAwADADASIAAhEBAxEB/8QAGwAAAQUBAQAAAAAAAAAAAAAAAwABAgQGBQf/xAAuEAACAQMCBAQEBwAAAAAAAAABAgMABBESMQUhYZETQVGBIiMycQYUFUJioeH/xAAaAQACAgMAAAAAAAAAAAAAAAACBAAFAQMG/8QAIhEAAgEEAQQDAAAAAAAAAAAAAQIAAxESIRMEIzFRQYHh/9oADAMBAAIRAxEAPwD0ilSqlxfiMXC+Gz3cpX5akqrNp1tjko6mpJJ3N9FbNpbLN6DyqVveQzgaXwx5aW5GsDa3V/8AiMS3M0klnA7aUa3IxkY1KSeecEf3Wj4FwyGGZp3hdNCiNTK+rUQeTb79aRFStylSRb1+xnjTDKaOmB+Iioo5c/tK43BzzqQ+o/YU6DeLR6qSxQXsRW4iS4gcjCPHkAjzOald3iWoXUrMW2wOXeqf6wFOWhOn+JyaVq9TSRwrNY/c2rSdhcCVLl4klkiWJFiX4UVQAF9qJ+YklgiRyjEA4Y7tjeuTcXM3itJFYyxRSOSHmXTvz23NW4IJr0FbYqnrI6ZUe3maqO7yNTI20exUID6mhtoooo8woEEh1kDzJoo+o/YVzrDh1zbz+LccSnuTjGggKnauiPqP2FdAviVrAA6grq2S6i0P5cwRuDVa14ZHC4eRvFcHK5GAOuPWr2nqe9LT1PegahTZw5GxCFRgMQdQF5Zw3sPhzLkA5BBwVPqDUrSAW1skIYsEGMnc0XT1Pelp6nvR4jLK24ORtj8QN28yRfIUtIT6e/8AnvRUOo5wRkA4NPp6nvSC4YnJ70UxP//Z",
+  poolman:"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCAAwADADASIAAhEBAxEB/8QAGgAAAwEBAQEAAAAAAAAAAAAAAAUGAgQBB//EACwQAAEDAgUDAwMFAAAAAAAAAAECAxEABAUSEyExBkFRYWKRFCKBIzIzcaH/xAAYAQEBAQEBAAAAAAAAAAAAAAADAgQBAP/EAB8RAAICAgIDAQAAAAAAAAAAAAECAAMRIQSREjFRE//aAAwDAQACEQMRAD8A+kUcUDilnUFzc2uEuqs7Ry7fX+mlCO07SfQV6cPrU0rGrJLuTUUd4zBO1drD7VwkqZcS4kGCUmYNQltYOuID17quqy5FWySmAqYJ2O48b1ZYbbt4fhjTX8aG0ycx4Hqa5+lbMVQHUiuu9VDWkb+TtopcnGGF3CW0IcKFKCdQiBJ42O8HzFMasqV9yldW9GHakPU2LM2LTduu4Qyt4EnMYOUU1v233LJ1Nq5pvkfYr1qCxvU6ht20u2rn1lqSlTzQlOXvI/seaalCT5fJn5LAqaySMxhhmJMsqF0xesFuClxBMz4/IrK+onn1rYuSV2a5Ci0kIWoeN6lrDpnE3cTDSLZYDcLzkiI7b8VQ2/T94/fO2wUgBr97kHKDHHqaalUYtY7Z6mawPUi01LjuPsFTY4gvU13XnW4Om4AmI4JA5qiqKtsJxXBb5NwywLkbghtUgg9vIq0SSUgkQSOPFDyAA2VORNPGJ8cMMGYda1EKGcplJTI5E96XW+EKtGdG2f0m+TCZUo+SaaZfcfmjL7j80IcgYEZ6lfZihGHXdvm0H0QrY7Qfx4rJtsSUMgUUo9XZ/wB5pzl9x+aMvuPzVLZ46AHUJ+OGOSx7nGEPWtqJcU64pQzrIKso8gV2IMoSZnbmImjL7j816BFQTncdVCjAn//Z",
+  gardener:"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCAAwADADASIAAhEBAxEB/8QAGgAAAgMBAQAAAAAAAAAAAAAABQYAAQQDB//EAC0QAAIBAwIEBQMFAQAAAAAAAAECAwAEEQUSISIxcQZBUWGREzJCFBYjgbHh/8QAFwEBAQEBAAAAAAAAAAAAAAAAAwQBAv/EAB4RAAIDAQACAwAAAAAAAAAAAAECAAMREgQhFDHx/9oADAMBAAIRAxEAPwD0cHIBqyQASTgCqX7R2rHqrXAspFtYDNIwIABx5etcs3IJmqNOSNqtqsmwue+OFaYpopgTFIjgHB2nOKQ7S0urhWm1BZHUrj9GEKFHzxzx5u5NOGlW1tp9rFbRqsUjDcULZY/PGp6bXZiGj2Vqq6IQqs8wHtV1X5jsaqk8i/aO1CG12Mz/AMa5t1VxK7AqYmUZ5s9BgGtmpxPNpc6RGQOU5fpnmz6CvO5b64aKaCe4k2yLskViAXHoT1z3oLbOfUN35IEOprVs1wfoajAtxx4lsg5/2hNpfXz3hgRjes8gO4rl22nqD1HAdqWtVsrezZFhd2dubDEYApusrhtGtYp+WS5MYi3tjHEdc+f/ACpRXXSilWOMf0x7w9pO4OfuOFrczTNFJNDJAzllMPA4wepJ4n+q3/mOxpK8O6rcTamkDXQcSNuYvli3DoPSnX8x2NXI4caIFZ0GRftHal/WPDY1Cf6kLxQgptKlPP14UfCYAGT81e33PzWsoYYYyOUOrFH9rzgokiwXKKuMt29DXWfwzPciHMsMSxknZtLeWBTTt9z81Nvufmpx4lYO+43yXgqz099L0xkiKvPuyWVPUjv5UQt2kaKIyjEhXmGMca67fc/NQLhs5PTzNUgADBAYljpn/9k=",
+  tukang:"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCAAwADADASIAAhEBAxEB/8QAGwAAAgIDAQAAAAAAAAAAAAAAAQUEBgACAwf/xAAtEAABAwMCAwgCAwEAAAAAAAABAgMRAAQFEjEhQaETIlFSYXGBkUJiBhQVMv/EABcBAQEBAQAAAAAAAAAAAAAAAAQAAgH/xAAfEQACAgICAwEAAAAAAAAAAAAAAQMRAhIhUQQTYaH/2gAMAwEAAhEDEQA/APRymTufuhp/ZX3W1ZURFu7y3s0g3DxROw3J+KNpdMXiCu3eKwDBGxHuKqWe/vv5u6YS0hENpUytwEpcTz4jaJqZh7TXfjs7lxIaB7UJGmTwj49KG55FLpXAtQxuLa+fwtGn9lfdAJhzc7VvQ/P4pgQNcbq4Ra2rj7pAQ2kqMmKX5XKO2zybe2b1vKGo90qgewpPkcn/AKWKfx9013nk6daDEc5jxmu6tox7MU+SKLhzJXLjguEF4cQAqYHp6U9TmLa3tFBLYRdJSkloiJJ4SDzEzXlt7jHse6ktPFaomUDSU9atmHxWVuMc2XWHFOqE9o8rSY3G/GjxeL6s3ltffYibynJglrXRZ8Zf5G6dSpdulVuTBX/zHt405/P4qqWrOWgWjbb7CSrvKIhKfEzz+KtSRpIEkwmJNJyQfBtrkj5By5ZY12jKXV8wdwPQc6Q4/Eu3l2Xb1hTbIJJSe6VqPoOIFWcgzv0oaVebpUsqOvG3bE17/FsXdmexUwuI1MrKZ9xsfqm7DSWGG2UTpbSEiTJgCK20q83Ss0q83Ss/TV8Ucrt5TDaVJ0iVBMq2E86Ns4Xm0OKToKkgkV00q83SsCVa5J4R4VEf/9k=",
+  massage:"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCAAwADADASIAAhEBAxEB/8QAGwAAAQUBAQAAAAAAAAAAAAAABQABAgQGBwP/xAAuEAACAQMCBAQFBQEAAAAAAAABAgMABBESIQUTMVEGImGBMlJxkcEUQUKhseH/xAAYAQADAQEAAAAAAAAAAAAAAAAAAgMEBf/EAB8RAAICAgMAAwAAAAAAAAAAAAECAAMREgQhQRMxM//aAAwDAQACEQMRAD8A6Kqrg+UdT+1S0r8o+1Jeh+pp6IQKfE/A1Muq9iXlPobKnc+m2/tV+xvbLiMPNspop4wcEpvg+vasFxPwfHFxVoEllW3eLXHISGIfPmBG3tj8VoPCvCLfh0ss0AmQCPlSGTYSEHOr/enepmxdtPY4rbXbyafSvyj7U4AHQAUFtJuKTcXdeZbtYqxOoDcg9B3zRqmVgwyIOmhwTGXofqaAjisg8RzwvIRaRxEBSB8QGSfTYGi907R2krqcMASKD82Ka3PNtoDzEKuQDqORvv70lnJqo/T2T+KyzGnh7ghuI291enmXUWuU7Ycde1XluL0BEluhJGBo0r/L1PeufXth+khjfUzBycHThRj171pvC1tNa8PeebyiZgyKeuMdfeslpOuwM6u5ZgpWH4J5bS6V9QYMcEYO47Y/NaWgdrYvdOjSqyRKc+bYt6fSjgq3FDBe5k5JUkY+54zxGa2kjBALZGTQdOE3qoF5kBA2zvR0DH3p6e7j13Y3GcSKWMmdZn7Tw9JAnLe6R4iN1MeQf7ota2EFsAVXU4Hxtuf+VapUy0opyBGa526JiqMUiyprXOMkb+hxUiMjFRjjWJAiDCiqyU//2Q==",
+  cooker:"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCAAwADADASIAAhEBAxEB/8QAGwAAAgMBAQEAAAAAAAAAAAAAAQUAAgQDBgf/xAAuEAACAQMCAwcDBQEAAAAAAAABAgMABBEFEhMhUQYiMTJBYZEUI0JxgaGxwdH/xAAXAQEBAQEAAAAAAAAAAAAAAAABAgMA/8QAHhEAAwEAAgMBAQAAAAAAAAAAAAERAhIhEzGBMkH/2gAMAwEAAhEDEQA/APo5UHr80No9/k1aquu5cVxxTcvoGYdQc1ZQrD8hjxBJpPc9orWG4+mjSWebiGPESd1GAyQWPLlW3TLuS6SUywmJlfHm3Bhjkc/5U8s2XseLl/ht2j3+TQAAcY6datQ/MfpVAGgSACT4UaSdqtSutM0vj2CxyTq65Rhu7vqcDn0pSrgNw6T6bEJZrpcJxmzKFz6cs469a22UEFla7InzGOZZmz/Neb03tNY3OhtcapP9NdIcSoAVLH02r65FTSePrtk11bxrBbl2VeI3NgD7Cs/E1u8fpfkuJfg+bWLNWxvZvcKcVuVg5VlOVK5BpFFoc+77rxKvVSWP9CnkaCMIi+CrgVrpZXoyw9P9HC9iuZQgtnRRz3BiRnpzFZIdGTO64mZyfFU7i/8AT801qULTXoXlN1nm+0HZptS4AtjbxxxA/bdfEn1yKb6PZtYaVbWriMNEm08Py1tqVM7pd6gGZUALHGSB+5qqMrkMpyCDzFSaFZk2OMrkHHXBzQhhWFFRPKowKQP/2Q==",
+  internet:"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCAAwADADASIAAhEBAxEB/8QAGwAAAQUBAQAAAAAAAAAAAAAAAQADBQYHAgT/xAAtEAACAQMDAgUEAQUAAAAAAAABAgMABBEFEjETIQYiYXGRB0FCUTJDgbHB0f/EABgBAAMBAQAAAAAAAAAAAAAAAAIDBAAB/8QAHxEAAgICAwADAAAAAAAAAAAAAQIAEQMSEyExQYHB/9oADAMBAAIRAxEAPwDRlVcHsOT9qO1f0PikvB9zRrTThzHGhdyqqOScACvIuqacz7RcxZPbv2HzUFrfiDT2bpbXk6ZOJOxXPtnzUNMZdXaRbV7kRogbfcAbHOSCAmMY7cg1SMAC7P1I3zuW1xi5agqkZABHtRAA4AFNWtulrAsUedo4yc49PanqnNX1KxddwLwfc0mICkkgAc5puaVYLaWZgSsYZyB+h3qhTeLLjWUa3tzFAsnbYT5mB+2T/qjRNu7oCA769AWTOdOtbOPUHRZw8/UdIJjna4Y9sg9sjj1/vXt8S3t9ocdottMsbSowdgoyTnPB45qEW4srUzQ6gnUIPl6T5x6ZH+ai77UYJbgyw2wUdh52LZ9TnmmcK82wsivT2Pr5ieZzh1NA34P2ah4XuJrrQLWa4lMsrhizE9/5GpaqJ9Ppbma7u3mD9LpqE7YXk8far3SsgpjH4zai41NCtxbywvkLIGQ45we1Z9qH08uIjv0+6WZR/TlG0/I7VowGPmlXFYr5Osob2Z1p/gG7lO6/uUgU/gnmP/KtGn+E9IsNrC2E0g/ObzH44qdpUTZGMFcaiBVVVAUAAcAUI5Fk3bc+Vipz+xXVBEVM7Rjccn3pcZP/2Q=="
+};
+
+
+var IMG={};
+function preloadImgs(bigKey,cb){
+  var keys=Object.keys(LOGOS),n=0;
+  keys.forEach(function(k){
+    var img=new Image();
+    img.onload=img.onerror=function(){
+      IMG[k]=(img.complete&&img.naturalWidth)?img:null;
+      n++;if(n===keys.length&&cb)cb();
+    };
+    img.src=LOGOS[k]||"";
+  });
+}
+var _raf=null;
+function startOrbit(canvasId,bigKey,taglineEl){
+  if(_raf){cancelAnimationFrame(_raf);_raf=null;}
+  var cv=document.getElementById(canvasId);if(!cv)return;
+  var ctx=cv.getContext("2d");
+  var DPR=window.devicePixelRatio||1;
+  cv.width=280*DPR;cv.height=280*DPR;cv.style.width="280px";cv.style.height="280px";
+  ctx.scale(DPR,DPR);
+  var CX=140,CY=140,R_ORB=100,R_OUT=128,R_SEC=88,R_MIN=76,R_HR=46;
+  var KEYS=["driver","cleaner","poolman","gardener","tukang","massage","cooker","internet"];
+  function drawH(c,cx,cy,a,len,w,col){
+    c.beginPath();c.moveTo(cx,cy);
+    c.lineTo(cx+Math.cos(a)*len,cy+Math.sin(a)*len);
+    c.strokeStyle=col;c.lineWidth=w;c.lineCap="round";c.stroke();
+  }
+  function frame(){
+    var now=new Date(),ms=now.getMilliseconds();
+    var sec=now.getSeconds()+ms/1000,min=now.getMinutes()+sec/60,hr=(now.getHours()%12)+min/60;
+    ctx.clearRect(0,0,280,280);
+    ctx.beginPath();ctx.arc(CX,CY,R_ORB,0,Math.PI*2);
+    ctx.strokeStyle="rgba(201,168,76,.10)";ctx.lineWidth=1;ctx.setLineDash([3,8]);ctx.stroke();ctx.setLineDash([]);
+    ctx.beginPath();ctx.arc(CX,CY,R_OUT,0,Math.PI*2);
+    ctx.strokeStyle="rgba(201,168,76,.08)";ctx.lineWidth=1;ctx.stroke();
+    for(var i=0;i<12;i++){
+      var a=(i/12)*Math.PI*2-Math.PI/2,tl=i%3===0?7:4;
+      ctx.beginPath();
+      ctx.moveTo(CX+Math.cos(a)*(R_OUT-1),CY+Math.sin(a)*(R_OUT-1));
+      ctx.lineTo(CX+Math.cos(a)*(R_OUT-1-tl),CY+Math.sin(a)*(R_OUT-1-tl));
+      ctx.strokeStyle=i%3===0?"rgba(201,168,76,.4)":"rgba(201,168,76,.12)";
+      ctx.lineWidth=i%3===0?1.5:1;ctx.stroke();
+    }
+    drawH(ctx,CX,CY,(hr/12)*Math.PI*2-Math.PI/2,R_HR,3,"rgba(232,220,200,.95)");
+    drawH(ctx,CX,CY,(min/60)*Math.PI*2-Math.PI/2,R_MIN,1.8,"rgba(232,220,200,.75)");
+    drawH(ctx,CX,CY,(sec/60)*Math.PI*2-Math.PI/2,R_SEC,1,"rgba(93,173,226,.95)");
+    ctx.beginPath();ctx.arc(CX,CY,3.5,0,Math.PI*2);ctx.fillStyle="rgba(201,168,76,.9)";ctx.fill();
+    var step=Math.PI*2/KEYS.length,drift=-(sec/60)*Math.PI*2*.5;
+    KEYS.forEach(function(k,i){
+      var big=(k===bigKey);
+      var angle=i*step+drift;
+      var x=CX+Math.cos(angle)*R_ORB,y=CY+Math.sin(angle)*R_ORB;
+      var bubR=big?22:13;
+      if(big){
+        var g=ctx.createRadialGradient(x,y,0,x,y,bubR+8);
+        g.addColorStop(0,"rgba(93,173,226,.18)");g.addColorStop(1,"transparent");
+        ctx.beginPath();ctx.arc(x,y,bubR+8,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+      }
+      ctx.beginPath();ctx.arc(x,y,bubR,0,Math.PI*2);
+      ctx.fillStyle=big?"rgba(22,33,62,.95)":"rgba(240,246,252,.92)";ctx.fill();
+      ctx.strokeStyle=big?"rgba(93,173,226,.9)":"rgba(100,120,160,.5)";
+      ctx.lineWidth=big?2:1.5;ctx.stroke();
+      var img=IMG[k];
+      if(img){
+        ctx.save();ctx.beginPath();ctx.arc(x,y,bubR-1.5,0,Math.PI*2);ctx.clip();
+        ctx.drawImage(img,x-(bubR-1.5),y-(bubR-1.5),(bubR-1.5)*2,(bubR-1.5)*2);
+        ctx.restore();
+      }
+      if(big){
+        ctx.font="9px Nunito,sans-serif";ctx.textAlign="center";ctx.textBaseline="top";
+        ctx.fillStyle="rgba(93,173,226,.85)";
+        var names={driver:"Ketut",cleaner:"Putu",poolman:"Made",gardener:"Wayan",tukang:"Nyoman",massage:"Ayu",cooker:"Kadek",internet:"Komang"};
+        ctx.fillText(names[k]||k,x,y+bubR+3);
+      }
+    });
+    _raf=requestAnimationFrame(frame);
+  }
+  preloadImgs(bigKey,null);frame();
+}
+
+
+// Set avatar everywhere
+window.addEventListener("DOMContentLoaded", function(){
+  var src = LOGOS["massage"] || "";
+  var els = [document.getElementById("tb-av-img"), document.getElementById("clk-av")];
+  els.forEach(function(el){ if(el) el.src = src; });
+
+  // Greeting
+  var h = new Date().getHours();
+  var g = h<12?"Good morning":h<17?"Good afternoon":"Good evening";
+  document.getElementById("hero-g").innerHTML = g+",<br><em>Ayu.</em> 👋";
+
+  // Fade in
+  setTimeout(function(){
+    var obs = new IntersectionObserver(function(ee){
+      ee.forEach(function(e){if(e.isIntersecting)e.target.classList.add("v");});
+    },{threshold:.05});
+    document.querySelectorAll(".fi").forEach(function(el){obs.observe(el);});
+  },60);
+});
+
+var accepted = false;
+function acceptMission(){
+  if(accepted) return;
+  accepted = true;
+  var btn = document.getElementById("acc-btn");
+  btn.classList.add("on");
+  btn.textContent = "✅ Mission accepted";
+  setTimeout(function(){
+    document.getElementById("mbody").classList.add("show");
+    startOrbit("orbitCanvas","massage",null);
+    document.getElementById("mbody").scrollIntoView({behavior:"smooth",block:"start"});
+  },600);
+}
+
+function toggleCheck(el){
+  el.classList.toggle("done");
+  el.querySelector(".check-box").textContent = el.classList.contains("done") ? "✓" : "";
+  var all = document.querySelectorAll(".check-item").length;
+  var done = document.querySelectorAll(".check-item.done").length;
+  document.getElementById("prog-bar").style.width = (all>0?Math.round(done/all*100):0)+"%";
+  if(all>0 && done===all) showToast("🎉 All done! Sofia notified the manager.");
+}
+
+function wbGood(){
+  var b = document.getElementById("wb-good");
+  b.classList.toggle("on");
+  if(b.classList.contains("on")) showToast("🌸 Sofia noted — you're doing great!");
+}
+
+function toast(msg){ showToast(msg); }
+function showToast(msg){
+  var t = document.getElementById("toast-el");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(t._t);
+  t._t = setTimeout(function(){t.classList.remove("show");}, 3000);
+}
+</script>
+</body>
+</html>

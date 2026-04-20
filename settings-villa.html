@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Settings Villa — Hidden Keys Bali</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+:root{
+  --gold:#8B6914;--gold-light:#C9A84C;
+  --cream:#F5F0E8;--cream2:#EDE8DC;--cream3:#E5DED0;
+  --surface:rgba(0,0,0,0.04);--border:rgba(139,105,20,0.18);
+  --text:#1A1208;--muted:#6B5B3E;
+  --green:#2ECC71;--green-d:#1A7A3C;
+  --blue:#3498DB;--blue-d:#1A5A8A;
+  --violet:#6B2D8B;--red:#C0392B;--orange:#B7590A;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cream);color:var(--text);font-family:"DM Mono",monospace;min-height:100vh;}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:200;background:rgba(245,240,232,0.97);border-bottom:1px solid var(--border);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);cursor:pointer;padding:6px 12px;border:1px solid var(--border);border-radius:20px;transition:all .2s;background:transparent;font-family:"DM Mono",monospace;}
+.back-btn:hover{border-color:var(--gold);color:var(--gold);}
+.topbar-sep{width:1px;height:24px;background:var(--border);}
+.topbar-title{font-family:"Playfair Display",serif;font-size:15px;color:var(--text);}
+.topbar-title span{color:var(--gold);font-style:italic;}
+.new-badge{font-size:8px;padding:3px 8px;border-radius:10px;background:rgba(52,152,219,.12);color:var(--blue-d);letter-spacing:1px;text-transform:uppercase;margin-left:6px;}
+
+/* VILLA HEADER sous topbar */
+.villa-header{background:var(--cream2);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;gap:16px;}
+.villa-header-icon{width:48px;height:48px;border-radius:12px;background:var(--cream3);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.villa-header-name{font-family:"Playfair Display",serif;font-size:22px;font-weight:700;color:var(--text);}
+.villa-header-meta{font-size:13px;color:var(--muted);font-weight:600;margin-top:2px;}
+.status-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:10px;font-size:11px;font-weight:700;letter-spacing:.5px;margin-left:12px;}
+.status-pill.green{background:rgba(46,204,113,.15);color:var(--green-d);}
+.status-pill.orange{background:rgba(183,89,10,.12);color:var(--orange);}
+.villa-header-links{margin-left:auto;display:flex;gap:8px;align-items:center;}
+.hdr-link{font-size:12px;color:var(--gold);cursor:pointer;padding:6px 12px;border:1px solid rgba(139,105,20,.25);border-radius:20px;transition:all .15s;font-weight:600;}
+.hdr-link:hover{background:rgba(139,105,20,.08);}
+
+/* TABS BAR — identique client.html */
+.tabs-bar{display:flex;align-items:stretch;background:var(--cream2);border-bottom:2px solid var(--border);position:sticky;top:60px;z-index:190;padding:0 32px;overflow-x:auto;}
+.tab-btn{padding:0 24px;height:52px;background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;font-family:"DM Mono",monospace;font-size:13px;font-weight:800;color:var(--muted);letter-spacing:2px;text-transform:uppercase;transition:color .15s,border-color .15s;white-space:nowrap;margin-bottom:-2px;flex-shrink:0;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(139,105,20,.04);}
+
+/* MAIN */
+.main-content{max-width:900px;margin:0 auto;padding:36px 32px 100px;}
+@media(max-width:800px){.main-content{padding:24px 18px 80px;}}
+
+.tab-pane{display:none;}
+.tab-pane.active{display:block;animation:fadeUp .25s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+.pane-title{font-family:"Playfair Display",serif;font-size:28px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.pane-title em{color:var(--gold);font-style:italic;}
+.pane-sub{font-size:13px;color:var(--muted);margin-bottom:32px;letter-spacing:.5px;font-weight:700;}
+
+/* CARDS */
+.settings-card{background:var(--cream2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px;}
+.card-header{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.card-header-icon{font-size:16px;}
+.card-header-title{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text);font-weight:800;}
+.card-header-action{margin-left:auto;font-size:11px;color:var(--gold);cursor:pointer;letter-spacing:1px;text-transform:uppercase;border:1px solid rgba(139,105,20,.25);padding:5px 12px;border-radius:12px;transition:all .2s;font-weight:700;}
+.card-header-action:hover{background:rgba(139,105,20,.08);}
+.card-body{padding:22px;}
+.card-body.tight{padding:0;}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:700px){.form-grid{grid-template-columns:1fr;}}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+@media(max-width:800px){.form-grid-3{grid-template-columns:1fr 1fr;}}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-group.full{grid-column:1/-1;}
+.form-label{font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--text);font-weight:800;}
+.form-input{padding:10px 13px;border:1px solid var(--border);border-radius:6px;font-family:"DM Mono",monospace;font-size:13px;background:var(--cream);color:var(--text);outline:none;transition:border-color .15s;}
+.form-input:focus{border-color:var(--gold);}
+.pill-radio{padding:8px 14px;border:1px solid var(--border);border-radius:20px;font-size:11px;color:var(--muted);cursor:pointer;text-align:center;transition:all .2s;background:var(--cream);user-select:none;}
+.pill-radio:hover{border-color:var(--gold);color:var(--gold);}
+.pill-radio.active{border-color:var(--gold);color:var(--gold);background:rgba(139,105,20,.08);font-weight:600;}
+.pill-multi{padding:8px 13px;border:1px solid var(--border);border-radius:20px;font-size:11px;color:var(--muted);cursor:pointer;transition:all .2s;background:var(--cream);user-select:none;}
+.pill-multi:hover{border-color:var(--gold);color:var(--gold);}
+.pill-multi.active{border-color:var(--gold);color:var(--gold);background:rgba(139,105,20,.08);font-weight:600;}
+.form-select{padding:10px 13px;border:1px solid var(--border);border-radius:6px;font-family:"DM Mono",monospace;font-size:13px;background:var(--cream);color:var(--text);outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236B5B3E'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
+.form-hint{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.6;font-weight:700;}
+
+/* BUTTONS */
+.btn-primary{padding:10px 22px;border-radius:8px;border:none;background:var(--gold);color:white;font-family:"DM Mono",monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.btn-primary:hover{background:#7A5D11;}
+.btn-ghost{padding:10px 22px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:"DM Mono",monospace;font-size:10px;cursor:pointer;transition:all .2s;}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+.btn-danger{padding:10px 22px;border-radius:8px;border:1px solid rgba(192,57,43,.35);background:transparent;color:var(--red);font-family:"DM Mono",monospace;font-size:10px;cursor:pointer;}
+
+.section-divider{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:28px 0 16px;display:flex;align-items:center;gap:14px;font-weight:800;}
+.section-divider::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);}
+
+/* MAP */
+.map-flow{display:flex;flex-direction:column;gap:16px;}
+.map-search-bar{display:flex;gap:8px;}
+.map-search-input{flex:1;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-family:"DM Mono",monospace;font-size:11px;background:var(--cream);color:var(--text);outline:none;transition:border-color .15s;}
+.map-search-input:focus{border-color:var(--gold);}
+.map-search-btn{padding:10px 18px;border-radius:8px;border:none;background:var(--gold);color:white;font-family:"DM Mono",monospace;font-size:10px;cursor:pointer;white-space:nowrap;transition:background .2s;}
+.map-search-btn:hover{background:#7A5D11;}
+.map-container{border-radius:10px;overflow:hidden;border:1px solid var(--border);position:relative;}
+#villa-map{height:320px;width:100%;background:var(--cream3);}
+.map-overlay-hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(26,18,8,.75);color:rgba(255,255,255,.85);font-size:9px;letter-spacing:1px;padding:6px 14px;border-radius:20px;pointer-events:none;backdrop-filter:blur(4px);white-space:nowrap;}
+.map-satellite-btn{position:absolute;top:10px;right:10px;background:rgba(245,240,232,.92);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:9px;color:var(--muted);cursor:pointer;font-family:"DM Mono",monospace;letter-spacing:.5px;transition:all .2s;backdrop-filter:blur(4px);}
+.map-satellite-btn:hover{border-color:var(--gold);color:var(--gold);}
+.gps-readout{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--cream);border:1px solid var(--border);border-radius:8px;}
+.gps-icon{font-size:16px;flex-shrink:0;}
+.gps-coords{flex:1;}
+.gps-lat{font-family:"DM Mono",monospace;font-size:11px;color:var(--text);}
+.gps-label{font-size:8px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+.gps-confirmed{display:flex;align-items:center;gap:6px;font-size:9px;color:var(--green-d);padding:4px 0;}
+
+/* PHOTOS */
+.photos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;}
+.photo-slot{aspect-ratio:4/3;border-radius:8px;border:1px solid var(--border);overflow:hidden;position:relative;cursor:pointer;background:var(--cream3);}
+.photo-slot-cover{position:absolute;inset:0;background:rgba(26,18,8,.45);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}
+.photo-slot:hover .photo-slot-cover{opacity:1;}
+.photo-actions{display:flex;gap:6px;}
+.photo-act-btn{width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,.5);background:rgba(0,0,0,.4);color:white;font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.photo-cover-badge{position:absolute;top:6px;left:6px;background:var(--gold);color:white;font-size:7px;padding:2px 6px;border-radius:4px;letter-spacing:.5px;font-weight:700;}
+.photo-add-slot{aspect-ratio:4/3;border-radius:8px;border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:all .2s;color:var(--muted);}
+.photo-add-slot:hover{border-color:var(--gold);color:var(--gold);}
+.photo-add-slot .add-icon{font-size:22px;}
+.photo-add-slot .add-label{font-size:9px;letter-spacing:.5px;}
+
+/* TOGGLE */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);}
+.toggle-row:last-child{border-bottom:none;}
+.toggle-info .toggle-title{font-size:14px;color:var(--text);margin-bottom:2px;font-weight:800;}
+.toggle-info .toggle-sub{font-size:12px;color:var(--muted);font-weight:600;}
+.toggle-switch{position:relative;width:40px;height:22px;flex-shrink:0;}
+.toggle-switch input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;inset:0;background:var(--cream3);border:1px solid var(--border);border-radius:11px;cursor:pointer;transition:all .25s;}
+.toggle-slider::after{content:"";position:absolute;left:2px;top:2px;width:16px;height:16px;border-radius:50%;background:var(--muted);transition:all .25s;}
+.toggle-switch input:checked + .toggle-slider{background:rgba(46,204,113,.2);border-color:var(--green);}
+.toggle-switch input:checked + .toggle-slider::after{transform:translateX(18px);background:var(--green-d);}
+
+/* SEUILS */
+.threshold-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+@media(max-width:700px){.threshold-grid{grid-template-columns:1fr;}}
+.threshold-box{padding:16px;border-radius:10px;border:1px solid var(--border);background:var(--cream);}
+.thr-dot{width:10px;height:10px;border-radius:50%;margin-bottom:10px;}
+.thr-dot.auto{background:var(--green);}
+.thr-dot.warn{background:var(--orange);}
+.thr-dot.stop{background:var(--red);}
+.thr-label{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.thr-input{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:"DM Mono",monospace;font-size:12px;background:var(--cream2);color:var(--text);outline:none;transition:border-color .15s;}
+.thr-input:focus{border-color:var(--gold);}
+.thr-desc{font-size:8px;color:var(--muted);margin-top:6px;line-height:1.6;}
+
+/* DETAIL LEVELS */
+.detail-levels{display:flex;gap:0;}
+.dl-btn{flex:1;padding:9px;border:1px solid var(--border);background:transparent;font-family:"DM Mono",monospace;font-size:9px;color:var(--muted);cursor:pointer;transition:all .2s;letter-spacing:.5px;text-transform:uppercase;}
+.dl-btn:first-child{border-radius:6px 0 0 6px;}
+.dl-btn:last-child{border-radius:0 6px 6px 0;}
+.dl-btn+.dl-btn{border-left:none;}
+.dl-btn.active{background:var(--gold);color:white;border-color:var(--gold);}
+
+/* XENDIT BOX */
+.xendit-box{background:linear-gradient(135deg,rgba(52,152,219,.06),rgba(26,90,138,.03));border:1px solid rgba(52,152,219,.2);border-radius:10px;padding:20px;margin-bottom:16px;}
+.xendit-box-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.xendit-box-icon{font-size:20px;}
+.xendit-box-title{font-size:14px;color:var(--text);font-weight:800;}
+.xendit-box-sub{font-size:12px;color:var(--muted);margin-top:2px;font-weight:600;}
+.xendit-box-status{margin-left:auto;font-size:11px;padding:4px 12px;border-radius:10px;font-weight:800;letter-spacing:.5px;}
+.xendit-box-status.connected{background:rgba(46,204,113,.15);color:var(--green-d);}
+.xendit-box-status.pending{background:rgba(183,89,10,.1);color:var(--orange);}
+.xendit-box-status.missing{background:rgba(139,105,20,.1);color:var(--muted);}
+.xendit-id{font-family:"DM Mono",monospace;font-size:12px;color:var(--blue-d);background:var(--cream);padding:8px 12px;border-radius:6px;border:1px solid rgba(52,152,219,.2);letter-spacing:1px;display:flex;align-items:center;justify-content:space-between;}
+.xendit-id-copy{font-size:10px;color:var(--muted);cursor:pointer;padding:3px 8px;border:1px solid var(--border);border-radius:4px;transition:all .15s;}
+.xendit-id-copy:hover{border-color:var(--gold);color:var(--gold);}
+.xendit-balance{display:flex;align-items:baseline;gap:8px;margin-top:12px;}
+.xendit-balance-val{font-family:"Playfair Display",serif;font-size:28px;color:var(--green-d);}
+.xendit-balance-lbl{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.xendit-create-btn{width:100%;padding:12px;border-radius:8px;border:1px dashed rgba(52,152,219,.4);background:rgba(52,152,219,.04);color:var(--blue-d);font-family:"DM Mono",monospace;font-size:10px;cursor:pointer;transition:all .2s;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:8px;}
+.xendit-create-btn:hover{background:rgba(52,152,219,.1);border-color:rgba(52,152,219,.6);}
+
+/* STAFF LIST */
+.staff-slot{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);transition:background .15s;}
+.staff-slot:last-child{border-bottom:none;}
+.staff-slot:hover{background:rgba(139,105,20,.03);}
+.staff-avatar{width:40px;height:40px;border-radius:50%;border:2px solid var(--border);background:var(--cream3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;overflow:hidden;}
+.staff-avatar img{width:100%;height:100%;object-fit:cover;}
+.staff-info{flex:1;min-width:0;}
+.staff-name{font-size:14px;color:var(--text);font-weight:800;}
+.staff-role{font-size:12px;color:var(--muted);margin-top:2px;font-weight:700;}
+.staff-contact{font-size:12px;color:var(--blue-d);font-family:"DM Mono",monospace;margin-top:2px;font-weight:600;}
+.staff-action{display:flex;gap:6px;flex-shrink:0;}
+.staff-btn{padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:transparent;font-family:"DM Mono",monospace;font-size:9px;color:var(--muted);cursor:pointer;transition:all .2s;}
+.staff-btn:hover{border-color:var(--gold);color:var(--gold);}
+.staff-btn.remove{border-color:rgba(192,57,43,.2);}
+.staff-btn.remove:hover{border-color:var(--red);color:var(--red);}
+.add-staff-row{display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;color:var(--gold);font-size:10px;letter-spacing:1px;text-transform:uppercase;transition:background .15s;}
+.add-staff-row:hover{background:rgba(139,105,20,.04);}
+
+/* PLATFORM ROW */
+.platform-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);}
+.platform-row:last-child{border-bottom:none;}
+.platform-logo{width:36px;height:36px;border-radius:8px;background:var(--cream3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.platform-info{width:140px;flex-shrink:0;}
+.platform-name{font-size:14px;color:var(--text);font-weight:800;}
+.platform-id{font-size:11px;color:var(--muted);font-family:"DM Mono",monospace;margin-top:2px;letter-spacing:.5px;font-weight:600;}
+.platform-status{font-size:11px;padding:3px 10px;border-radius:10px;flex-shrink:0;font-weight:800;}
+.platform-status.ok{background:rgba(46,204,113,.12);color:var(--green-d);}
+.platform-status.missing{background:rgba(139,105,20,.1);color:var(--muted);}
+
+/* SAVE BAR */
+.save-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(245,240,232,0.97);border-top:1px solid var(--border);backdrop-filter:blur(12px);padding:14px 48px;display:flex;align-items:center;justify-content:space-between;z-index:190;transform:translateY(100%);transition:transform .25s ease;}
+.save-bar.visible{transform:none;}
+.save-bar-info{font-size:10px;color:var(--muted);}
+.save-bar-info strong{color:var(--orange);}
+.save-bar-btns{display:flex;gap:10px;}
+
+/* STANDING */
+.standing-bar-wrap{position:relative;height:8px;background:linear-gradient(90deg,rgba(139,105,20,.1),var(--gold));border-radius:4px;margin:10px 0;}
+.standing-bar-wrap input[type=range]{position:absolute;inset:0;width:100%;opacity:0;cursor:pointer;height:100%;}
+.standing-bar-track{height:8px;background:linear-gradient(90deg,rgba(26,122,60,.4),rgba(139,105,20,.6),rgba(107,45,139,.4));border-radius:4px;}
+.standing-thumb{position:absolute;top:50%;transform:translate(-50%,-50%);width:18px;height:18px;border-radius:50%;background:var(--gold);border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,.2);pointer-events:none;transition:left .1s;}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="topbar-left">
+    <button class="back-btn" onclick="goBack()">← Retour</button>
+    <div class="topbar-sep"></div>
+    <div class="topbar-title">Settings — <span id="villa-title-name">Villa</span></div>
+    <span class="new-badge" id="new-badge" style="display:none;">Nouvelle villa</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px;">
+    <span style="font-family:'Playfair Display',serif;font-size:13px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;">HIDDEN KEYS</span>
+    <span style="font-size:9px;color:var(--muted);font-family:'Cormorant Garamond',serif;font-style:italic;">Bali</span>
+  </div>
+</nav>
+
+<div class="desktop-banner">⚙ Page configuration — desktop recommandé</div>
+
+<!-- VILLA HEADER -->
+<div class="villa-header">
+  <div class="villa-header-icon" id="sidebar-icon">🏠</div>
+  <div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="villa-header-name" id="sidebar-name">—</div>
+      <div class="status-pill green" id="sidebar-status">✓ Active</div>
+    </div>
+    <div class="villa-header-meta" id="sidebar-meta">— chambres · — · Proprio : — · <span id="sidebar-id"></span></div>
+  </div>
+  <div class="villa-header-links">
+    <span class="hdr-link" onclick="goVillaView()">→ Vue villa</span>
+    <span class="hdr-link" onclick="goClient()">→ Dashboard</span>
+    <span class="hdr-link" onclick="goSettingsClient()">→ Settings client</span>
+  </div>
+</div>
+
+<!-- TABS BAR -->
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="switchTab('localisation',this)">📍 Infos</button>
+  <button class="tab-btn" onclick="switchTab('pricing',this)">💰 Pricing</button>
+  <button class="tab-btn" onclick="switchTab('app',this)">🤖 Sofia</button>
+  <button class="tab-btn" onclick="switchTab('finances',this)">💳 Finances</button>
+  <button class="tab-btn" onclick="switchTab('staff',this)">👥 Staff</button>
+</div>
+
+<div class="main-content">
+
+    <!-- ══ ONGLET 1 — INFOS & LOCALISATION ══ -->
+    <div class="tab-pane active" id="pane-localisation">
+      <div class="pane-title">Infos & <em>localisation</em></div>
+      <div class="pane-sub">Identité, photo de couverture, GPS</div>
+
+      <!-- BANDEAU AUDIT — visible si données importées -->
+      <div id="audit-banner" style="display:none;margin-bottom:20px;background:rgba(46,204,113,.05);border:1px solid rgba(46,204,113,.2);border-radius:12px;padding:18px 20px;">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--green-d);margin-bottom:12px;">✦ Données audit importées</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+          <div style="text-align:center;"><div style="font-size:9px;color:var(--muted);margin-bottom:4px;">ADR moyen</div><div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--gold);" id="ab-adr">—</div></div>
+          <div style="text-align:center;"><div style="font-size:9px;color:var(--muted);margin-bottom:4px;">Occupation</div><div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--gold);" id="ab-occ">—</div></div>
+          <div style="text-align:center;"><div style="font-size:9px;color:var(--muted);margin-bottom:4px;">Net/mois</div><div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--gold);" id="ab-rev">—</div></div>
+          <div style="text-align:center;"><div style="font-size:9px;color:var(--muted);margin-bottom:4px;">Période</div><div style="font-size:11px;color:var(--text);" id="ab-periode">—</div></div>
+        </div>
+      </div>
+
+      <!-- PHOTO & IDENTITÉ -->
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">📸</span>
+          <span class="card-header-title">Photo & identité</span>
+        </div>
+        <div class="card-body">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px 0 22px;border-bottom:1px solid var(--border);margin-bottom:22px;">
+            <div id="sv-bubble" onclick="document.getElementById('sv-photo-upload').click()" style="width:100px;height:100px;border-radius:50%;border:2.5px solid var(--gold);background:var(--cream3);display:flex;align-items:center;justify-content:center;font-size:36px;overflow:hidden;cursor:pointer;position:relative;box-shadow:0 0 22px rgba(139,105,20,.18);transition:all .2s;">
+              <div id="sv-bubble-inner" style="font-size:36px;">🏠</div>
+              <div style="position:absolute;inset:0;background:rgba(26,18,8,.45);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;font-size:20px;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">📸</div>
+            </div>
+            <input type="file" id="sv-photo-upload" accept="image/*" style="display:none;" onchange="onSvPhoto(this)">
+            <div style="font-size:9px;color:var(--muted);">Cliquer pour changer la photo de couverture</div>
+            <div style="font-family:'Playfair Display',serif;font-size:20px;color:var(--text);" id="sv-name-preview">—</div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <div class="form-label">Nom de la villa</div>
+              <input class="form-input" id="sv-name-input" type="text" placeholder="Ex : Villa Surya" oninput="markDirty();updateSidebarName(this.value);document.getElementById('sv-name-preview').textContent=this.value||'—';">
+            </div>
+            <div class="form-group">
+              <div class="form-label">Emoji / Icône</div>
+              <input class="form-input" id="sv-emoji" type="text" value="🏠" maxlength="4" oninput="markDirty();document.getElementById('sidebar-icon').textContent=this.value;if(!svPhotoUrl)document.getElementById('sv-bubble-inner').textContent=this.value;">
+            </div>
+            <div class="form-group">
+              <div class="form-label">Type</div>
+              <select class="form-select" id="sv-type" onchange="markDirty()">
+                <option value="">— Choisir —</option>
+                <option>Villa</option><option>Studio</option><option>Maison</option><option>Appartement</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <div class="form-label">Chambres</div>
+              <select class="form-select" id="sv-beds" onchange="markDirty()">
+                <option value="">—</option>
+                <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6+</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <div class="form-label">Quartier</div>
+              <select class="form-select" id="sv-area" onchange="markDirty()">
+                <option value="">— Choisir —</option>
+                <option>Canggu</option><option>Berawa</option><option>Seminyak</option><option>Pererenan</option><option>Echo Beach</option><option>Kuta</option><option>Autre</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <div class="form-label">Propriétaire</div>
+              <input class="form-input" id="sv-owner-name" type="text" placeholder="Nom du propriétaire" oninput="markDirty()">
+            </div>
+            <div class="form-group full">
+              <div class="form-label">Adresse complète</div>
+              <input class="form-input" id="sv-address" type="text" placeholder="Ex : Jl. Pantai Berawa No. 12, Berawa, Canggu" oninput="markDirty()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHOTOS SUPPLÉMENTAIRES -->
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">🖼</span>
+          <span class="card-header-title">Photos supplémentaires</span>
+          <span class="card-header-action" onclick="alert('Sync photos Hostaway')">↻ Sync Hostaway</span>
+        </div>
+        <div class="card-body">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.9;font-weight:600;">
+            La photo de couverture est définie ci-dessus. Ajoutez ici les photos additionnelles de la villa.<br>
+            Si Hostaway est connecté, les photos se synchronisent automatiquement.
+          </div>
+          <div class="photos-grid" id="photos-grid"></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.8;font-weight:600;">
+            ★ = définir comme nouvelle cover · ✕ = supprimer · Drag pour réordonner · Compression auto 200-300kb
+          </div>
+        </div>
+      </div>
+
+      <!-- MAP GPS -->
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">📍</span>
+          <span class="card-header-title">Localisation GPS</span>
+          <span class="card-header-action" id="gps-status-label">📍 Non confirmé</span>
+        </div>
+        <div class="card-body">
+          <div class="map-flow">
+            <div class="map-search-bar">
+              <input class="map-search-input" id="map-search" type="text" placeholder="Ex : Villa, Berawa, Bali..." onkeydown="if(event.key==='Enter')searchLocation()">
+              <button class="map-search-btn" onclick="searchLocation()">🔍 Localiser</button>
+            </div>
+            <div id="sv-search-results-wrap"></div>
+            <div class="map-container" style="position:relative;">
+              <div id="villa-map"></div>
+              <div id="sv-crosshair" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-100%);z-index:500;pointer-events:none;">
+                <div id="sv-pin-icon" style="width:36px;height:36px;border-radius:50%;background:var(--gold);border:3px solid white;box-shadow:0 3px 14px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;font-size:16px;overflow:hidden;transition:transform .15s;">🏠</div>
+                <div style="width:2px;height:12px;background:var(--gold);margin:0 auto;opacity:.7;"></div>
+              </div>
+              <div class="map-overlay-hint" id="map-hint">Déplacer la carte pour centrer le pin sur la villa</div>
+              <button class="map-satellite-btn" onclick="toggleSatellite()">🛰 Vue satellite</button>
+            </div>
+            <div class="gps-readout">
+              <div class="gps-icon">📡</div>
+              <div class="gps-coords">
+                <div class="gps-lat" id="gps-display">—, —</div>
+                <div class="gps-label">Coordonnées GPS — déplacer la carte pour affiner</div>
+              </div>
+              <div>
+                <div class="gps-confirmed" id="gps-confirmed" style="display:none;">✓ Position confirmée</div>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <div class="form-label">Latitude</div>
+                <input class="form-input" id="gps-lat-input" type="text" placeholder="-8.6503" oninput="updateMapFromInputs()">
+              </div>
+              <div class="form-group">
+                <div class="form-label">Longitude</div>
+                <input class="form-input" id="gps-lng-input" type="text" placeholder="115.1384" oninput="updateMapFromInputs()">
+              </div>
+            </div>
+            <div style="font-size:11px;color:var(--muted);line-height:1.8;font-weight:600;">
+              💡 Alimente la carte agence, la map guest PWA, et les distances plages & commerces.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARACTÉRISTIQUES PREMIUM -->
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">✦</span>
+          <span class="card-header-title">Caractéristiques & positionnement</span>
+          <span style="margin-left:auto;font-size:10px;color:var(--muted);">Utilisé par Sofia · Pricelabs · AirDNA</span>
+        </div>
+        <div class="card-body">
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+            <div class="form-group">
+              <div class="form-label">Surface villa (m²)</div>
+              <input class="form-input" type="number" id="v-surface-villa" placeholder="ex : 280" min="0" onchange="calcStandingSV()">
+            </div>
+            <div class="form-group">
+              <div class="form-label">Surface terrain (m²)</div>
+              <input class="form-input" type="number" id="v-surface-terrain" placeholder="ex : 800" min="0">
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+            <div class="form-group">
+              <div class="form-label">Salles de bain</div>
+              <input class="form-input" type="number" id="v-sdb" placeholder="ex : 3" min="0" max="20">
+            </div>
+            <div class="form-group">
+              <div class="form-label">Toilettes</div>
+              <input class="form-input" type="number" id="v-toilettes" placeholder="ex : 4" min="0" max="20">
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+            <div class="form-group">
+              <div class="form-label">Nb. guests max</div>
+              <input class="form-input" type="number" id="v-guests-max" placeholder="ex : 8" min="1" max="30">
+            </div>
+            <div class="form-group">
+              <div class="form-label">Parking voiture</div>
+              <input class="form-input" type="number" id="v-parking" placeholder="ex : 2" min="0" max="10">
+              <div class="form-hint">Scooter = nb. guests (auto)</div>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:16px;">
+            <div class="form-label">Types de lits <span style="font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0;">(plusieurs possibles)</span></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;" id="sv-lits-wrap">
+              <div class="pill-multi" data-key="king" onclick="togglePillSV(this)">🛏 King</div>
+              <div class="pill-multi" data-key="queen" onclick="togglePillSV(this)">🛏 Queen</div>
+              <div class="pill-multi" data-key="double" onclick="togglePillSV(this)">🛏 Double</div>
+              <div class="pill-multi" data-key="twin" onclick="togglePillSV(this)">🛏 Twin</div>
+              <div class="pill-multi" data-key="single" onclick="togglePillSV(this)">🛏 Single</div>
+              <div class="pill-multi" data-key="bunk" onclick="togglePillSV(this)">🛏 Lits superposés</div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:6px;">
+            <div class="form-group">
+              <div class="form-label">Note Airbnb ★</div>
+              <input class="form-input" type="number" id="v-note-airbnb" placeholder="ex : 4.87" min="1" max="5" step="0.01" onchange="calcStandingSV()">
+              <div class="form-hint">Sur 5.0</div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">Note Booking ★</div>
+              <input class="form-input" type="number" id="v-note-booking" placeholder="ex : 9.2" min="1" max="10" step="0.1" onchange="calcStandingSV()">
+              <div class="form-hint">Sur 10.0</div>
+            </div>
+          </div>
+          <div id="sv-note-composite-line" style="display:none;margin-bottom:16px;padding:8px 12px;background:rgba(139,105,20,.05);border:1px solid var(--border);border-radius:8px;font-size:11px;">
+            Note composite Sofia : <strong id="sv-note-composite">—</strong> / 5.0
+          </div>
+
+          <div class="form-group" style="margin-bottom:16px;">
+            <div class="form-label">Piscine</div>
+            <div style="display:flex;gap:8px;margin-top:6px;">
+              <label style="flex:1;cursor:pointer;"><input type="radio" name="piscine" value="privee" style="display:none;" onchange="calcStandingSV()"><div class="pill-radio" id="pr-privee">🏊 Privée</div></label>
+              <label style="flex:1;cursor:pointer;"><input type="radio" name="piscine" value="partagee" style="display:none;" onchange="calcStandingSV()"><div class="pill-radio" id="pr-partagee">👥 Partagée</div></label>
+              <label style="flex:1;cursor:pointer;"><input type="radio" name="piscine" value="aucune" style="display:none;" onchange="calcStandingSV()"><div class="pill-radio" id="pr-aucune">✕ Aucune</div></label>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:16px;">
+            <div class="form-label">Vue</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+              <label style="cursor:pointer;"><input type="radio" name="vue" value="mer" style="display:none;" onchange="calcStandingSV()"><div class="pill-radio" id="vr-mer">🌊 Mer</div></label>
+              <label style="cursor:pointer;"><input type="radio" name="vue" value="riziere" style="display:none;" onchange="calcStandingSV()"><div class="pill-radio" id="vr-riziere">🌾 Rizière</div></label>
+              <label style="cursor:pointer;"><input type="radio" name="vue" value="jardin" style="display:none;" onchange="calcStandingSV()"><div class="pill-radio" id="vr-jardin">🌿 Jardin</div></label>
+              <label style="cursor:pointer;"><input type="radio" name="vue" value="standard" style="display:none;" onchange="calcStandingSV()"><div class="pill-radio" id="vr-standard">— Standard</div></label>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:16px;">
+            <div class="form-label">Style & caractère</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+              <label style="cursor:pointer;"><input type="radio" name="sv-style" value="moderne" style="display:none;" onchange="calcStandingSV()"><div class="pill-radio">🏗 Moderne</div></label>
+              <label style="cursor:pointer;"><input type="radio" name="sv-style" value="indo-renove" style="display:none;" onchange="calcStandingSV()"><div class="pill-radio">🏛 Indo rénové</div></label>
+              <label style="cursor:pointer;"><input type="radio" name="sv-style" value="charme" style="display:none;" onchange="calcStandingSV()"><div class="pill-radio">✨ Charme</div></label>
+              <label style="cursor:pointer;"><input type="radio" name="sv-style" value="basique" style="display:none;" onchange="calcStandingSV()"><div class="pill-radio">🏠 Basique</div></label>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:16px;">
+            <div class="form-label">État général</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+              <label style="cursor:pointer;"><input type="radio" name="sv-etat" value="neuf" style="display:none;" onchange="calcStandingSV()"><div class="pill-radio">✨ Neuf / récent</div></label>
+              <label style="cursor:pointer;"><input type="radio" name="sv-etat" value="bon" style="display:none;" onchange="calcStandingSV()"><div class="pill-radio">✓ Bon état</div></label>
+              <label style="cursor:pointer;"><input type="radio" name="sv-etat" value="moyen" style="display:none;" onchange="calcStandingSV()"><div class="pill-radio">⚠ À rafraîchir</div></label>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:16px;">
+            <div class="form-label">Situation</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+              <label style="cursor:pointer;"><input type="radio" name="sv-situation" value="isolee" style="display:none;"><div class="pill-radio">🌿 Isolée</div></label>
+              <label style="cursor:pointer;"><input type="radio" name="sv-situation" value="complexe" style="display:none;"><div class="pill-radio">🏘 Complexe de villas</div></label>
+              <label style="cursor:pointer;"><input type="radio" name="sv-situation" value="residentiel" style="display:none;"><div class="pill-radio">🏡 Résidentiel</div></label>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:16px;">
+            <div class="form-label">Équipements lifestyle <span style="font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0;">(plusieurs possibles)</span></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+              <div class="pill-multi" data-key="yoga" onclick="togglePillSV(this)">🧘 Yoga deck</div>
+              <div class="pill-multi" data-key="gym" onclick="togglePillSV(this)">💪 Fitness / gym</div>
+              <div class="pill-multi" data-key="velos" onclick="togglePillSV(this)">🚲 Vélos</div>
+              <div class="pill-multi" data-key="surf-storage" onclick="togglePillSV(this)">🏄 Surf storage</div>
+              <div class="pill-multi" data-key="cowork" onclick="togglePillSV(this)">💻 Coworking</div>
+              <div class="pill-multi" data-key="jeux" onclick="togglePillSV(this)">🧸 Salle jeux enfants</div>
+              <div class="pill-multi" data-key="cinema" onclick="togglePillSV(this)">🎬 Home cinéma</div>
+              <div class="pill-multi" data-key="bbq" onclick="togglePillSV(this)">🔥 BBQ / outdoor kitchen</div>
+              <div class="pill-multi" data-key="icebath" onclick="togglePillSV(this)">🧊 Ice bath</div>
+              <div class="pill-multi" data-key="sauna" onclick="togglePillSV(this)">🌡 Sauna</div>
+              <div class="pill-multi" data-key="hifi" onclick="togglePillSV(this)">🔊 Chaîne hifi</div>
+              <div class="pill-multi" data-key="pooltable" onclick="togglePillSV(this)">🎱 Billard</div>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:16px;">
+            <div class="form-label">Équipements standard</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+              <div class="pill-multi" data-key="aircon-ch" onclick="togglePillSV(this)">❄️ Aircon chambres</div>
+              <div class="pill-multi" data-key="aircon-liv" onclick="togglePillSV(this)">❄️ Aircon living</div>
+              <div class="pill-multi" data-key="four" onclick="togglePillSV(this)">🫕 Four</div>
+              <div class="pill-multi" data-key="lave-linge" onclick="togglePillSV(this)">👕 Lave-linge</div>
+              <div class="pill-multi" data-key="lave-vaisselle" onclick="togglePillSV(this)">🍽 Lave-vaisselle</div>
+              <div class="pill-multi" data-key="baignoire" onclick="togglePillSV(this)">🛁 Baignoire</div>
+              <div class="pill-multi" data-key="netflix" onclick="togglePillSV(this)">📺 Netflix / streaming</div>
+              <div class="pill-multi" data-key="chauffe-eau" onclick="togglePillSV(this)">🚿 Eau chaude</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">Atouts spéciaux</div>
+            <textarea class="form-input" id="v-carac-speciales" rows="2" placeholder="ex : rooftop, jacuzzi, salle de méditation, accès direct rizière…" style="resize:vertical;"></textarea>
+          </div>
+
+          <!-- STANDING -->
+          <div class="section-divider" style="margin-top:24px;">Positionnement Sofia</div>
+          <div style="padding:18px;background:rgba(139,105,20,.04);border:1px solid var(--border);border-radius:10px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+              <div>
+                <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--gold);" id="sv-standing-label">—</div>
+                <div style="font-size:9px;color:var(--muted);margin-top:2px;" id="sv-standing-score">—</div>
+              </div>
+              <div style="font-size:9px;color:var(--muted);" id="sv-standing-hint">Calculé depuis tes critères</div>
+            </div>
+            <div class="standing-bar-wrap">
+              <div class="standing-bar-track"></div>
+              <div class="standing-thumb" id="sv-standing-thumb" style="left:50%;"></div>
+              <input type="range" id="sv-standing-slider" min="0" max="100" value="0" oninput="onStandingSliderSV(this.value,false);markDirty();">
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button class="btn-ghost" onclick="discardChanges()">Annuler</button>
+        <button class="btn-primary" onclick="saveSection('Localisation')">Enregistrer</button>
+      </div>
+    </div>
+
+    <!-- ══ ONGLET 2 — PRICING & PLATEFORMES ══ -->
+    <div class="tab-pane" id="pane-pricing">
+      <div class="pane-title">Pricing & <em>plateformes</em></div>
+      <div class="pane-sub">Tarifs, listings Airbnb / Booking, Pricelabs, Hostaway</div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">💰</span>
+          <span class="card-header-title">Tarifs de base</span>
+        </div>
+        <div class="card-body">
+          <div class="form-grid-3">
+            <div class="form-group">
+              <div class="form-label">Prix minimum (floor)</div>
+              <input class="form-input" id="sv-price-floor" type="text" placeholder="ex : $180" oninput="markDirty()">
+              <div class="form-hint">Pricelabs ne descendra jamais en dessous</div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">Prix basse saison</div>
+              <input class="form-input" id="sv-price-low" type="text" placeholder="ex : $220" oninput="markDirty()">
+            </div>
+            <div class="form-group">
+              <div class="form-label">Prix haute saison</div>
+              <input class="form-input" id="sv-price-high" type="text" placeholder="ex : $380" oninput="markDirty()">
+            </div>
+          </div>
+          <div class="form-hint" style="margin-top:12px;">💡 Ces prix alimentent Pricelabs comme référence. Pricelabs ajuste ensuite selon le marché, dans les limites définies ici.</div>
+          <div class="section-divider" style="margin-top:24px;">Last-minute</div>
+          <div class="form-grid-3">
+            <div class="form-group">
+              <div class="form-label">Prix last-minute <code style="font-size:9px;background:rgba(139,105,20,.1);padding:1px 5px;border-radius:4px;">lm_price</code></div>
+              <input class="form-input" type="number" id="sv-lm-price" placeholder="ex : 70" oninput="markDirty()">
+              <div class="form-hint">Nuits J+1 et J+2 uniquement · Laisser vide = 70% de l'ADR automatiquement</div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">Fenêtre last-minute</div>
+              <input class="form-input" value="J+1 — J+2" disabled style="opacity:.5;cursor:not-allowed;">
+              <div class="form-hint">Fixe — réglé au niveau agence</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">🔗</span>
+          <span class="card-header-title">Plateformes</span>
+        </div>
+        <div class="card-body tight">
+          <div style="padding:16px 20px;">
+            <div class="platform-row">
+              <div class="platform-logo">🏠</div>
+              <div class="platform-info">
+                <div class="platform-name">Airbnb</div>
+                <div class="platform-id" id="airbnb-id-label">Listing ID : —</div>
+              </div>
+              <div style="flex:1;padding:0 12px;">
+                <input class="form-input" id="sv-airbnb-id" type="text" placeholder="Airbnb Listing ID" oninput="markDirty();document.getElementById('airbnb-id-label').textContent='Listing ID : '+(this.value||'—');" style="width:100%;">
+              </div>
+              <span class="platform-status missing" id="airbnb-status">Non renseigné</span>
+            </div>
+            <div class="platform-row">
+              <div class="platform-logo">📘</div>
+              <div class="platform-info">
+                <div class="platform-name">Booking.com</div>
+                <div class="platform-id" id="booking-id-label">Property ID : —</div>
+              </div>
+              <div style="flex:1;padding:0 12px;">
+                <input class="form-input" id="sv-booking-id" type="text" placeholder="Booking.com Property ID" oninput="markDirty();document.getElementById('booking-id-label').textContent='Property ID : '+(this.value||'—');" style="width:100%;">
+              </div>
+              <span class="platform-status missing" id="booking-status">Non renseigné</span>
+            </div>
+            <div class="platform-row">
+              <div class="platform-logo">🗝️</div>
+              <div class="platform-info">
+                <div class="platform-name">Hostaway</div>
+                <div class="platform-id" id="hostaway-id-label">Property ID : —</div>
+              </div>
+              <div style="flex:1;padding:0 12px;">
+                <input class="form-input" id="sv-hostaway-id" type="text" placeholder="Hostaway Property ID" oninput="markDirty();document.getElementById('hostaway-id-label').textContent='Property ID : '+(this.value||'—');" style="width:100%;">
+              </div>
+              <span class="platform-status missing" id="hostaway-status">Non renseigné</span>
+            </div>
+            <div class="platform-row" style="border-bottom:none;">
+              <div class="platform-logo">📊</div>
+              <div class="platform-info">
+                <div class="platform-name">Pricelabs</div>
+                <div class="platform-id">Lien listing Pricelabs</div>
+              </div>
+              <div style="flex:1;padding:0 12px;">
+                <input class="form-input" id="sv-pricelabs-url" type="text" placeholder="https://app.pricelabs.co/pricing?listing=..." oninput="markDirty();" style="width:100%;">
+              </div>
+              <span class="platform-status missing" id="pricelabs-status">Non renseigné</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button class="btn-ghost" onclick="discardChanges()">Annuler</button>
+        <button class="btn-primary" onclick="saveSection('Pricing')">Enregistrer</button>
+      </div>
+    </div>
+
+    <!-- ══ ONGLET 3 — APP & ALERTES ══ -->
+    <div class="tab-pane" id="pane-app">
+      <div class="pane-title">App & <em>alertes</em></div>
+      <div class="pane-sub">Comportement Sofia pour cette villa — overrides du client</div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">🚦</span>
+          <span class="card-header-title">Seuils d'alerte — override villa</span>
+        </div>
+        <div class="card-body">
+          <div id="thresholds-inherit-hint" style="font-size:11px;color:var(--muted);margin-bottom:16px;padding:10px 12px;background:rgba(139,105,20,.05);border-radius:6px;line-height:1.8;font-weight:600;">
+            ⬆ Hérite des seuils du client · Cocher un champ pour définir un override spécifique à cette villa
+          </div>
+          <div class="threshold-grid">
+            <div class="threshold-box">
+              <div class="thr-dot auto"></div>
+              <div class="thr-label">Auto · vert</div>
+              <input class="thr-input" type="text" id="sv-thr-auto" placeholder="Hérité du client" oninput="markDirty()">
+              <div class="thr-desc">Laisser vide = utilise le seuil du client</div>
+            </div>
+            <div class="threshold-box">
+              <div class="thr-dot warn"></div>
+              <div class="thr-label">Validation · orange</div>
+              <input class="thr-input" type="text" id="sv-thr-orange" placeholder="Hérité du client" oninput="markDirty()">
+              <div class="thr-desc">Laisser vide = utilise le seuil du client</div>
+            </div>
+            <div class="threshold-box">
+              <div class="thr-dot stop"></div>
+              <div class="thr-label">Proprio · rouge</div>
+              <input class="thr-input" type="text" id="sv-thr-rouge" placeholder="Hérité du client" oninput="markDirty()">
+              <div class="thr-desc">Laisser vide = utilise le seuil du client</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">🤖</span>
+          <span class="card-header-title">Comportement Sofia — cette villa</span>
+        </div>
+        <div class="card-body">
+          <div style="margin-bottom:20px;">
+            <div class="form-label" style="margin-bottom:10px;">Niveau de reporting</div>
+            <div class="detail-levels">
+              <button class="dl-btn" onclick="setDetail(this)">Minimal</button>
+              <button class="dl-btn active" onclick="setDetail(this)">Standard</button>
+              <button class="dl-btn" onclick="setDetail(this)">Détaillé</button>
+            </div>
+            <div class="form-hint" style="margin-top:8px;">Override du réglage client pour cette villa uniquement</div>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-title">Sofia répond aux guests</div>
+              <div class="toggle-sub">Sofia gère les messages guests Airbnb / WhatsApp pour cette villa</div>
+            </div>
+            <label class="toggle-switch"><input type="checkbox" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-title">Suggestions Pricelabs dans le feed</div>
+              <div class="toggle-sub">Affiche les recommandations de prix pour cette villa</div>
+            </div>
+            <label class="toggle-switch"><input type="checkbox" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-title">Alerte last-minute automatique</div>
+              <div class="toggle-sub">Sofia bascule en tarif last-minute si dispo J-3 non bookée</div>
+            </div>
+            <label class="toggle-switch"><input type="checkbox" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-title">Paiement PLN automatique</div>
+              <div class="toggle-sub">Sofia paie l'électricité et envoie le token au guest</div>
+            </div>
+            <label class="toggle-switch"><input type="checkbox" onchange="markDirty()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button class="btn-ghost" onclick="discardChanges()">Annuler</button>
+        <button class="btn-primary" onclick="saveSection('App & alertes')">Enregistrer</button>
+      </div>
+    </div>
+
+    <!-- ══ ONGLET 4 — FINANCES & XENDIT ══ -->
+    <div class="tab-pane" id="pane-finances">
+      <div class="pane-title">Finances & <em>Xendit</em></div>
+      <div class="pane-sub">Wallet Xendit sub-account · balance · commission · taxes</div>
+
+      <!-- XENDIT SUB-ACCOUNT — connecté -->
+      <div class="xendit-box" id="xendit-connected-zone" style="display:none;">
+        <div class="xendit-box-header">
+          <div class="xendit-box-icon">💳</div>
+          <div>
+            <div class="xendit-box-title" id="xendit-box-title">Wallet Xendit — <span id="xendit-villa-name">—</span></div>
+            <div class="xendit-box-sub" id="xendit-box-sub">Sub-account OWNED rattaché à <span id="xendit-owner-name">—</span></div>
+          </div>
+          <div class="xendit-box-status connected">Actif</div>
+        </div>
+        <div class="xendit-id">
+          <span id="xendit-id-val">—</span>
+          <span class="xendit-id-copy" onclick="copyXenditId()">Copier</span>
+        </div>
+        <div class="xendit-balance">
+          <div class="xendit-balance-val" id="xendit-balance">—</div>
+          <div class="xendit-balance-lbl">Balance disponible</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.8;font-weight:600;" id="xendit-last-tx">—</div>
+      </div>
+
+      <!-- XENDIT — pas encore créé -->
+      <div id="xendit-create-zone">
+        <div class="xendit-box" style="border-style:dashed;opacity:.7;">
+          <div class="xendit-box-header">
+            <div class="xendit-box-icon">💳</div>
+            <div>
+              <div class="xendit-box-title">Wallet Xendit — non configuré</div>
+              <div class="xendit-box-sub">Créer un sub-account pour cette villa</div>
+            </div>
+            <div class="xendit-box-status missing">Non configuré</div>
+          </div>
+        </div>
+        <button class="xendit-create-btn" onclick="createXenditSubAccount()">
+          <span>💳</span> Créer le wallet Xendit pour cette villa
+        </button>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;text-align:center;line-height:1.8;font-weight:600;">
+          1 appel API · sub-account OWNED rattaché au client master · balance réelle chez Xendit
+        </div>
+      </div>
+
+      <div class="settings-card" style="margin-top:16px;">
+        <div class="card-header">
+          <span class="card-header-icon">💰</span>
+          <span class="card-header-title">Commission — override villa</span>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <div class="form-label">Commission (%)</div>
+              <input class="form-input" id="sv-commission" type="number" placeholder="Héritée du client" oninput="markDirty()">
+              <div class="form-hint">Laisser vide = utilise la commission du client</div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">Seuil validation auto dépenses</div>
+              <input class="form-input" id="sv-approval-threshold" type="text" placeholder="Hérité du client" oninput="markDirty()">
+              <div class="form-hint">ex : 500.000 IDR · laisser vide = hérite du client</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">📊</span>
+          <span class="card-header-title">Historique ledger</span>
+          <span class="card-header-action" id="csv-export-btn" onclick="exportCSV()">Export CSV</span>
+        </div>
+        <div class="card-body tight">
+          <div id="ledger-preview" style="font-size:10px;">
+            <div style="padding:20px;text-align:center;font-size:11px;color:var(--muted);font-style:italic;">Aucun ledger — connecter hk-data.js</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAXES & COMPTABILITÉ -->
+      <div class="section-divider">Taxes & comptabilité</div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">🧾</span>
+          <span class="card-header-title">Profil fiscal — <span id="sv-fiscal-villa-name">cette villa</span></span>
+          <span class="card-header-action" onclick="window.location.href='taxes.html?villa='+villaId+(dataUrl?'&data='+encodeURIComponent(dataUrl):'')">→ Voir comptabilité complète</span>
+        </div>
+        <div class="card-body">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:16px;padding:10px 12px;background:rgba(139,105,20,.05);border-radius:6px;line-height:1.9;font-weight:600;" id="fiscal-inherit-hint">
+            ⬆ Hérite du profil fiscal du client · Cocher un champ pour définir un override spécifique à cette villa
+          </div>
+          <div class="form-grid-3" style="margin-bottom:16px;">
+            <div class="form-group">
+              <div class="form-label">PBJT — Taxe hébergement</div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input class="form-input" type="number" placeholder="Hérité : 10%" id="sv-pbjt" oninput="markDirty()" style="flex:1;">
+                <span style="font-size:11px;color:var(--muted);">%</span>
+              </div>
+              <div class="form-hint">Collectée sur le loyer brut · déclaration mensuelle</div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">PPh final — Revenu proprio</div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input class="form-input" type="number" placeholder="Hérité : 10%" id="sv-pph" oninput="markDirty()" style="flex:1;">
+                <span style="font-size:11px;color:var(--muted);">%</span>
+              </div>
+              <div class="form-hint">Art. 4(2) · sur revenus bruts · annuel</div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">PPN / TVA</div>
+              <div style="display:flex;gap:8px;align-items:center;margin-top:4px;">
+                <label class="toggle-switch"><input type="checkbox" id="sv-ppn" onchange="markDirty()"><span class="toggle-slider"></span></label>
+                <span style="font-size:11px;color:var(--muted);font-weight:600;">Désactivée (recommandé)</span>
+              </div>
+              <div class="form-hint">Activer si PKP enregistré · 11%</div>
+            </div>
+          </div>
+          <div class="form-grid" style="margin-bottom:0;">
+            <div class="form-group">
+              <div class="form-label">Fréquence déclaration PBJT</div>
+              <select class="form-select" id="sv-pbjt-freq" onchange="markDirty()">
+                <option value="">Héritée du client</option>
+                <option value="mensuelle">Mensuelle</option>
+                <option value="trimestrielle">Trimestrielle</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <div class="form-label">Envoi déclaration automatique</div>
+              <div style="display:flex;gap:8px;align-items:center;margin-top:6px;">
+                <label class="toggle-switch"><input type="checkbox" checked onchange="markDirty()"><span class="toggle-slider"></span></label>
+                <span style="font-size:11px;color:var(--muted);font-weight:600;">Sofia prépare + envoie en temps voulu</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Résumé taxes calculées -->
+      <div style="display:flex;gap:10px;padding:14px 18px;background:rgba(139,105,20,.04);border:1px solid var(--border);border-radius:12px;margin-bottom:20px;">
+        <div style="flex:1;text-align:center;">
+          <div style="font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">PBJT ce mois</div>
+          <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--gold);" id="sv-tax-pbjt-val">—</div>
+        </div>
+        <div style="flex:1;text-align:center;">
+          <div style="font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">PPh estimé (année)</div>
+          <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--gold);" id="sv-tax-pph-val">—</div>
+        </div>
+        <div style="flex:1;text-align:center;">
+          <div style="font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Net après taxes</div>
+          <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--green-d);" id="sv-tax-net-val">—</div>
+        </div>
+        <div style="display:flex;align-items:center;">
+          <button style="font-size:9px;letter-spacing:.5px;padding:7px 12px;border-radius:8px;border:1px solid var(--gold);background:transparent;color:var(--gold);cursor:pointer;" onclick="window.location.href='taxes.html?villa='+villaId+(dataUrl?'&data='+encodeURIComponent(dataUrl):'')">Détails →</button>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button class="btn-ghost" onclick="discardChanges()">Annuler</button>
+        <button class="btn-primary" onclick="saveSection('Finances')">Enregistrer</button>
+      </div>
+    </div>
+
+    <!-- ══ ONGLET 5 — STAFF ASSIGNÉ ══ -->
+    <div class="tab-pane" id="pane-staff">
+      <div class="pane-title">Staff <em>assigné</em></div>
+      <div class="pane-sub" id="staff-pane-sub">Équipe dédiée à cette villa</div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">👥</span>
+          <span class="card-header-title">Équipe</span>
+          <span class="card-header-action" onclick="alert('Ajouter un membre de staff')">+ Ajouter</span>
+        </div>
+        <div class="card-body tight">
+          <div id="staff-list">
+            <div style="padding:20px;text-align:center;font-size:11px;color:var(--muted);font-style:italic;">Aucun staff assigné — connecter hk-data.js</div>
+          </div>
+          <div class="add-staff-row" onclick="alert('→ Choisir un staff existant ou créer nouveau')">
+            ＋ Assigner un staff à cette villa
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">🔑</span>
+          <span class="card-header-title">Accès & clés</span>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <div class="form-label">Code entrée / Digicode</div>
+              <input class="form-input" id="sv-code-entree" type="text" placeholder="Code d'accès villa" oninput="markDirty()">
+              <div class="form-hint">Visible uniquement par le staff assigné et l'agence</div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">Code WiFi</div>
+              <input class="form-input" id="sv-code-wifi" type="text" placeholder="Mot de passe WiFi" oninput="markDirty()">
+              <div class="form-hint">Envoyé automatiquement au guest à l'arrivée</div>
+            </div>
+            <div class="form-group full">
+              <div class="form-label">Instructions d'accès (pour le staff)</div>
+              <textarea class="form-input" id="sv-instructions-acces" rows="3" style="resize:vertical;line-height:1.7;" placeholder="ex : Portail coulissant à gauche. Clé de secours chez le voisin..." oninput="markDirty()"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button class="btn-ghost" onclick="discardChanges()">Annuler</button>
+        <button class="btn-primary" onclick="saveSection('Staff')">Enregistrer</button>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
+
+<!-- SAVE BAR -->
+<div class="save-bar" id="save-bar">
+  <div class="save-bar-info"><strong>Modifications non enregistrées</strong></div>
+  <div class="save-bar-btns">
+    <button class="btn-ghost" onclick="discardChanges()">Annuler</button>
+    <button class="btn-primary" onclick="saveSection('tout')">Enregistrer tout</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// ── URL PARAMS ──
+var params = new URLSearchParams(window.location.search);
+var villaId = params.get('id') || 'new';
+var dataUrl  = params.get('data') || null;
+var isNew    = params.get('new') === '1';
+
+// ── HK DATA INJECTION ──
+// Vars attendues par HK_inject() — init vide
+var HK_OWNER  = null;
+var HK_VILLAS = [];
+var HK_STAFF  = [];
+
+// inject depuis HK_VILLAS dans les champs
+function populateFromHK(){
+  if(!HK_VILLAS || !HK_VILLAS.length) return;
+  var V = HK_VILLAS.find(function(v){return v.id===villaId;});
+  if(!V) return;
+
+  // Sidebar
+  setText('sidebar-name', V.name || '—');
+  setText('villa-title-name', V.name || '—');
+  setText('sv-name-preview', V.name || '—');
+  setVal('sv-name-input', V.name || '');
+  setVal('sv-emoji', V.emoji || '🏠');
+  if(V.emoji){
+    document.getElementById('sidebar-icon').textContent = V.emoji;
+    document.getElementById('sv-bubble-inner').textContent = V.emoji;
+    document.getElementById('sv-pin-icon').textContent = V.emoji;
+  }
+
+  // Meta sidebar
+  var meta = (V.bedrooms||'—')+' chambres · '+(V.location||'—')+'<br>Proprio : '+(HK_OWNER&&HK_OWNER.name||'—')+'<br>';
+  document.getElementById('sidebar-meta').innerHTML = meta;
+  document.getElementById('sidebar-id').textContent = 'ID : '+villaId;
+
+  // Owner name
+  setVal('sv-owner-name', HK_OWNER && HK_OWNER.name || '');
+  setText('xendit-owner-name', HK_OWNER && HK_OWNER.name || '—');
+
+  // Beds / area
+  if(V.bedrooms){ var el=document.getElementById('sv-beds'); if(el){var opt=[...el.options].find(function(o){return parseInt(o.value)===V.bedrooms||o.value===''+V.bedrooms;}); if(opt) opt.selected=true;} }
+  if(V.location){ var el=document.getElementById('sv-area'); if(el){var opt=[...el.options].find(function(o){return o.value===V.location||o.textContent===V.location;}); if(opt) opt.selected=true;} }
+
+  // GPS
+  if(V.lat && V.lng){
+    setVal('gps-lat-input', V.lat);
+    setVal('gps-lng-input', V.lng);
+    setText('gps-display', V.lat+', '+V.lng);
+  }
+
+  // Pricing
+  if(V.adr_per_night){ setVal('sv-price-floor', '$'+(V.adr_per_night||'')); }
+  if(V.lm_price){ setVal('sv-lm-price', V.lm_price); }
+
+  // Xendit
+  setText('xendit-villa-name', V.name || '—');
+  setText('sv-fiscal-villa-name', V.name || 'cette villa');
+  setText('sv-standing-label', '—');
+
+  // Topbar title
+  document.querySelector('.topbar-title').innerHTML = 'Settings — <span style="color:var(--gold);font-style:italic;">'+(V.name||'Villa')+'</span>';
+
+  // Staff pane sub
+  setText('staff-pane-sub', 'Équipe dédiée à '+(V.name||'cette villa'));
+
+  // Fiscal inherit hint
+  var ownerName = HK_OWNER && HK_OWNER.name || 'client';
+  document.getElementById('fiscal-inherit-hint').innerHTML = '⬆ Hérite du profil fiscal de '+ownerName+' · Cocher un champ pour définir un override spécifique à '+(V.name||'cette villa');
+  document.getElementById('thresholds-inherit-hint').innerHTML = '⬆ Hérite des seuils de '+ownerName+' · Cocher un champ pour définir un override spécifique à cette villa';
+
+  // Staff
+  if(HK_STAFF && HK_STAFF.length){
+    var villaStaff = HK_STAFF.filter(function(s){return !s.villas || s.villas.indexOf(villaId)>-1;});
+    if(villaStaff.length) buildStaff(villaStaff);
+  }
+
+  // Map init with GPS
+  if(V.lat && V.lng && mapReady){
+    map.setView([V.lat, V.lng], 15, {animate:false});
+  }
+}
+
+function setText(id,val){var el=document.getElementById(id);if(el)el.textContent=val;}
+function setVal(id,val){var el=document.getElementById(id);if(el&&el.tagName==='INPUT')el.value=val;}
+
+// ── LOAD hk-data.js ──
+(function(){
+  if(!dataUrl){
+    // Try demo folder
+    var s=document.createElement('script');
+    s.src='DOSSIER-DEMO-JEAN-LOUP/hk-data.js';
+    s.onload=function(){if(typeof HK_inject==='function')HK_inject();populateFromHK();loadFromLocalStorage();};
+    s.onerror=function(){loadFromLocalStorage();}; // no data, use localStorage only
+    document.head.appendChild(s);
+  } else {
+    var s=document.createElement('script');
+    s.src=dataUrl;
+    s.onload=function(){if(typeof HK_inject==='function')HK_inject();populateFromHK();loadFromLocalStorage();};
+    s.onerror=function(){loadFromLocalStorage();};
+    document.head.appendChild(s);
+  }
+})();
+
+// ── INIT FROM URL PARAMS ──
+(function(){
+  if(isNew){ var b=document.getElementById('new-badge'); if(b) b.style.display='inline-flex'; }
+  var name=params.get('name');
+  if(name){ setText('sidebar-name',name); setText('villa-title-name',name); setText('sv-name-preview',name); setVal('sv-name-input',name); }
+  var beds=params.get('beds');
+  if(beds){ var el=document.getElementById('sv-beds'); if(el) el.value=beds; }
+  var area=params.get('area');
+  if(area){ var el=document.getElementById('sv-area'); if(el) el.value=area; }
+  var lat=params.get('lat'), lng=params.get('lng');
+  if(lat && lng){ setVal('gps-lat-input',parseFloat(lat).toFixed(6)); setVal('gps-lng-input',parseFloat(lng).toFixed(6)); setText('gps-display',parseFloat(lat).toFixed(6)+', '+parseFloat(lng).toFixed(6)); }
+  // Audit data
+  var adr=params.get('adr_usd'), occ=params.get('occupancy'), revM=params.get('revenu_mensuel_usd'), debut=params.get('periode_debut'), fin=params.get('periode_fin');
+  if(adr||occ||revM){
+    var banner=document.getElementById('audit-banner');
+    if(banner){
+      banner.style.display='block';
+      if(adr) document.getElementById('ab-adr').textContent='$'+Math.round(adr)+'/nuit';
+      if(occ) document.getElementById('ab-occ').textContent=occ+'%';
+      if(revM) document.getElementById('ab-rev').textContent='$'+Math.round(revM)+'/mois';
+      if(debut&&fin) document.getElementById('ab-periode').textContent=debut+' → '+fin;
+    }
+  }
+})();
+
+// ── LOAD FROM localStorage ──
+function loadFromLocalStorage(){
+  try{
+    var key='hk_villa_'+villaId;
+    var raw=localStorage.getItem(key);
+    if(!raw) return;
+    var d=JSON.parse(raw);
+    if(d.lm_price!=null){ setVal('sv-lm-price', d.lm_price); }
+    var directLM=localStorage.getItem('hk_lm_'+villaId);
+    if(directLM && d.lm_price==null){ setVal('sv-lm-price', directLM); }
+    if(d.pbjt_pct!=null){ setVal('sv-pbjt', d.pbjt_pct); }
+    if(d.pph_pct!=null){ setVal('sv-pph', d.pph_pct); }
+    if(d.ppn!=null){ var el=document.getElementById('sv-ppn'); if(el) el.checked=d.ppn; }
+    if(d.pbjt_freq){ var el=document.getElementById('sv-pbjt-freq'); if(el) el.value=d.pbjt_freq; }
+    if(d.name){ setText('sidebar-name',d.name); setText('villa-title-name',d.name); setText('sv-name-preview',d.name); setVal('sv-name-input',d.name); }
+    if(d.xendit_id){ showXenditConnected(d.xendit_id); }
+    if(d.code_entree){ setVal('sv-code-entree', d.code_entree); }
+    if(d.code_wifi){ setVal('sv-code-wifi', d.code_wifi); }
+    if(d.instructions_acces){ var el=document.getElementById('sv-instructions-acces'); if(el) el.value=d.instructions_acces; }
+    if(d.airbnb_id){ setVal('sv-airbnb-id', d.airbnb_id); updatePlatformStatus('airbnb', d.airbnb_id); }
+    if(d.hostaway_id){ setVal('sv-hostaway-id', d.hostaway_id); updatePlatformStatus('hostaway', d.hostaway_id); }
+    if(d.booking_id){ setVal('sv-booking-id', d.booking_id); updatePlatformStatus('booking', d.booking_id); }
+    if(d.pricelabs_url){ setVal('sv-pricelabs-url', d.pricelabs_url); updatePlatformStatus('pricelabs', d.pricelabs_url); }
+  }catch(e){console.warn('localStorage load failed',e);}
+}
+
+function updatePlatformStatus(platform, val){
+  var statusEl = document.getElementById(platform+'-status');
+  if(statusEl && val){
+    statusEl.textContent = '✓ Renseigné';
+    statusEl.className = 'platform-status ok';
+  }
+}
+
+// ── NAVIGATION ──
+function goBack(){
+  var clientId=params.get('client');
+  var fromVilla=params.get('from')||params.get('id');
+  var dParam=dataUrl?'&data='+encodeURIComponent(dataUrl):'';
+  if(clientId) window.location.href='settings-client.html?id='+clientId+dParam;
+  else if(fromVilla) window.location.href='villa_vierge.html?id='+fromVilla+dParam;
+  else window.location.href='client.html'+(dataUrl?'?data='+encodeURIComponent(dataUrl):'');
+}
+function goVillaView(){ window.location.href='villa_vierge.html?id='+villaId+(dataUrl?'&data='+encodeURIComponent(dataUrl):''); }
+function goClient(){ window.location.href='client.html'+(dataUrl?'?data='+encodeURIComponent(dataUrl):''); }
+function goSettingsClient(){ window.location.href='settings-client.html'+(dataUrl?'?data='+encodeURIComponent(dataUrl):''); }
+function exportCSV(){ alert('Export CSV ledger — '+(document.getElementById('sidebar-name').textContent||villaId)); }
+
+// ── TABS ──
+var TABS=['localisation','pricing','app','finances','staff'];
+function switchTab(id,navEl){
+  TABS.forEach(function(t){document.getElementById('pane-'+t).classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(n){n.classList.remove('active');});
+  document.getElementById('pane-'+id).classList.add('active');
+  if(navEl) navEl.classList.add('active');
+  if(id==='localisation' && !mapReady) initMap();
+}
+
+// ── PILL RADIO ──
+document.querySelectorAll('input[type=radio]').forEach(function(r){
+  r.addEventListener('change',function(){
+    var name=r.name;
+    document.querySelectorAll('input[name="'+name+'"]').forEach(function(rb){
+      var pill=rb.closest('label')&&rb.closest('label').querySelector('.pill-radio');
+      if(pill) pill.classList.remove('active');
+    });
+    var active=r.closest('label')&&r.closest('label').querySelector('.pill-radio');
+    if(active) active.classList.add('active');
+  });
+});
+
+function togglePillSV(el){ el.classList.toggle('active'); markDirty(); }
+
+// ── STANDING ──
+var SV_STANDING_LABELS=['Standard','Standard+','Supérieur','Supérieur+','Premium','Premium+','✦ Luxe'];
+function calcStandingSV(){
+  var score=0;
+  var pisc=document.querySelector('input[name="piscine"]:checked');
+  if(pisc){ if(pisc.value==='privee') score+=20; else if(pisc.value==='partagee') score+=8; }
+  var vue=document.querySelector('input[name="vue"]:checked');
+  if(vue){ if(vue.value==='mer') score+=20; else if(vue.value==='riziere') score+=12; else if(vue.value==='jardin') score+=6; }
+  var style=document.querySelector('input[name="sv-style"]:checked');
+  if(style){ if(style.value==='moderne'||style.value==='charme') score+=15; else if(style.value==='indo-renove') score+=10; }
+  var etat=document.querySelector('input[name="sv-etat"]:checked');
+  if(etat){ if(etat.value==='neuf') score+=15; else if(etat.value==='bon') score+=8; }
+  var airbnbEl=document.getElementById('v-note-airbnb');
+  var bookingEl=document.getElementById('v-note-booking');
+  var airbnb=parseFloat(airbnbEl&&airbnbEl.value||0);
+  var booking=parseFloat(bookingEl&&bookingEl.value||0);
+  var noteComp=null;
+  if(airbnb>0&&booking>0) noteComp=Math.round((airbnb*0.6+(booking/10*5)*0.4)*100)/100;
+  else if(airbnb>0) noteComp=airbnb;
+  else if(booking>0) noteComp=Math.round(booking/10*5*100)/100;
+  if(noteComp){
+    score+=Math.round((noteComp-3)*15);
+    document.getElementById('sv-note-composite-line').style.display='block';
+    document.getElementById('sv-note-composite').textContent=noteComp.toFixed(2);
+  } else {
+    document.getElementById('sv-note-composite-line').style.display='none';
+  }
+  score=Math.max(0,Math.min(100,score));
+  document.getElementById('sv-standing-slider').value=score;
+  onStandingSliderSV(score,true);
+  markDirty();
+}
+function onStandingSliderSV(val,fromCalc){
+  val=parseInt(val);
+  var idx=Math.min(6,Math.floor(val/100*7));
+  document.getElementById('sv-standing-label').textContent=SV_STANDING_LABELS[idx];
+  document.getElementById('sv-standing-score').textContent='score '+val+'/100';
+  document.getElementById('sv-standing-hint').textContent=fromCalc?'Calculé depuis tes critères — tu peux ajuster':'Ajusté manuellement';
+  var thumb=document.getElementById('sv-standing-thumb');
+  if(thumb) thumb.style.left=val+'%';
+}
+onStandingSliderSV(0, true);
+
+// ── MAP ──
+var map, mapReady=false, tileLayer, satelliteMode=false;
+var TILE_STREET='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+var TILE_SAT='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+var DEFAULT_LAT=-8.6521, DEFAULT_LNG=115.1271;
+
+function initMap(){
+  if(mapReady) return;
+  var latIn=document.getElementById('gps-lat-input');
+  var lngIn=document.getElementById('gps-lng-input');
+  var lat=parseFloat(latIn&&latIn.value)||DEFAULT_LAT;
+  var lng=parseFloat(lngIn&&lngIn.value)||DEFAULT_LNG;
+  try{
+    map=L.map('villa-map',{zoomControl:true,scrollWheelZoom:false,touchZoom:false});
+    tileLayer=L.tileLayer(TILE_STREET,{maxZoom:19,attribution:''}).addTo(map);
+    map.setView([lat,lng],15);
+    map.on('move',function(){ var c=map.getCenter(); updateGPS(c.lat,c.lng); });
+    map.on('tileerror',function(){
+      var hint=document.getElementById('map-hint');
+      if(hint) hint.textContent='Tuiles non disponibles en mode file:// — OK depuis serveur';
+    });
+    mapReady=true;
+  }catch(e){ console.warn('Map init error',e); }
+}
+
+function updateGPS(lat,lng){
+  var la=lat.toFixed(6), lo=lng.toFixed(6);
+  setText('gps-display', la+', '+lo);
+  setVal('gps-lat-input',la);
+  setVal('gps-lng-input',lo);
+  document.getElementById('gps-status-label').textContent='📍 À confirmer';
+  document.getElementById('gps-confirmed').style.display='none';
+}
+
+function updateMapFromInputs(){
+  if(!mapReady) return;
+  var lat=parseFloat(document.getElementById('gps-lat-input').value);
+  var lng=parseFloat(document.getElementById('gps-lng-input').value);
+  if(!isNaN(lat)&&!isNaN(lng)) map.setView([lat,lng],15,{animate:true});
+}
+
+function searchLocation(){
+  var q=document.getElementById('map-search').value.trim();
+  if(!q) return;
+  var url='https://nominatim.openstreetmap.org/search?q='+encodeURIComponent(q)+'&format=json&limit=5&countrycodes=id';
+  fetch(url).then(function(r){return r.json();}).then(function(data){
+    if(data&&data.length) showLocationResults(data);
+    else alert('Aucun résultat — essayer une adresse plus précise');
+  }).catch(function(){ alert('Erreur réseau Nominatim'); });
+}
+
+function showLocationResults(results){
+  var wrap=document.getElementById('sv-search-results-wrap');
+  wrap.innerHTML='<div style="background:var(--cream);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:10px;box-shadow:0 4px 14px rgba(0,0,0,.07);">'
+    +'<div style="padding:7px 14px;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);">'+results.length+' résultats — choisir le bon</div>'
+    +results.map(function(d,i){var p=d.display_name.split(',');return '<div onclick="pickSVResult('+i+')" style="padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;display:flex;gap:9px;transition:background .15s;" onmouseover="this.style.background=\'rgba(139,105,20,.05)\'" onmouseout="this.style.background=\'\'"><span style="font-size:13px;flex-shrink:0;">📍</span><div><div style="font-size:11px;color:var(--text);">'+p[0].trim()+'</div><div style="font-size:9px;color:var(--muted);margin-top:2px;">'+p.slice(1,4).map(function(s){return s.trim();}).join(', ')+'</div></div></div>';}).join('')
+    +'</div>';
+  window._svResults=results;
+}
+
+function pickSVResult(i){
+  var d=window._svResults[i];
+  if(map) map.setView([parseFloat(d.lat),parseFloat(d.lon)],17,{animate:true});
+  document.getElementById('sv-search-results-wrap').innerHTML='';
+}
+
+function toggleSatellite(){
+  if(!mapReady) return;
+  satelliteMode=!satelliteMode;
+  map.removeLayer(tileLayer);
+  tileLayer=L.tileLayer(satelliteMode?TILE_SAT:TILE_STREET,{maxZoom:19}).addTo(map);
+  document.querySelector('.map-satellite-btn').textContent=satelliteMode?'🗺 Vue plan':'🛰 Vue satellite';
+}
+
+document.addEventListener('DOMContentLoaded',function(){setTimeout(initMap,100);});
+
+// ── PHOTOS ──
+var PHOTOS_DATA=[];
+function buildPhotos(){
+  var grid=document.getElementById('photos-grid');
+  if(!grid) return;
+  var html=PHOTOS_DATA.map(function(p,i){
+    return '<div class="photo-slot"><div style="width:100%;height:100%;background:linear-gradient(135deg,var(--cream3),var(--cream2));display:flex;align-items:center;justify-content:center;font-size:28px;">🏠</div>'+(p.cover?'<div class="photo-cover-badge">★ Cover</div>':'')+'<div class="photo-slot-cover"><div class="photo-actions"><div class="photo-act-btn" title="Cover" onclick="setCover('+i+')">★</div><div class="photo-act-btn" title="Supprimer" onclick="removePhoto('+i+')">✕</div></div></div></div>';
+  }).join('');
+  html+='<div class="photo-add-slot" onclick="alert(\'Upload photo\')"><div class="add-icon">＋</div><div class="add-label">Ajouter</div></div>';
+  grid.innerHTML=html;
+}
+buildPhotos();
+function setCover(i){PHOTOS_DATA.forEach(function(p,j){p.cover=j===i;});buildPhotos();markDirty();}
+function removePhoto(i){PHOTOS_DATA.splice(i,1);buildPhotos();markDirty();}
+
+// ── PHOTO COVER UPLOAD ──
+var svPhotoUrl=null;
+function onSvPhoto(inp){
+  var f=inp.files[0]; if(!f) return;
+  var r=new FileReader();
+  r.onload=function(e){
+    svPhotoUrl=e.target.result;
+    document.getElementById('sv-bubble-inner').innerHTML='<img src="'+svPhotoUrl+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+    var pin=document.getElementById('sv-pin-icon');
+    if(pin) pin.innerHTML='<img src="'+svPhotoUrl+'" style="width:100%;height:100%;object-fit:cover;">';
+    markDirty();
+  };
+  r.readAsDataURL(f);
+}
+
+// ── STAFF ──
+function buildStaff(staffArr){
+  var el=document.getElementById('staff-list');
+  if(!el) return;
+  if(!staffArr || !staffArr.length){
+    el.innerHTML='<div style="padding:20px;text-align:center;font-size:11px;color:var(--muted);font-style:italic;">Aucun staff assigné</div>';
+    return;
+  }
+  el.innerHTML=staffArr.map(function(s,i){
+    var avatar=s.logo||s.photo?('<img src="'+(s.logo||s.photo)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">'):s.emoji||'👤';
+    var isImg=s.logo||s.photo;
+    return '<div class="staff-slot"><div class="staff-avatar">'+(isImg?'<img src="'+(s.logo||s.photo)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">':s.emoji||'👤')+'</div><div class="staff-info"><div class="staff-name">'+(s.name||'—')+'</div><div class="staff-role">'+(s.role||'—')+'</div><div class="staff-contact">'+(s.tel||'')+'</div></div><div class="staff-action"><button class="staff-btn" onclick="window.location.href=\'staff.html?who='+(s.id||'')+'\'">→</button><button class="staff-btn remove" onclick="removeStaff('+i+')">✕</button></div></div>';
+  }).join('');
+}
+
+var STAFF_LOCAL=[];
+function removeStaff(i){if(confirm('Retirer ce staff de cette villa ?')){STAFF_LOCAL.splice(i,1);buildStaff(STAFF_LOCAL);markDirty();}}
+
+// ── XENDIT ──
+function showXenditConnected(id){
+  var cz=document.getElementById('xendit-create-zone');
+  var xc=document.getElementById('xendit-connected-zone');
+  if(cz) cz.style.display='none';
+  if(xc) xc.style.display='block';
+  var iv=document.getElementById('xendit-id-val');
+  if(iv) iv.textContent=id;
+}
+function copyXenditId(){
+  var id=document.getElementById('xendit-id-val')&&document.getElementById('xendit-id-val').textContent;
+  if(id&&id!=='—') navigator.clipboard.writeText(id).catch(function(){});
+  var btn=document.querySelector('.xendit-id-copy');
+  if(btn){btn.textContent='✓ Copié';setTimeout(function(){btn.textContent='Copier';},2000);}
+}
+function createXenditSubAccount(){
+  var btn=document.querySelector('.xendit-create-btn');
+  if(btn){btn.textContent='⏳ Création en cours...';btn.disabled=true;}
+  setTimeout(function(){
+    var newId='xw_'+villaId+'_'+Math.random().toString(36).substr(2,8);
+    showXenditConnected(newId);
+    alert('✓ Sub-account Xendit créé\nID : '+newId);
+    var dirty2=document.getElementById('save-bar');
+    markDirty();
+  },1800);
+}
+
+// ── DETAIL LEVELS ──
+function setDetail(el){
+  el.closest('.detail-levels').querySelectorAll('.dl-btn').forEach(function(b){b.classList.remove('active');});
+  el.classList.add('active');
+  markDirty();
+}
+
+// ── SIDEBAR NAME ──
+function updateSidebarName(v){
+  setText('sidebar-name', v||'Villa');
+  setText('villa-title-name', v||'Villa');
+}
+
+// ── SAVE BAR ──
+var dirty=false;
+function markDirty(){if(!dirty){dirty=true;document.getElementById('save-bar').classList.add('visible');}}
+function discardChanges(){dirty=false;document.getElementById('save-bar').classList.remove('visible');}
+
+function saveSection(label){
+  dirty=false;
+  document.getElementById('save-bar').classList.remove('visible');
+
+  // GPS confirm
+  var gpsEl=document.getElementById('gps-confirmed');
+  if(gpsEl){gpsEl.innerHTML='✓ Position confirmée';gpsEl.style.display='flex';gpsEl.style.color='var(--green-d)';}
+  var gpsStatus=document.getElementById('gps-status-label');
+  if(gpsStatus) gpsStatus.textContent='✓ Confirmé';
+
+  var btn=event&&event.target;
+  if(btn&&btn.tagName==='BUTTON'){
+    var orig=btn.textContent;
+    btn.textContent='✓ Enregistré';
+    btn.style.background='var(--green-d)';
+    setTimeout(function(){btn.textContent=orig;btn.style.background='';},1800);
+  }
+
+  // Persist to localStorage
+  try{
+    var key='hk_villa_'+villaId;
+    var existing={};
+    try{var raw=localStorage.getItem(key);if(raw)existing=JSON.parse(raw);}catch(e){}
+
+    // Pricing
+    var lmEl=document.getElementById('sv-lm-price');
+    if(lmEl&&lmEl.value!==''){
+      existing.lm_price=parseFloat(lmEl.value)||null;
+      localStorage.setItem('hk_lm_'+villaId, lmEl.value);
+    }
+
+    // Taxes
+    var pbjt=document.getElementById('sv-pbjt');
+    var pph=document.getElementById('sv-pph');
+    var ppn=document.getElementById('sv-ppn');
+    var freq=document.getElementById('sv-pbjt-freq');
+    if(pbjt&&pbjt.value!=='') existing.pbjt_pct=parseFloat(pbjt.value)||null;
+    if(pph&&pph.value!=='') existing.pph_pct=parseFloat(pph.value)||null;
+    if(ppn) existing.ppn=ppn.checked;
+    if(freq) existing.pbjt_freq=freq.value;
+
+    // Identity
+    var nameEl=document.getElementById('sv-name-input');
+    var bedsEl=document.getElementById('sv-beds');
+    if(nameEl&&nameEl.value) existing.name=nameEl.value;
+    if(bedsEl&&bedsEl.value) existing.beds=parseInt(bedsEl.value)||null;
+
+    // GPS
+    var latEl=document.getElementById('gps-lat-input');
+    var lngEl=document.getElementById('gps-lng-input');
+    if(latEl&&latEl.value) existing.lat=parseFloat(latEl.value);
+    if(lngEl&&lngEl.value) existing.lng=parseFloat(lngEl.value);
+
+    // Platforms
+    var airbnbEl=document.getElementById('sv-airbnb-id');
+    var hostwayEl=document.getElementById('sv-hostaway-id');
+    var bookingEl=document.getElementById('sv-booking-id');
+    var pricelabsEl=document.getElementById('sv-pricelabs-url');
+    if(airbnbEl&&airbnbEl.value){ existing.airbnb_id=airbnbEl.value; updatePlatformStatus('airbnb',airbnbEl.value); }
+    if(hostwayEl&&hostwayEl.value){ existing.hostaway_id=hostwayEl.value; updatePlatformStatus('hostaway',hostwayEl.value); }
+    if(bookingEl&&bookingEl.value){ existing.booking_id=bookingEl.value; updatePlatformStatus('booking',bookingEl.value); }
+    if(pricelabsEl&&pricelabsEl.value){ existing.pricelabs_url=pricelabsEl.value; updatePlatformStatus('pricelabs',pricelabsEl.value); }
+
+    // Access
+    var codeEntreeEl=document.getElementById('sv-code-entree');
+    var codeWifiEl=document.getElementById('sv-code-wifi');
+    var instructEl=document.getElementById('sv-instructions-acces');
+    if(codeEntreeEl&&codeEntreeEl.value) existing.code_entree=codeEntreeEl.value;
+    if(codeWifiEl&&codeWifiEl.value) existing.code_wifi=codeWifiEl.value;
+    if(instructEl&&instructEl.value) existing.instructions_acces=instructEl.value;
+
+    existing._saved=new Date().toISOString();
+    existing._villaId=villaId;
+    localStorage.setItem(key,JSON.stringify(existing));
+    localStorage.setItem('hk_villa_latest',villaId);
+  }catch(e){console.warn('localStorage save failed',e);}
+}
+
+// ── JS VALIDATION ──
+try{
+  new Function('var x = 1; return x;')();
+}catch(e){console.error('JS validation error',e);}
+</script>
+</body>
+</html>

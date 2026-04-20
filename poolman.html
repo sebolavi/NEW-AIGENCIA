@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Pool Man · BALIAGENCIA</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Mono:wght@300;400&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F0F7FF;--bg2:#E3EFF9;--bg3:#D5E5F2;
+  --dark:#1A1F2C;--dark2:#1E2A3A;--dark3:#080F1A;
+  --text:#2C2C3A;--muted:#7A8A9A;--muted2:#A8B8C8;
+  --green:#27AE60;--green-soft:#E8F5EE;--green-mid:#A8D5B8;--green-dark:#1E8449;
+  --gold:#C9A84C;--gold-light:#E8C97A;
+  --orange:#E67E22;--orange-soft:#FEF0E3;
+  --red:#C0392B;--red-soft:#FDECEA;
+  --blue:#2E86C1;--blue-soft:#EBF5FB;--blue-mid:#7FB3D3;--blue-dark:#1A5276;
+  --tropical:#00A693;--tropical-soft:#E0F4F2;
+  --rose:#FDF0F6;--rose-btn:#D4749A;--rose-dark:#A84870;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.05);
+  --shadow:0 2px 12px rgba(0,0,0,0.08);
+  --radius:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;max-width:430px;margin:0 auto;}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(240,247,255,0.97);border-bottom:1px solid var(--border);padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);}
+.tb-logo{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;}
+.tb-right{display:flex;align-items:center;gap:10px;}
+.tb-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#A0D4FF,#3090D8);border:2px solid rgba(46,134,193,0.3);display:flex;align-items:center;justify-content:center;font-size:17px;}
+.tb-name strong{font-size:12px;font-weight:800;color:var(--dark);display:block;text-align:right;}
+.tb-name span{font-size:10px;color:var(--muted);display:block;text-align:right;}
+.lang-toggle{font-size:10px;font-weight:700;color:var(--muted);background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:4px 10px;cursor:pointer;user-select:none;}
+
+/* HERO */
+.hero{background:linear-gradient(160deg,#0D2137 0%,#1A3A5C 60%,#0A1F35 100%);padding:28px 22px 0;position:relative;overflow:hidden;}
+.hero-wave{position:absolute;right:-20px;bottom:0;font-size:120px;opacity:0.07;pointer-events:none;}
+.hero-wave2{position:absolute;left:-10px;top:-10px;font-size:90px;opacity:0.04;pointer-events:none;}
+.hero-date{font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.35);margin-bottom:10px;text-transform:uppercase;font-family:'DM Mono',monospace;}
+.hero-greeting{font-size:26px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:6px;}
+.hero-greeting em{color:var(--gold);font-style:italic;font-family:'Playfair Display',serif;font-size:28px;font-weight:400;}
+.hero-mission{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;max-width:300px;margin-bottom:18px;}
+.hero-villa-card{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:14px;margin-bottom:28px;}
+.hvc-icon{font-size:28px;}
+.hvc-name{font-size:15px;font-weight:800;color:#fff;}
+.hvc-meta{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;}
+.hvc-tags{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
+.hvc-tag{font-size:9px;padding:3px 8px;border-radius:20px;font-weight:700;}
+.tag-routine{background:rgba(46,134,193,0.2);color:#7EC8F0;border:1px solid rgba(46,134,193,0.3);}
+.tag-chemical{background:rgba(230,126,34,0.2);color:#F0A060;border:1px solid rgba(230,126,34,0.3);}
+.tag-new{background:rgba(0,166,147,0.2);color:var(--tropical);border:1px solid rgba(0,166,147,0.3);}
+
+/* ── ORBITAL CLOCK ── */
+.clock-section{background:linear-gradient(180deg,#0A1F35 0%,#050C14 100%);padding:24px 20px 28px;display:flex;flex-direction:column;align-items:center;}
+.clock-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.2);margin-bottom:18px;font-family:'DM Mono',monospace;}
+.clock-wrap{position:relative;width:280px;height:280px;}
+#orbitCanvas{position:absolute;top:0;left:0;width:280px;height:280px;}
+.clock-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:74px;height:74px;border-radius:50%;background:radial-gradient(circle,rgba(46,134,193,0.2),rgba(46,134,193,0.03));border:1.5px solid rgba(46,134,193,0.5);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;box-shadow:0 0 32px rgba(46,134,193,0.15);}
+.clock-center-emoji{font-size:26px;line-height:1;}
+.clock-center-lbl{font-size:7px;color:#7EC8F0;font-family:'DM Mono',monospace;letter-spacing:0.8px;margin-top:3px;text-transform:uppercase;opacity:0.9;text-align:center;max-width:64px;}
+.clock-tagline{font-size:11px;color:rgba(255,255,255,0.25);margin-top:16px;text-align:center;max-width:260px;line-height:1.75;font-style:italic;}
+.clock-tagline em{color:#7EC8F0;font-style:normal;font-weight:800;}
+
+/* BLOCKS */
+.block{margin:16px 20px 0;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+.block-head{padding:14px 18px;background:linear-gradient(135deg,#1A3A5C,#0D2137);display:flex;align-items:center;gap:10px;}
+.bh-icon{font-size:20px;}
+.bh-title{font-size:13px;font-weight:800;color:#fff;}
+.bh-sub{font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;}
+.block-body{padding:14px 18px;}
+
+/* PROGRESS */
+.progress-wrap{padding:18px 20px 0;}
+.progress-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.progress-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.progress-pct{font-family:'DM Mono',monospace;font-size:13px;color:var(--blue);}
+.progress-track{height:7px;background:var(--bg3);border-radius:4px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue-dark),var(--blue));border-radius:4px;transition:width .5s cubic-bezier(.4,0,.2,1);width:0%;}
+
+/* CHECKLIST CATS */
+.cats{padding:14px 20px 0;display:flex;flex-direction:column;gap:10px;}
+.cat-block{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;border:1.5px solid transparent;transition:border-color .25s;}
+.cat-block.done{border-color:var(--blue-mid);}
+.cat-block.problem-orange{border-color:var(--orange);background:rgba(230,126,34,0.02);}
+.cat-block.problem-red{border-color:var(--red);background:rgba(192,57,43,0.02);}
+.cat-header{display:flex;align-items:center;gap:12px;padding:16px 18px;cursor:pointer;user-select:none;}
+.cat-check{width:32px;height:32px;border-radius:50%;flex-shrink:0;border:2px solid var(--bg3);background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .3s cubic-bezier(.175,.885,.32,1.275);position:relative;}
+.cat-block.done .cat-check{background:var(--blue);border-color:var(--blue);box-shadow:0 0 0 4px rgba(46,134,193,0.15);}
+.cat-tick{opacity:0;font-size:14px;color:#fff;position:absolute;transition:opacity .2s;}
+.cat-block.done .cat-tick{opacity:1;}
+.cat-emoji{transition:opacity .2s;}
+.cat-block.done .cat-emoji{opacity:0;}
+.cat-info{flex:1;}
+.cat-name{font-size:14px;font-weight:800;color:var(--dark);}
+.cat-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.cat-badge{font-size:10px;font-weight:700;color:var(--muted);background:var(--bg2);padding:4px 10px;border-radius:20px;white-space:nowrap;}
+.cat-block.done .cat-badge{background:var(--blue-soft);color:var(--blue-dark);}
+.cat-block.problem-orange .cat-badge{background:var(--orange-soft);color:var(--orange);}
+.cat-block.problem-red .cat-badge{background:var(--red-soft);color:var(--red);}
+
+/* Problem button inside cat */
+.cat-problem-btn{display:flex;align-items:center;gap:8px;margin:10px 0 4px;padding:10px 14px;border-radius:10px;border:1.5px solid rgba(230,126,34,0.35);background:var(--orange-soft);font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;color:var(--orange);cursor:pointer;width:100%;transition:all .2s;}
+.cat-problem-btn:active{transform:scale(.98);}
+.cat-problem-btn.is-red{border-color:rgba(192,57,43,0.35);background:var(--red-soft);color:var(--red);}
+
+/* Dual action row: Done + Issue */
+.cat-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.cat-act-done{padding:11px;border-radius:10px;border:1.5px solid var(--green-mid);background:var(--green-soft);font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;color:var(--green-dark);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.cat-act-done.on{background:linear-gradient(135deg,var(--green-dark),var(--green));color:#fff;border-color:var(--green-dark);box-shadow:0 3px 12px rgba(39,174,96,0.25);}
+.cat-act-issue{padding:11px;border-radius:10px;border:1.5px solid rgba(230,126,34,0.35);background:var(--orange-soft);font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;color:var(--orange);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.cat-act-issue.on{background:linear-gradient(135deg,var(--orange),#C0710A);color:#fff;border-color:var(--orange);box-shadow:0 3px 12px rgba(230,126,34,0.25);}
+.cat-act-issue.is-red{border-color:rgba(192,57,43,0.35);background:var(--red-soft);color:var(--red);}
+.cat-act-issue.is-red.on{background:linear-gradient(135deg,var(--red),#A93226);color:#fff;}
+
+/* Inline problem panel */
+.inline-problem{display:none;margin-top:10px;border-radius:10px;overflow:hidden;border:1.5px solid rgba(230,126,34,0.25);}
+.inline-problem.show{display:block;}
+.inline-problem.is-red{border-color:rgba(192,57,43,0.25);}
+.ip-head{padding:10px 14px;font-size:11px;font-weight:800;display:flex;align-items:center;gap:8px;}
+.ip-head.orange{background:var(--orange-soft);color:var(--orange);}
+.ip-head.red{background:var(--red-soft);color:var(--red);}
+.ip-body{padding:12px 14px;background:#fff;}
+.ip-urgency{display:flex;gap:6px;margin:10px 0;}
+.ip-urg{flex:1;padding:8px 4px;border-radius:10px;background:var(--bg2);border:1.5px solid transparent;text-align:center;cursor:pointer;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:var(--muted);transition:all .2s;}
+.ip-urg.on-low{background:var(--green-soft);color:var(--green-dark);border-color:var(--green-mid);}
+.ip-urg.on-med{background:var(--orange-soft);color:var(--orange);border-color:rgba(230,126,34,0.3);}
+.ip-urg.on-high{background:var(--red-soft);color:var(--red);border-color:rgba(192,57,43,0.3);}
+
+/* Sofia inline chat */
+.sofia-chat-mini{margin-top:12px;background:linear-gradient(135deg,#091A09,#122012);border-radius:10px;padding:12px;border:1px solid rgba(39,174,96,0.2);}
+.scm-top{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.scm-av{width:28px;height:28px;border-radius:50%;background:radial-gradient(circle,#7ECAA8,#2D8C5C);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;position:relative;}
+.scm-dot{position:absolute;bottom:0;right:0;width:7px;height:7px;background:var(--green);border-radius:50%;border:1.5px solid #091A09;}
+.scm-name{font-size:11px;font-weight:800;color:var(--green-mid);}
+.scm-thread{display:flex;flex-direction:column;gap:6px;margin-bottom:8px;min-height:30px;}
+.scm-msg{max-width:85%;}
+.scm-msg.me{align-self:flex-end;}
+.scm-msg.sofia{align-self:flex-start;}
+.scm-bubble{padding:7px 11px;border-radius:10px;font-size:11px;line-height:1.5;}
+.scm-msg.me .scm-bubble{background:var(--green-dark);color:#fff;border-radius:10px 10px 2px 10px;}
+.scm-msg.sofia .scm-bubble{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);border-radius:2px 10px 10px 10px;}
+.scm-typing{padding:6px 10px;background:rgba(255,255,255,0.07);border-radius:2px 10px 10px 10px;display:flex;gap:3px;align-items:center;width:fit-content;}
+.scm-typing span{width:4px;height:4px;background:rgba(255,255,255,0.4);border-radius:50%;animation:blink 1.2s infinite;}
+.scm-typing span:nth-child(2){animation-delay:.2s;}
+.scm-typing span:nth-child(3){animation-delay:.4s;}
+
+/* Send to Sofia button */
+.send-sofia-btn{width:100%;margin-top:10px;padding:12px;background:linear-gradient(135deg,#1A3A5C,var(--blue));border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;}
+.send-sofia-btn.red{background:linear-gradient(135deg,var(--red),#A93226);}
+.send-sofia-btn.sent{background:linear-gradient(135deg,var(--green-dark),var(--green));pointer-events:none;}
+.send-sofia-btn:active{transform:scale(.98);}
+.cat-detail{padding:0 18px 14px 62px;display:none;}
+.cat-detail.show{display:block;}
+.cat-di{font-size:12px;color:var(--muted);padding:5px 0;border-bottom:1px solid var(--border2);display:flex;align-items:flex-start;gap:8px;line-height:1.5;}
+.cat-di:last-of-type{border-bottom:none;}
+.cat-dot{width:5px;height:5px;border-radius:50%;background:var(--blue-mid);flex-shrink:0;margin-top:5px;}
+.cat-special{margin-top:10px;padding:10px 12px;background:rgba(46,134,193,0.08);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;font-size:11px;color:var(--dark2);font-style:italic;}
+
+/* WATER CHEMISTRY */
+.chem-grid{display:flex;flex-direction:column;gap:10px;padding:14px 18px;}
+.chem-row{background:var(--bg);border-radius:12px;padding:12px 14px;border:1.5px solid var(--border);}
+.chem-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.chem-label{font-size:13px;font-weight:800;color:var(--dark);}
+.chem-range{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;}
+.chem-btns{display:flex;gap:6px;}
+.chem-btn{flex:1;padding:8px 4px;border-radius:10px;border:1.5px solid transparent;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;cursor:pointer;background:var(--bg2);color:var(--muted);transition:all .2s;text-align:center;}
+.chem-btn.ok{background:var(--green-soft);color:var(--green-dark);border-color:var(--green-mid);}
+.chem-btn.low{background:var(--orange-soft);color:var(--orange);border-color:rgba(230,126,34,0.3);}
+.chem-btn.high{background:var(--red-soft);color:var(--red);border-color:rgba(192,57,43,0.3);}
+.chem-btn.added{background:var(--blue-soft);color:var(--blue-dark);border-color:var(--blue-mid);}
+.chem-note{font-size:11px;color:var(--muted2);margin-top:8px;font-style:italic;}
+
+/* SUPPLIES same as cleaner */
+.supply-all-ok{width:100%;padding:13px;background:linear-gradient(135deg,var(--green-soft),#D0EDD8);border:2px solid var(--green-mid);border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:var(--green-dark);cursor:pointer;transition:all .25s;margin-bottom:14px;}
+.supply-all-ok.on{background:linear-gradient(135deg,var(--green-dark),var(--green));color:#fff;border-color:var(--green-dark);}
+.supply-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border2);}
+.supply-row:last-child{border-bottom:none;}
+.supply-icon{font-size:22px;flex-shrink:0;}
+.supply-info{flex:1;}
+.supply-name{font-size:13px;font-weight:700;color:var(--dark);}
+.supply-hint{font-size:10px;color:var(--muted);margin-top:2px;}
+.supply-btns{display:flex;gap:5px;flex-shrink:0;}
+.s-btn{padding:6px 10px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg2);font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap;}
+.s-btn.ok{background:var(--green-soft);color:var(--green-dark);border-color:var(--green-mid);}
+.s-btn.replaced{background:var(--blue-soft);color:var(--blue-dark);border-color:var(--blue-mid);}
+.s-btn.low{background:var(--orange-soft);color:var(--orange);border-color:rgba(230,126,34,0.3);}
+
+/* CONDITION — same 3-tier as cleaner */
+.condition-wrap{margin:16px 20px 0;}
+.condition-head{font-size:14px;font-weight:800;color:var(--dark);margin-bottom:4px;padding:0 2px;}
+.condition-sub{font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.6;padding:0 2px;}
+.tier-green{background:linear-gradient(135deg,#E8F8EE,#D4EFE0);border:2px solid var(--green-mid);border-radius:var(--radius);padding:18px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:all .25s;margin-bottom:10px;}
+.tier-green.on{background:linear-gradient(135deg,var(--green-dark),var(--green));box-shadow:0 6px 20px rgba(39,174,96,0.25);}
+.tier-green.on .tg-label{color:#fff;}
+.tier-green.on .tg-sub{color:rgba(255,255,255,0.7);}
+.tg-icon{font-size:28px;}
+.tg-label{font-size:15px;font-weight:800;color:var(--green-dark);}
+.tg-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.tier-accordion{border-radius:var(--radius);overflow:hidden;margin-bottom:10px;}
+.t-orange{border:2px solid rgba(230,126,34,0.3);}
+.t-red{border:2px solid rgba(192,57,43,0.25);}
+.tier-acc-header{display:flex;align-items:center;gap:12px;padding:16px 18px;cursor:pointer;user-select:none;}
+.t-orange .tier-acc-header{background:var(--orange-soft);}
+.t-red .tier-acc-header{background:var(--red-soft);}
+.tier-acc-icon{font-size:22px;}
+.tier-acc-label{font-size:14px;font-weight:800;}
+.t-orange .tier-acc-label{color:var(--orange);}
+.t-red .tier-acc-label{color:var(--red);}
+.tier-acc-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.tier-acc-arrow{margin-left:auto;font-size:12px;color:var(--muted);transition:transform .3s;}
+.tier-accordion.open .tier-acc-arrow{transform:rotate(180deg);}
+.tier-acc-body{display:none;padding:16px 18px;background:#fff;border-top:1px solid var(--border2);}
+.tier-accordion.open .tier-acc-body{display:block;}
+.chip-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.chip{padding:6px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;user-select:none;}
+.chip-light{background:var(--bg2);color:var(--muted);border:1.5px solid var(--border);}
+.chip-light.on{background:var(--orange-soft);color:var(--orange);border-color:rgba(230,126,34,0.4);}
+.chip-dark{background:rgba(192,57,43,0.06);color:var(--red);border:1.5px solid rgba(192,57,43,0.2);}
+.chip-dark.on{background:var(--red);color:#fff;border-color:var(--red);}
+.rinput{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:12px;font-family:'Nunito',sans-serif;font-size:13px;color:var(--dark);resize:none;outline:none;min-height:70px;margin-top:8px;transition:border-color .2s;}
+.rinput:focus{border-color:var(--blue);}
+.rinput-light{background:var(--bg);}
+.urgency-row{display:flex;gap:8px;margin:8px 0;}
+.urg{flex:1;padding:10px 6px;border-radius:10px;background:var(--bg2);border:1.5px solid var(--border);text-align:center;cursor:pointer;transition:all .2s;}
+.urg-icon{font-size:16px;margin-bottom:3px;}
+.urg-label{font-size:10px;font-weight:700;color:var(--muted);}
+.urg.on-low{background:var(--green-soft);border-color:var(--green-mid);}
+.urg.on-med{background:var(--orange-soft);border-color:rgba(230,126,34,0.3);}
+.urg.on-high{background:var(--red-soft);border-color:rgba(192,57,43,0.3);}
+.pu{display:flex;align-items:center;gap:12px;background:var(--bg2);border:1.5px dashed var(--bg3);border-radius:10px;padding:12px 14px;cursor:pointer;margin-top:10px;}
+.pu input{display:none;}
+.pu-ico{font-size:22px;}
+.pu-txt-l strong{font-size:12px;font-weight:800;color:var(--dark);display:block;}
+.pu-txt-l span{font-size:10px;color:var(--muted);}
+.photos-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.pm{position:relative;width:72px;height:72px;border-radius:10px;overflow:hidden;}
+.pm img{width:100%;height:100%;object-fit:cover;}
+.pm-rm{position:absolute;top:3px;right:3px;background:rgba(0,0,0,0.6);color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+
+/* WELLBEING */
+.wellbeing-wrap{margin:16px 20px 0;background:linear-gradient(135deg,#FFF0F8,#FDE8F4);border:1.5px solid rgba(212,116,154,0.2);border-radius:var(--radius);padding:20px;}
+.wb-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--rose-dark);font-family:'DM Mono',monospace;margin-bottom:8px;opacity:.7;}
+.wb-title{font-size:16px;font-weight:800;color:var(--dark);margin-bottom:4px;}
+.wb-sub{font-size:12px;color:var(--muted);line-height:1.65;margin-bottom:16px;}
+.wb-choices{display:flex;flex-direction:column;gap:10px;}
+.wb-good{display:flex;align-items:center;gap:14px;padding:16px;background:#fff;border-radius:12px;border:2px solid transparent;cursor:pointer;transition:all .25s;}
+.wb-good.on{border-color:var(--green);background:var(--green-soft);}
+.wb-good-icon{font-size:26px;}
+.wb-good-text{font-size:14px;font-weight:800;color:var(--dark);}
+.wb-good-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.wb-report{display:flex;align-items:center;gap:14px;padding:16px;background:var(--dark2);border-radius:12px;border:2px solid transparent;cursor:pointer;transition:all .25s;}
+.wb-report.on{border-color:var(--rose-btn);}
+.wb-report-icon{font-size:26px;}
+.wb-report-text{font-size:14px;font-weight:800;color:#fff;}
+.wb-report-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;}
+.wb-qcm{margin-top:14px;display:none;}
+.wb-qcm.show{display:block;}
+.wb-qcm-step{display:none;}
+.wb-qcm-step.active{display:block;}
+.wb-q{font-size:14px;font-weight:800;color:var(--dark);margin-bottom:12px;}
+.wb-opts{display:flex;flex-direction:column;gap:8px;}
+.wb-opt{display:flex;align-items:center;gap:12px;padding:12px 14px;background:#fff;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;font-size:13px;font-weight:600;color:var(--dark);transition:all .2s;user-select:none;}
+.wb-opt.sel{background:var(--rose);border-color:var(--rose-btn);color:var(--rose-dark);}
+.wb-opt-icon{font-size:18px;}
+.wb-back{margin-top:10px;background:transparent;border:none;font-family:'Nunito',sans-serif;font-size:12px;color:var(--muted);cursor:pointer;padding:4px 0;}
+.wb-stars-label{font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6;}
+.wb-stars{display:flex;gap:8px;margin-bottom:14px;font-size:28px;}
+.star{cursor:pointer;opacity:.3;transition:opacity .15s;}
+.star.on{opacity:1;}
+.wb-note{font-size:12px;color:var(--muted);line-height:1.65;margin-bottom:10px;font-style:italic;}
+.wb-textarea{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:12px;font-family:'Nunito',sans-serif;font-size:13px;color:var(--dark);resize:none;min-height:80px;outline:none;background:var(--bg);transition:border-color .2s;}
+.wb-textarea:focus{border-color:var(--rose-btn);}
+.wb-alert-note{background:rgba(212,116,154,0.1);border-left:3px solid var(--rose-btn);border-radius:0 8px 8px 0;padding:10px 12px;font-size:11px;color:var(--rose-dark);margin-top:10px;display:none;line-height:1.6;}
+.wb-alert-note.show{display:block;}
+.wb-report-btn{width:100%;margin-top:14px;padding:14px;background:linear-gradient(135deg,var(--rose-dark),var(--rose-btn));border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;color:#fff;cursor:pointer;transition:all .25s;}
+
+/* SUBMIT */
+.note-wrap{margin:16px 20px 0;}
+.note-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.note-area{width:100%;border:1.5px solid var(--border);border-radius:12px;padding:12px;font-family:'Nunito',sans-serif;font-size:13px;color:var(--dark);resize:none;min-height:80px;background:#fff;outline:none;transition:border-color .2s;}
+.note-area:focus{border-color:var(--blue);}
+.submit-wrap{margin:14px 20px 0;}
+.submit-warn{font-size:12px;color:var(--orange);font-weight:700;margin-bottom:10px;display:none;}
+.submit-btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--blue-dark),var(--blue));border:none;border-radius:var(--radius);font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;color:#fff;cursor:pointer;box-shadow:0 6px 20px rgba(46,134,193,0.3);transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.submit-btn:active{transform:scale(.98);}
+
+/* SUCCESS */
+.success{display:none;padding:40px 24px;text-align:center;min-height:100vh;background:linear-gradient(160deg,#0D2137,#1A3A5C);}
+.success.show{display:block;}
+.success-burst{font-size:64px;margin-bottom:20px;animation:pop .4s ease;}
+@keyframes pop{0%{transform:scale(0.5)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+.success-h{font-family:'Playfair Display',serif;font-size:32px;color:#fff;margin-bottom:12px;line-height:1.3;}
+.success-h em{color:#7EC8F0;font-style:italic;}
+.success-p{font-size:14px;color:rgba(255,255,255,0.55);margin-bottom:28px;line-height:1.75;}
+.success-stats{display:flex;justify-content:center;gap:20px;margin-bottom:24px;}
+.ss{text-align:center;}
+.ss-num{font-family:'DM Mono',monospace;font-size:28px;color:#7EC8F0;font-weight:700;}
+.ss-label{font-size:11px;color:rgba(255,255,255,0.35);margin-top:4px;}
+.success-notify{font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:16px;padding:10px 16px;background:rgba(255,255,255,0.05);border-radius:10px;display:inline-block;}
+.success-quote{font-size:13px;color:rgba(255,255,255,0.4);font-style:italic;margin-bottom:28px;line-height:1.75;max-width:280px;margin-left:auto;margin-right:auto;}
+.success-next{padding:14px 32px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;}
+
+/* FI */
+.fi{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;}
+.fi.v{opacity:1;transform:none;}
+.spacer{height:40px;}
+/* ← BACK BUTTON */
+.tb-back{font-size:11px;font-weight:800;color:var(--muted);padding:5px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border);cursor:pointer;text-decoration:none;transition:all .2s;}
+.tb-back:hover{border-color:var(--blue);color:var(--blue);}
+/* CLOCK SECTION */
+.clock-section{background:linear-gradient(180deg,#0D1E35 0%,var(--dark3) 100%);padding:22px 20px 24px;display:flex;flex-direction:column;align-items:center;}
+.clock-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.18);margin-bottom:16px;font-family:'DM Mono',monospace;}
+.clock-wrap{position:relative;width:280px;height:280px;}
+#orbitCanvas{position:absolute;top:0;left:0;width:280px;height:280px;}
+.clock-tagline{font-size:11px;color:rgba(255,255,255,.25);margin-top:14px;text-align:center;max-width:260px;line-height:1.75;font-style:italic;}
+.clock-tagline em{color:var(--blue-mid);font-style:normal;font-weight:800;}
+/* XENDIT */
+.pay-block{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin:12px 20px 0;overflow:hidden;border-left:3px solid var(--blue);}
+.pay-header{padding:14px 16px 10px;display:flex;align-items:center;gap:10px;}
+.pay-icon{font-size:22px;}
+.pay-title{font-size:13px;font-weight:800;color:var(--dark);}
+.pay-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.pay-salary-row{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 14px;}
+.pay-salary-lbl{font-size:12px;color:var(--muted);}
+.pay-salary-amt{font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--blue);}
+.pay-btns{padding:0 16px 16px;display:flex;flex-direction:column;gap:8px;}
+.pay-btn-advance{width:100%;padding:12px 16px;border-radius:10px;background:linear-gradient(135deg,rgba(41,128,185,0.12),rgba(41,128,185,0.06));border:1.5px solid rgba(41,128,185,0.3);color:var(--blue);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .25s;}
+.pay-btn-advance.sent{background:rgba(39,174,96,0.1);border-color:var(--green-mid);color:var(--green-dark);cursor:default;}
+.pay-btn-reimb{width:100%;padding:12px 16px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.06));border:1.5px solid rgba(201,168,76,0.3);color:var(--gold);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .25s;}
+.pay-btn-reimb.sent{background:rgba(39,174,96,0.1);border-color:var(--green-mid);color:var(--green-dark);cursor:default;}
+.pay-receipt-area{padding:0 16px 16px;display:none;}
+.pay-receipt-area.show{display:block;}
+.pay-receipt-label{font-size:11px;color:var(--muted);margin-bottom:8px;}
+.pay-receipt-upload{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;border:1.5px dashed rgba(201,168,76,0.4);background:rgba(201,168,76,0.04);cursor:pointer;}
+.pay-receipt-upload input{display:none;}
+.pay-receipt-thumb{width:48px;height:48px;border-radius:8px;object-fit:cover;display:none;}
+.pay-confirm-btn{margin-top:10px;width:100%;padding:12px;border-radius:10px;background:var(--green);border:none;color:#fff;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;display:none;}
+.pay-confirm-btn.show{display:block;}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar" id="topbar">
+  <label style="cursor:pointer;display:flex;align-items:center;gap:8px;" title="Upload agency logo">
+    <div id="tb-logo-wrap" style="width:32px;height:32px;border-radius:8px;background:rgba(201,168,76,0.12);border:1.5px dashed rgba(201,168,76,0.35);display:flex;align-items:center;justify-content:center;overflow:hidden;transition:all .2s;">
+      <span id="tb-logo-placeholder" style="font-size:14px;">🏨</span>
+      <img id="tb-logo-img" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:6px;">
+    </div>
+    <div class="tb-logo" id="tb-logo-text">BALIAGENCIA</div>
+    <input type="file" accept="image/*" style="display:none;" onchange="handleLogoUpload(this)">
+  </label>
+  <div class="tb-right">
+    <a class="tb-back" href="manager.html">← Manager</a>
+    <div class="tb-name"><strong>Kadek Surya</strong><span>Pool Man</span></div>
+    <div class="tb-avatar">🌊</div>
+    <div class="lang-toggle" id="lang-btn" onclick="cycleLang()">ID</div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-wave">🌊</div>
+  <div class="hero-wave2">💧</div>
+  <div class="hero-date" id="hero-date">—</div>
+  <div class="hero-greeting">Good morning,<br><em>Kadek.</em></div>
+  <div class="hero-mission" id="hero-txt">Villa Surya is waiting for you. Crystal clear — as always. 🙏</div>
+  <div class="hero-villa-card">
+    <div class="hvc-icon">🏊</div>
+    <div>
+      <div class="hvc-name">Villa Surya</div>
+      <div class="hvc-meta">Seminyak · 7BR · Pool: 12m × 5m</div>
+      <div class="hvc-tags">
+        <span class="hvc-tag tag-routine">Daily routine</span>
+        <span class="hvc-tag tag-chemical">Check chemicals</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ORBIT CLOCK — 280px section ── -->
+<div class="clock-section fi" style="transition-delay:.02s">
+  <div class="clock-lbl">Your constellation · Villa Surya</div>
+  <div class="clock-wrap">
+    <canvas id="orbitCanvas" width="280" height="280"></canvas>
+  </div>
+  <div class="clock-tagline">Crystal water reflects a thousand suns — <em>you make that happen.</em> 🌊</div>
+</div>
+
+<!-- XENDIT — MODE SALAIRE FIXE (poolman) -->
+<div class="pay-block fi" style="transition-delay:.04s" id="pay-block">
+  <div class="pay-header">
+    <div class="pay-icon">💸</div>
+    <div>
+      <div class="pay-title">Pembayaran · Rex</div>
+      <div class="pay-sub">Gaji bulanan tetap · Mode salary fisso</div>
+    </div>
+  </div>
+  <div class="pay-salary-row">
+    <span class="pay-salary-lbl">Gaji bulan ini</span>
+    <span class="pay-salary-amt" id="pay-salary-amt">Rp 3.800.000</span>
+  </div>
+  <div class="pay-btns">
+    <button class="pay-btn-advance" id="btn-advance" onclick="requestAdvance()">
+      💳 Perlu uang muka untuk beli bahan kimia?
+    </button>
+    <button class="pay-btn-reimb" id="btn-reimb" onclick="openReimb()">
+      🧾 Minta penggantian biaya (upload struk)
+    </button>
+  </div>
+  <div class="pay-receipt-area" id="reimb-area">
+    <div class="pay-receipt-label">Upload foto struk pembelian</div>
+    <label class="pay-receipt-upload">
+      <span>📸 Foto struk</span>
+      <input type="file" accept="image/*" capture="environment" onchange="reimbPhoto(this)">
+      <img class="pay-receipt-thumb" id="reimb-thumb">
+    </label>
+    <button class="pay-confirm-btn" id="reimb-confirm-btn" onclick="confirmReimb()">✅ Kirim ke Rex untuk diproses</button>
+  </div>
+</div>
+
+<!-- ── DAILY PLANNING ── -->
+<div id="planning-block" style="margin:16px 20px 0;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;">
+  <div style="padding:14px 18px;background:linear-gradient(135deg,#1A3A5C,#0D2137);display:flex;align-items:center;gap:10px;">
+    <div style="font-size:20px;">📋</div>
+    <div>
+      <div style="font-size:13px;font-weight:800;color:#fff;">Your missions today</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;" id="plan-date-lbl">Loading...</div>
+    </div>
+    <div id="plan-status-dot" style="margin-left:auto;width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 8px rgba(39,174,96,0.6);"></div>
+  </div>
+  <!-- Missions list -->
+  <div style="padding:12px 18px;" id="plan-missions">
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border2);">
+      <div style="width:28px;height:28px;border-radius:50%;background:var(--blue-soft);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--blue);flex-shrink:0;">1</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:800;color:var(--dark);">Villa Surya</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px;">Seminyak · 7:30 AM</div>
+      </div>
+      <div style="font-size:11px;font-weight:700;color:var(--green);background:var(--green-soft);padding:3px 10px;border-radius:20px;">Now ✓</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border2);">
+      <div style="width:28px;height:28px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--muted);flex-shrink:0;">2</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:800;color:var(--dark);">Villa Indah</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px;">Pererenan · ~10:00 AM</div>
+      </div>
+      <div style="font-size:11px;font-weight:700;color:var(--muted);background:var(--bg2);padding:3px 10px;border-radius:20px;">Next</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;">
+      <div style="width:28px;height:28px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--muted);flex-shrink:0;">3</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:800;color:var(--dark);">Villa Karma</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px;">Kerobokan · ~12:30 PM</div>
+      </div>
+      <div style="font-size:11px;font-weight:700;color:var(--muted);background:var(--bg2);padding:3px 10px;border-radius:20px;">Later</div>
+    </div>
+  </div>
+  <!-- Availability confirm -->
+  <div style="padding:0 18px 16px;" id="plan-confirm" >
+    <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">Are you available for all missions today?</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <button id="plan-yes" onclick="planConfirm(true)" style="padding:11px;border-radius:10px;border:1.5px solid var(--green-mid);background:var(--green-soft);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:var(--green-dark);cursor:pointer;transition:all .2s;">✅ Yes, I'm in</button>
+      <button id="plan-no" onclick="planConfirm(false)" style="padding:11px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg2);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:var(--muted);cursor:pointer;transition:all .2s;">❌ Can't make it</button>
+    </div>
+    <!-- Absence reason — hidden by default -->
+    <div id="plan-absent-panel" style="display:none;margin-top:12px;">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">Reason</div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px;">
+        <div class="chip chip-light" onclick="selectAbsenceReason(this)">🤒 Sick</div>
+        <div class="chip chip-light" onclick="selectAbsenceReason(this)">🙏 Ceremony</div>
+        <div class="chip chip-light" onclick="selectAbsenceReason(this)">👨‍👩‍👧 Family</div>
+        <div class="chip chip-light" onclick="selectAbsenceReason(this)">🚗 Transport</div>
+        <div class="chip chip-light" onclick="selectAbsenceReason(this)">Other</div>
+      </div>
+      <div style="font-size:11px;color:var(--muted2);font-style:italic;margin-bottom:8px;">Sofia will arrange a replacement. No need to call.</div>
+      <button onclick="sendAbsence()" style="width:100%;padding:12px;background:linear-gradient(135deg,var(--orange),#C0710A);border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:#fff;cursor:pointer;">📤 Send — Sofia will handle it</button>
+      <div id="plan-absent-sent" style="display:none;margin-top:10px;padding:10px 14px;background:var(--orange-soft);border:1px solid rgba(230,126,34,0.25);border-radius:10px;font-size:12px;color:var(--orange);font-weight:700;">✅ Noted — Sofia is finding a replacement. Rest well 🙏</div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- PROGRESS -->
+<div class="progress-wrap fi">
+  <div class="progress-row">
+    <div class="progress-label">Mission progress</div>
+    <div class="progress-pct" id="prog-pct">0%</div>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+</div>
+
+<!-- CHECKLIST CATS -->
+<div class="cats">
+
+  <!-- POOL SURFACE -->
+  <div class="cat-block fi" style="transition-delay:.08s" data-cat="surface">
+    <div class="cat-header" onclick="toggleCat(this)">
+      <div class="cat-check"><span class="cat-emoji">🌊</span><span class="cat-tick">✓</span></div>
+      <div class="cat-info"><div class="cat-name">Pool surface & skimming</div><div class="cat-sub">Leaves, debris, foam — clean it all</div></div>
+      <div class="cat-badge">Tap to done</div>
+    </div>
+    <div class="cat-detail" id="detail-surface">
+      <div class="cat-di"><div class="cat-dot"></div>Skim entire surface with net — no debris</div>
+      <div class="cat-di"><div class="cat-dot"></div>Empty skimmer basket</div>
+      <div class="cat-di"><div class="cat-dot"></div>Remove any leaves from steps and corners</div>
+      <div class="cat-di"><div class="cat-dot"></div>Check waterline — wipe tiles if needed</div>
+      <div class="cat-special">🌊 <strong>Villa Surya</strong> — Pool has overflow system. Check overflow channel at far end.</div>
+    </div>
+  </div>
+
+  <!-- WATER CHEMISTRY -->
+  <div class="cat-block fi" style="transition-delay:.10s" data-cat="chemistry">
+    <div class="cat-header" onclick="toggleCat(this)">
+      <div class="cat-check"><span class="cat-emoji">🧪</span><span class="cat-tick">✓</span></div>
+      <div class="cat-info"><div class="cat-name">Water chemistry</div><div class="cat-sub">pH · Chlorine · Alkalinity · Clarity</div></div>
+      <div class="cat-badge">Tap to done</div>
+    </div>
+    <div class="cat-detail show" id="detail-chemistry">
+      <div class="chem-grid" style="padding:0 0 8px 0;">
+
+        <div class="chem-row">
+          <div class="chem-top">
+            <div class="chem-label">🧫 pH level</div>
+            <div class="chem-range">Target: 7.2 – 7.6</div>
+          </div>
+          <div class="chem-btns">
+            <button class="chem-btn" onclick="setChem(this,'ok')">✅ OK</button>
+            <button class="chem-btn" onclick="setChem(this,'low')">⬇ Low</button>
+            <button class="chem-btn" onclick="setChem(this,'high')">⬆ High</button>
+            <button class="chem-btn" onclick="setChem(this,'added')">+ Added</button>
+          </div>
+          <div class="chem-note">Low pH → add soda ash · High pH → add muriatic acid</div>
+        </div>
+
+        <div class="chem-row">
+          <div class="chem-top">
+            <div class="chem-label">🟡 Free chlorine</div>
+            <div class="chem-range">Target: 1.0 – 3.0 ppm</div>
+          </div>
+          <div class="chem-btns">
+            <button class="chem-btn" onclick="setChem(this,'ok')">✅ OK</button>
+            <button class="chem-btn" onclick="setChem(this,'low')">⬇ Low</button>
+            <button class="chem-btn" onclick="setChem(this,'high')">⬆ High</button>
+            <button class="chem-btn" onclick="setChem(this,'added')">+ Added</button>
+          </div>
+          <div class="chem-note">Low → add chlorine tablet or liquid. High → let it off-gas naturally.</div>
+        </div>
+
+        <div class="chem-row">
+          <div class="chem-top">
+            <div class="chem-label">🔵 Total alkalinity</div>
+            <div class="chem-range">Target: 80 – 120 ppm</div>
+          </div>
+          <div class="chem-btns">
+            <button class="chem-btn" onclick="setChem(this,'ok')">✅ OK</button>
+            <button class="chem-btn" onclick="setChem(this,'low')">⬇ Low</button>
+            <button class="chem-btn" onclick="setChem(this,'high')">⬆ High</button>
+            <button class="chem-btn" onclick="setChem(this,'added')">+ Added</button>
+          </div>
+        </div>
+
+        <div class="chem-row">
+          <div class="chem-top">
+            <div class="chem-label">💎 Water clarity</div>
+            <div class="chem-range">Must see pool bottom clearly</div>
+          </div>
+          <div class="chem-btns">
+            <button class="chem-btn" onclick="setChem(this,'ok')">✅ Crystal</button>
+            <button class="chem-btn" onclick="setChem(this,'low')">🌫 Cloudy</button>
+            <button class="chem-btn" onclick="setChem(this,'added')">+ Treated</button>
+          </div>
+          <div class="chem-note">Cloudy → shock treatment. If green → algaecide + shock. Report to manager.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PUMP & FILTER -->
+  <div class="cat-block fi" style="transition-delay:.12s" data-cat="pump" id="cat-pump">
+    <div class="cat-header" style="cursor:default;">
+      <div class="cat-check"><span class="cat-emoji">⚙️</span><span class="cat-tick">✓</span></div>
+      <div class="cat-info"><div class="cat-name">Pump, filter & equipment</div><div class="cat-sub">Running correctly, no leaks</div></div>
+    </div>
+    <div style="padding:0 18px 6px 18px;">
+      <div class="cat-di"><div class="cat-dot"></div>Check pump is running — listen for normal sound</div>
+      <div class="cat-di"><div class="cat-dot"></div>Clean filter basket if full</div>
+      <div class="cat-di"><div class="cat-dot"></div>Check all pipes — no leaks or cracks</div>
+      <div class="cat-di"><div class="cat-dot"></div>Backwash filter if pressure is high</div>
+      <div class="cat-di"><div class="cat-dot"></div>Check pool lights — all working</div>
+      <div class="cat-di" style="border-bottom:none;"><div class="cat-dot"></div>Verify water level — add if low</div>
+      <div class="cat-actions">
+        <button class="cat-act-done" id="done-pump" onclick="catActDone('pump')">✅ All good</button>
+        <button class="cat-act-issue" id="issue-pump" onclick="catActIssue('pump')">⚠️ Issue here</button>
+      </div>
+      <div class="inline-problem" id="inline-pump">
+        <div class="ip-head orange" id="ip-head-pump">⚠️ What's the problem?</div>
+        <div class="ip-body">
+          <div class="chips" id="pump-chips">
+            <div class="chip chip-light" onclick="selectProblemChip(this,'pump')">⚙️ Pump not running</div>
+            <div class="chip chip-light" onclick="selectProblemChip(this,'pump')">💧 Pipe leak</div>
+            <div class="chip chip-light" onclick="selectProblemChip(this,'pump')">🔌 Lights broken</div>
+            <div class="chip chip-light" onclick="selectProblemChip(this,'pump')">🌊 Low water level</div>
+            <div class="chip chip-light" onclick="selectProblemChip(this,'pump')">🔧 Filter clogged</div>
+            <div class="chip chip-light" onclick="selectProblemChip(this,'pump')">Other</div>
+          </div>
+          <textarea class="rinput rinput-light" id="pump-text" placeholder="Optional — describe what you saw..."></textarea>
+          <div class="chip-lbl" style="margin-top:10px;">How urgent?</div>
+          <div class="ip-urgency" id="pump-urg">
+            <button class="ip-urg" onclick="setInlineUrg(this,'pump','low')">🟢 Can wait</button>
+            <button class="ip-urg" onclick="setInlineUrg(this,'pump','med')">🟠 Today</button>
+            <button class="ip-urg" onclick="setInlineUrg(this,'pump','high')">🔴 Right now</button>
+          </div>
+          <label>
+            <div class="pu pu-light" style="margin-top:0;"><div class="pu-ico">📷</div><div class="pu-txt-l"><strong>Photo</strong><span>Helps the tukang</span></div></div>
+            <input type="file" accept="image/*,video/*" capture="environment" multiple onchange="addPhoto(this,'pump-problem-photos')">
+          </label>
+          <div class="photos-row" id="pump-problem-photos"></div>
+          <button class="send-sofia-btn" id="send-pump" onclick="sendToSofia('pump')">📤 Send to Sofia</button>
+          <div class="sofia-chat-mini" id="chat-pump" style="display:none;">
+            <div class="scm-top"><div class="scm-av">✨<div class="scm-dot"></div></div><div class="scm-name">Sofia · On it</div></div>
+            <div class="scm-thread" id="thread-pump"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POOL AREA -->
+  <div class="cat-block fi" style="transition-delay:.14s" data-cat="area" id="cat-area">
+    <div class="cat-header" style="cursor:default;">
+      <div class="cat-check"><span class="cat-emoji">🏖️</span><span class="cat-tick">✓</span></div>
+      <div class="cat-info"><div class="cat-name">Pool deck & surroundings</div><div class="cat-sub">Loungers, towels, tiles, drains</div></div>
+    </div>
+    <div style="padding:0 18px 6px 18px;">
+      <div class="cat-di"><div class="cat-dot"></div>Arrange sun loungers neatly</div>
+      <div class="cat-di"><div class="cat-dot"></div>Brush pool tiles at waterline</div>
+      <div class="cat-di"><div class="cat-dot"></div>Clear pool drain covers — no blockages</div>
+      <div class="cat-di" style="border-bottom:none;"><div class="cat-dot"></div>Rinse pool deck with water</div>
+      <div class="cat-special">🛁 <strong>Villa Surya</strong> — Jacuzzi at far end. Check jets and temperature (target 36°C).</div>
+      <div class="cat-actions">
+        <button class="cat-act-done" id="done-area" onclick="catActDone('area')">✅ All good</button>
+        <button class="cat-act-issue" id="issue-area" onclick="catActIssue('area')">⚠️ Issue here</button>
+      </div>
+      <div class="inline-problem" id="inline-area">
+        <div class="ip-head orange" id="ip-head-area">⚠️ What's the problem?</div>
+        <div class="ip-body">
+          <div class="chips" id="area-chips">
+            <div class="chip chip-light" onclick="selectProblemChip(this,'area')">🪨 Broken tile / step</div>
+            <div class="chip chip-light" onclick="selectProblemChip(this,'area')">🚿 Drain blocked</div>
+            <div class="chip chip-light" onclick="selectProblemChip(this,'area')">🛁 Jacuzzi issue</div>
+            <div class="chip chip-light" onclick="selectProblemChip(this,'area')">🪑 Broken lounger</div>
+            <div class="chip chip-light" onclick="selectProblemChip(this,'area')">⚠️ Safety hazard</div>
+            <div class="chip chip-light" onclick="selectProblemChip(this,'area')">Other</div>
+          </div>
+          <textarea class="rinput rinput-light" id="area-text" placeholder="Optional — describe what you saw..."></textarea>
+          <div class="chip-lbl" style="margin-top:10px;">How urgent?</div>
+          <div class="ip-urgency" id="area-urg">
+            <button class="ip-urg" onclick="setInlineUrg(this,'area','low')">🟢 Can wait</button>
+            <button class="ip-urg" onclick="setInlineUrg(this,'area','med')">🟠 Today</button>
+            <button class="ip-urg" onclick="setInlineUrg(this,'area','high')">🔴 Right now</button>
+          </div>
+          <label>
+            <div class="pu pu-light" style="margin-top:0;"><div class="pu-ico">📷</div><div class="pu-txt-l"><strong>Photo</strong><span>Optional but helpful</span></div></div>
+            <input type="file" accept="image/*,video/*" capture="environment" multiple onchange="addPhoto(this,'area-problem-photos')">
+          </label>
+          <div class="photos-row" id="area-problem-photos"></div>
+          <button class="send-sofia-btn" id="send-area" onclick="sendToSofia('area')">📤 Send to Sofia</button>
+          <div class="sofia-chat-mini" id="chat-area" style="display:none;">
+            <div class="scm-top"><div class="scm-av">✨<div class="scm-dot"></div></div><div class="scm-name">Sofia · On it</div></div>
+            <div class="scm-thread" id="thread-area"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="spacer"></div>
+
+<!-- CHEMICAL SUPPLIES -->
+<div class="block fi" style="transition-delay:.16s;margin:0 20px;">
+  <div class="block-head"><div class="bh-icon">🧴</div><div><div class="bh-title">Chemical supplies</div><div class="bh-sub">Mark low stock — Sofia handles the rest</div></div></div>
+  <div class="block-body">
+    <button class="supply-all-ok" id="all-ok-btn" onclick="supplyAllOk()">✅ All supplies OK</button>
+    <div class="supply-row">
+      <div class="supply-icon">🟡</div>
+      <div class="supply-info"><div class="supply-name">Chlorine</div><div class="supply-hint">Tablets / liquid · pump room</div></div>
+      <div class="supply-btns" id="cb-chlorine">
+        <button class="s-btn" onclick="setSupply('chlorine','ok',this)">OK</button>
+        <button class="s-btn" onclick="setSupply('chlorine','replaced',this)">↺ Added</button>
+        <button class="s-btn" onclick="setSupply('chlorine','low',this)">Low ⚠️</button>
+      </div>
+    </div>
+    <div class="supply-row">
+      <div class="supply-icon">🧫</div>
+      <div class="supply-info"><div class="supply-name">pH+ / pH−</div><div class="supply-hint">Soda ash & muriatic acid</div></div>
+      <div class="supply-btns" id="cb-ph">
+        <button class="s-btn" onclick="setSupply('ph','ok',this)">OK</button>
+        <button class="s-btn" onclick="setSupply('ph','replaced',this)">↺ Added</button>
+        <button class="s-btn" onclick="setSupply('ph','low',this)">Low ⚠️</button>
+      </div>
+    </div>
+    <div class="supply-row">
+      <div class="supply-icon">🌿</div>
+      <div class="supply-info"><div class="supply-name">Algaecide</div><div class="supply-hint">Preventive weekly dose</div></div>
+      <div class="supply-btns" id="cb-algae">
+        <button class="s-btn" onclick="setSupply('algae','ok',this)">OK</button>
+        <button class="s-btn" onclick="setSupply('algae','replaced',this)">↺ Added</button>
+        <button class="s-btn" onclick="setSupply('algae','low',this)">Low ⚠️</button>
+      </div>
+    </div>
+    <div class="supply-row">
+      <div class="supply-icon">🧹</div>
+      <div class="supply-info"><div class="supply-name">Pool brush & net</div><div class="supply-hint">Equipment condition</div></div>
+      <div class="supply-btns" id="cb-equipment">
+        <button class="s-btn" onclick="setSupply('equipment','ok',this)">OK</button>
+        <button class="s-btn" onclick="setSupply('equipment','low',this)">Needs replace</button>
+      </div>
+    </div>
+    <!-- Sofia feedback for low supplies -->
+    <div id="supply-sofia" style="display:none;margin-top:12px;">
+      <div class="sofia-chat-mini">
+        <div class="scm-top"><div class="scm-av">✨<div class="scm-dot"></div></div><div class="scm-name">Sofia · Supplies</div></div>
+        <div class="scm-thread" id="thread-supply"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── POOL CONDITION RECAP ── -->
+<div class="condition-wrap fi" style="transition-delay:.18s">
+  <div class="condition-head">🏊 Pool condition recap</div>
+  <div class="condition-sub">Auto-updated from your checks above. Tap ✅ if everything else is fine.</div>
+  <div class="tier-green" id="tier-green" onclick="tierGreenToggle()">
+    <div class="tg-icon">✅</div>
+    <div><div class="tg-label">All good — pool is perfect</div><div class="tg-sub">Tap to confirm</div></div>
+  </div>
+  <div id="recap-issues" style="display:none;margin-top:10px;border-radius:var(--radius);padding:14px 16px;">
+    <div style="font-size:12px;font-weight:800;margin-bottom:8px;" id="recap-issues-title">⚠️ Issues reported</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.8;white-space:pre-line;" id="recap-issues-body">—</div>
+    <div style="font-size:11px;color:var(--muted2);margin-top:8px;font-style:italic;">Sent to Sofia ✓ — included in your final report.</div>
+  </div>
+</div>
+
+<!-- WELLBEING -->
+<div class="wellbeing-wrap fi" style="transition-delay:.22s">
+  <div class="wb-label">For you · Confidential · Manager only</div>
+  <div class="wb-title">How was your day? 🌸</div>
+  <div class="wb-sub">This is just between you and the team. You matter to us.</div>
+  <div class="wb-choices">
+    <div class="wb-good" id="wb-good" onclick="selWbGood()">
+      <div class="wb-good-icon">😊</div>
+      <div><div class="wb-good-text">All good — lovely day!</div><div class="wb-good-sub">Everything was fine, nothing to say</div></div>
+    </div>
+    <div class="wb-report" id="wb-report" onclick="selWbReport()">
+      <div class="wb-report-icon">😢</div>
+      <div><div class="wb-report-text">I have something to tell you</div><div class="wb-report-sub">Something made me uncomfortable today</div></div>
+    </div>
+  </div>
+
+  <div class="wb-qcm" id="wb-qcm">
+    <div class="wb-qcm-step active" id="wb-step-0">
+      <div class="wb-q">Who made you feel this way?</div>
+      <div class="wb-opts">
+        <div class="wb-opt" onclick="wbNext(1,'guest')"><div class="wb-opt-icon">🧳</div>A guest</div>
+        <div class="wb-opt" onclick="wbNext(1,'staff')"><div class="wb-opt-icon">👥</div>Another staff member</div>
+        <div class="wb-opt" onclick="wbNext(1,'neighbor')"><div class="wb-opt-icon">🏘️</div>A neighbor</div>
+        <div class="wb-opt" onclick="wbNext(1,'other')"><div class="wb-opt-icon">❓</div>Other</div>
+      </div>
+    </div>
+    <div class="wb-qcm-step" id="wb-step-1">
+      <div class="wb-q" id="wb-q1">What happened?</div>
+      <div class="wb-opts" id="wb-opts1"></div>
+      <button class="wb-back" onclick="wbBack(0)">← Back</button>
+    </div>
+    <div class="wb-qcm-step" id="wb-step-2">
+      <div class="wb-q">How did it make you feel?</div>
+      <div class="wb-opts">
+        <div class="wb-opt" onclick="wbNext(3,'uncomfortable')"><div class="wb-opt-icon">😟</div>Uncomfortable, a bit upset</div>
+        <div class="wb-opt" onclick="wbNext(3,'bad')"><div class="wb-opt-icon">😔</div>Really bad, I felt disrespected</div>
+        <div class="wb-opt" onclick="wbNext(3,'serious')"><div class="wb-opt-icon">😨</div>Scared or in danger</div>
+      </div>
+      <button class="wb-back" onclick="wbBack(1)">← Back</button>
+    </div>
+    <div class="wb-qcm-step" id="wb-step-3">
+      <div class="wb-q">Thank you for telling us 🫂</div>
+      <div class="wb-stars-label">How would you rate this experience overall?<br><span style="font-size:10px;opacity:.5;">1 = very bad · 5 = not too bad</span></div>
+      <div class="wb-stars" id="wb-stars">
+        <span class="star" onclick="setStar(1)">⭐</span>
+        <span class="star" onclick="setStar(2)">⭐</span>
+        <span class="star" onclick="setStar(3)">⭐</span>
+        <span class="star" onclick="setStar(4)">⭐</span>
+        <span class="star" onclick="setStar(5)">⭐</span>
+      </div>
+      <div class="wb-note">Add anything you want to say — in any language, in your own words. Or leave it blank — your manager will call you.</div>
+      <textarea class="wb-textarea" id="wb-text" placeholder="..."></textarea>
+      <div class="wb-alert-note show">🌸 Your manager will be notified and will call you personally. You don't have to handle this alone.</div>
+      <button class="wb-report-btn" onclick="sendWbReport()">📤 Send report</button>
+    </div>
+  </div>
+</div>
+
+<div class="spacer"></div>
+
+<div class="submit-wrap fi" style="transition-delay:.24s">
+  <div class="submit-warn" id="submit-warn"></div>
+  <button class="submit-btn" onclick="doSubmit()">Done ✓</button>
+</div>
+
+<!-- SUCCESS — smart contextual end screen -->
+<div class="success" id="success">
+
+  <!-- BURST + NAME -->
+  <div class="success-burst" id="s-burst">🌊</div>
+  <div class="success-h">Well done,<br><em id="s-name">Kadek!</em></div>
+
+  <!-- STATS -->
+  <div class="success-stats">
+    <div class="ss"><div class="ss-num" id="s-checks">0</div><div class="ss-label">Checks done</div></div>
+    <div class="ss"><div class="ss-num" id="s-chems">0</div><div class="ss-label">Chemicals</div></div>
+    <div class="ss"><div class="ss-num" id="s-time">—</div><div class="ss-label">Duration</div></div>
+  </div>
+
+  <!-- SOFIA RECAP CARD -->
+  <div id="s-sofia-card" style="margin:18px 0 0;border-radius:var(--radius);overflow:hidden;">
+    <div id="s-situation" style="border-radius:var(--radius) var(--radius) 0 0;padding:14px 18px;text-align:left;font-size:13px;line-height:1.75;"></div>
+    <div id="s-sofia-msg" style="background:linear-gradient(160deg,#071510,#0D1E14);padding:16px 18px;border:1px solid rgba(39,174,96,0.15);border-top:none;border-radius:0 0 var(--radius) var(--radius);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:34px;height:34px;border-radius:50%;background:radial-gradient(circle,#7ECAA8,#2D8C5C);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;box-shadow:0 0 10px rgba(45,140,92,0.4);">✨</div>
+        <div>
+          <div style="font-size:12px;font-weight:800;color:#7ECAA8;letter-spacing:.5px;">Sofia</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:1px;">Manager is informed ✓</div>
+        </div>
+      </div>
+      <div style="font-size:12.5px;color:rgba(255,255,255,0.75);line-height:1.8;white-space:pre-line;" id="s-sofia-text"></div>
+    </div>
+  </div>
+
+  <!-- QUOTE -->
+  <div class="success-quote" id="s-quote" style="margin:16px 0 20px;">"Thank you for everything, Kadek.<br>Bali is lucky to have you." 🌴</div>
+
+  <!-- NEXT MISSION — big blue CTA, always visible first -->
+  <div id="s-next-mission" style="display:none;margin-bottom:8px;">
+    <div id="s-next-card" onclick="goNextVilla()"
+      style="background:linear-gradient(135deg,#1A4A7A,#2563A8);border:1px solid rgba(100,180,255,0.25);border-radius:var(--radius);padding:18px 20px;cursor:pointer;display:flex;align-items:center;gap:14px;transition:all .18s;box-shadow:0 4px 20px rgba(37,99,168,0.35);"
+      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 28px rgba(37,99,168,0.5)'"
+      onmouseout="this.style.transform='';this.style.boxShadow='0 4px 20px rgba(37,99,168,0.35)'">
+      <div style="font-size:30px;" id="s-next-icon">🏊</div>
+      <div style="flex:1;">
+        <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.4);font-family:'DM Mono',monospace;margin-bottom:4px;">Next mission</div>
+        <div style="font-size:16px;font-weight:800;color:#fff;" id="s-next-name">Villa Indah</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-top:2px;" id="s-next-meta">Pererenan · 4BR · ~12 min</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.18);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:800;color:#fff;white-space:nowrap;">Go →</div>
+    </div>
+  </div>
+
+  <!-- ALL DONE button (evening / no next mission) -->
+  <button class="success-next" onclick="location.reload()" id="s-btn" style="display:none;width:100%;margin-bottom:8px;">All done 🌊</button>
+
+  <!-- DIVIDER — wellbeing below -->
+  <div style="margin:28px 0 20px;border-top:1px solid rgba(255,255,255,0.08);">
+    <div style="margin-top:12px;text-align:center;font-size:10px;color:rgba(255,255,255,0.18);letter-spacing:1.5px;text-transform:uppercase;font-family:'DM Mono',monospace;">Optional · For you only</div>
+  </div>
+
+  <!-- WELLBEING — clearly optional, below the fold -->
+  <div style="margin-bottom:6px;">
+    <div style="font-size:14px;font-weight:800;color:rgba(255,255,255,0.55);margin-bottom:4px;">How was your day? 🌸</div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.22);margin-bottom:16px;">Confidential — manager only. Not required to continue.</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div id="s-wb-good" onclick="sWbGood()" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:rgba(255,255,255,0.04);border-radius:12px;border:1.5px solid transparent;cursor:pointer;transition:all .2s;">
+        <div style="font-size:24px;">😊</div>
+        <div><div style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.7);">All good — lovely day!</div><div style="font-size:11px;color:rgba(255,255,255,0.28);margin-top:2px;">Nothing to say</div></div>
+      </div>
+      <div id="s-wb-report" onclick="sWbReport()" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:rgba(255,255,255,0.04);border-radius:12px;border:1.5px solid transparent;cursor:pointer;transition:all .2s;">
+        <div style="font-size:24px;">😢</div>
+        <div><div style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.7);">I have something to tell you</div><div style="font-size:11px;color:rgba(255,255,255,0.28);margin-top:2px;">Something made me uncomfortable</div></div>
+      </div>
+    </div>
+    <!-- Wellbeing QCM (compact) -->
+    <div id="s-wb-qcm" style="display:none;margin-top:14px;">
+      <div id="s-wb-step-0">
+        <div style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.7);margin-bottom:10px;">Who made you feel this way?</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div onclick="sWbNext('guest')" style="padding:11px 14px;background:rgba(255,255,255,0.06);border-radius:10px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.7);cursor:pointer;display:flex;align-items:center;gap:10px;"><span>🧳</span>A guest</div>
+          <div onclick="sWbNext('staff')" style="padding:11px 14px;background:rgba(255,255,255,0.06);border-radius:10px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.7);cursor:pointer;display:flex;align-items:center;gap:10px;"><span>👥</span>Another staff member</div>
+          <div onclick="sWbNext('other')" style="padding:11px 14px;background:rgba(255,255,255,0.06);border-radius:10px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.7);cursor:pointer;display:flex;align-items:center;gap:10px;"><span>❓</span>Other</div>
+        </div>
+      </div>
+      <div id="s-wb-step-1" style="display:none;">
+        <div style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.7);margin-bottom:10px;">How did it make you feel?</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div onclick="sWbSeverity('uncomfortable')" style="padding:11px 14px;background:rgba(255,255,255,0.06);border-radius:10px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.7);cursor:pointer;display:flex;align-items:center;gap:10px;"><span>😟</span>Uncomfortable / upset</div>
+          <div onclick="sWbSeverity('bad')" style="padding:11px 14px;background:rgba(255,255,255,0.06);border-radius:10px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.7);cursor:pointer;display:flex;align-items:center;gap:10px;"><span>😔</span>Disrespected</div>
+          <div onclick="sWbSeverity('danger')" style="padding:11px 14px;background:rgba(192,57,43,0.15);border:1px solid rgba(192,57,43,0.3);border-radius:10px;font-size:12px;font-weight:600;color:var(--red);cursor:pointer;display:flex;align-items:center;gap:10px;"><span>😨</span>Scared or in danger</div>
+        </div>
+        <textarea id="s-wb-text" style="width:100%;margin-top:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px;font-family:'Nunito',sans-serif;font-size:12px;color:rgba(255,255,255,0.7);resize:none;min-height:60px;outline:none;" placeholder="In your own words — or leave blank. Your manager will call you."></textarea>
+        <button onclick="sWbSend()" style="width:100%;margin-top:10px;padding:12px;background:linear-gradient(135deg,var(--rose-dark),var(--rose-btn));border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:#fff;cursor:pointer;">📤 Send — manager will call you</button>
+      </div>
+      <div id="s-wb-sent" style="display:none;padding:12px 14px;background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.2);border-radius:10px;font-size:12px;color:rgba(255,255,255,0.6);line-height:1.65;">🌸 Report sent. Your manager will call you personally. You don't have to handle this alone.</div>
+    </div>
+  </div>
+
+  <div style="height:40px;"></div>
+</div>
+
+<script>
+const LANGS=['ID','BALI','EN'];
+let langIdx=parseInt(localStorage.getItem('pm_lang')||'0');
+function cycleLang(){langIdx=(langIdx+1)%LANGS.length;localStorage.setItem('pm_lang',langIdx);document.getElementById('lang-btn').textContent=LANGS[langIdx];}
+
+// GREETING
+const now=new Date();
+const h=now.getHours();
+const greet=h<12?'Good morning':h<17?'Good afternoon':'Good evening';
+document.querySelector('.hero-greeting').innerHTML=`${greet},<br><em>Kadek.</em>`;
+const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+document.getElementById('hero-date').textContent=`${days[now.getDay()]} · ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+const S={cats:new Set(),chems:{},supplies:{},allOk:false,tierGreen:false,wbStatus:null,wbSource:null,wbRating:0,start:Date.now()};
+const TOTAL=4;
+
+// ── LOGO UPLOAD + ADAPTIVE COLORS ──
+function handleLogoUpload(input){
+  const file=input.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const dataUrl=e.target.result;
+    const img=document.getElementById('tb-logo-img');
+    img.src=dataUrl; img.style.display='block';
+    document.getElementById('tb-logo-placeholder').style.display='none';
+    document.getElementById('tb-logo-wrap').style.border='none';
+    extractAndApplyColor(dataUrl);
+  };
+  reader.readAsDataURL(file);
+}
+function extractAndApplyColor(dataUrl){
+  const img=new Image(); img.onload=()=>{
+    const c=document.createElement('canvas');c.width=c.height=40;
+    const cx=c.getContext('2d');cx.drawImage(img,0,0,40,40);
+    const d=cx.getImageData(0,0,40,40).data;
+    const map={};
+    for(let i=0;i<d.length;i+=4){
+      const r=d[i],g=d[i+1],b=d[i+2],a=d[i+3];
+      if(a<128)continue;
+      const lum=0.299*r+0.587*g+0.114*b;
+      if(lum>240||lum<10)continue; // skip near-white/near-black
+      const k=`${Math.round(r/20)*20},${Math.round(g/20)*20},${Math.round(b/20)*20}`;
+      map[k]=(map[k]||0)+1;
+    }
+    let best=null,bestV=0;
+    for(const[k,v]of Object.entries(map)){if(v>bestV){bestV=v;best=k;}}
+    if(!best)return;
+    const[r,g,b]=best.split(',').map(Number);
+    applyBrandColor(r,g,b);
+  };
+  img.src=dataUrl;
+}
+function applyBrandColor(r,g,b){
+  const lum=0.299*r+0.587*g+0.114*b;
+  const isDark=lum<140;
+  const hex='#'+[r,g,b].map(v=>Math.min(255,v+0).toString(16).padStart(2,'0')).join('');
+  const hexLight='#'+[r,g,b].map(v=>Math.min(255,Math.round(v*0.15+240*0.85)).toString(16).padStart(2,'0')).join('');
+  const hexMid='#'+[r,g,b].map(v=>Math.min(255,Math.round(v*0.35+200*0.65)).toString(16).padStart(2,'0')).join('');
+  const hexDark='#'+[r,g,b].map(v=>Math.max(0,Math.round(v*0.5)).toString(16).padStart(2,'0')).join('');
+  const root=document.documentElement.style;
+  if(!isDark){
+    // Light brand color — use as accent only, keep light bg
+    root.setProperty('--bg',hexLight);
+    root.setProperty('--bg2',hexMid);
+    root.setProperty('--bg3','#D0D8E0');
+    root.setProperty('--text','#1A1F2C');
+    root.setProperty('--muted','#556070');
+    root.setProperty('--gold',hex);
+    root.setProperty('--blue',hexDark);
+    root.setProperty('--blue-dark','#0A3050');
+    // topbar bg
+    document.getElementById('topbar').style.background=hexLight+'F8';
+    document.querySelector('.tb-name strong').style.color='#1A1F2C';
+    document.querySelector('.tb-name span').style.color='#556070';
+    document.getElementById('tb-logo-text').style.color=hexDark;
+  } else {
+    // Dark brand color — adapt to work on dark
+    root.setProperty('--bg','#F4F7FA');
+    root.setProperty('--text','#1A1F2C');
+    root.setProperty('--gold',hex);
+    root.setProperty('--blue',hex);
+    root.setProperty('--blue-dark',hexDark);
+    document.getElementById('topbar').style.background='rgba(244,247,250,0.97)';
+    document.getElementById('tb-logo-text').style.color=hex;
+  }
+}
+
+// CATS
+function toggleCat(header){
+  const block=header.closest('.cat-block'),cat=block.dataset.cat;
+  if(block.classList.contains('done')){block.classList.remove('done');S.cats.delete(cat);block.querySelector('.cat-badge').textContent='Tap to done';}
+  else{block.classList.add('done');S.cats.add(cat);block.querySelector('.cat-badge').textContent='✓ Done';if('vibrate'in navigator)navigator.vibrate(40);}
+  const pct=Math.round(S.cats.size/TOTAL*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-pct').textContent=pct+'%';
+}
+
+// CHEMISTRY
+function setChem(btn,status){
+  btn.closest('.chem-btns').querySelectorAll('.chem-btn').forEach(b=>b.className='chem-btn');
+  btn.classList.add(status);
+  S.chems[btn.closest('.chem-row').querySelector('.chem-label').textContent]=status;
+}
+
+// ── DUAL ACTION: DONE / ISSUE ──
+function catActDone(zone){
+  const cat=document.getElementById('cat-'+zone);
+  const doneBtn=document.getElementById('done-'+zone);
+  const issueBtn=document.getElementById('issue-'+zone);
+  const panel=document.getElementById('inline-'+zone);
+  const wasOn=doneBtn.classList.contains('on');
+  doneBtn.classList.toggle('on',!wasOn);
+  issueBtn.classList.remove('on');
+  if(panel)panel.classList.remove('show');
+  cat.classList.remove('problem-orange','problem-red','done');
+  if(!wasOn){
+    cat.classList.add('done');
+    S.cats.add(zone);
+  } else {
+    S.cats.delete(zone);
+  }
+  updateProgress();
+}
+
+function catActIssue(zone){
+  const cat=document.getElementById('cat-'+zone);
+  const issueBtn=document.getElementById('issue-'+zone);
+  const doneBtn=document.getElementById('done-'+zone);
+  const panel=document.getElementById('inline-'+zone);
+  const wasOn=issueBtn.classList.contains('on');
+  issueBtn.classList.toggle('on',!wasOn);
+  doneBtn.classList.remove('on');
+  cat.classList.remove('done');
+  S.cats.delete(zone);
+  if(!wasOn){
+    cat.classList.add('problem-orange');
+    if(panel)panel.classList.add('show');
+  } else {
+    cat.classList.remove('problem-orange','problem-red');
+    if(panel)panel.classList.remove('show');
+  }
+  updateProgress();
+}
+
+function updateProgress(){
+  const pct=Math.round(S.cats.size/TOTAL*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-pct').textContent=pct+'%';
+}
+
+// ── PLANNING ──
+document.getElementById('plan-date-lbl').textContent=
+  `${days[now.getDay()]} ${now.getDate()} ${months[now.getMonth()]} · ${3} missions`;
+
+function planConfirm(yes){
+  const yBtn=document.getElementById('plan-yes');
+  const nBtn=document.getElementById('plan-no');
+  const absentPanel=document.getElementById('plan-absent-panel');
+  if(yes){
+    yBtn.style.background='linear-gradient(135deg,var(--green-dark),var(--green))';
+    yBtn.style.color='#fff';yBtn.style.borderColor='var(--green-dark)';
+    nBtn.style.opacity='.4';
+    absentPanel.style.display='none';
+    document.getElementById('plan-confirm').querySelector('div:first-child').textContent='✅ Great — Sofia confirmed. Let\'s go! 🌊';
+  } else {
+    nBtn.style.background='linear-gradient(135deg,var(--orange),#C0710A)';
+    nBtn.style.color='#fff';nBtn.style.borderColor='var(--orange)';
+    yBtn.style.opacity='.4';
+    absentPanel.style.display='block';
+  }
+}
+
+function selectAbsenceReason(chip){
+  document.querySelectorAll('#plan-absent-panel .chip').forEach(c=>c.classList.remove('on'));
+  chip.classList.add('on');
+}
+
+function sendAbsence(){
+  const reason=document.querySelector('#plan-absent-panel .chip.on');
+  if(!reason){document.querySelector('#plan-absent-panel .chip').style.border='1.5px solid var(--orange)';return;}
+  document.getElementById('plan-absent-sent').style.display='block';
+  document.querySelector('#plan-absent-panel button').style.display='none';
+}
+
+// ── SCROLL-TO-ERROR VALIDATION ──
+function scrollToError(el,msg){
+  el.style.outline='2px solid var(--red)';
+  el.style.borderRadius='12px';
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+  // shake animation
+  el.style.animation='shake .4s ease';
+  setTimeout(()=>{el.style.animation='';el.style.outline='';},2000);
+  // show mini toast near element
+  const toast=document.createElement('div');
+  toast.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;padding:10px 18px;border-radius:10px;font-size:12px;font-weight:700;z-index:999;box-shadow:0 4px 16px rgba(192,57,43,0.4);';
+  toast.textContent='⚠️ '+msg;
+  document.body.appendChild(toast);
+  setTimeout(()=>toast.remove(),2500);
+}
+
+// Add shake keyframes dynamically
+const shakeStyle=document.createElement('style');
+shakeStyle.textContent='@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}';
+document.head.appendChild(shakeStyle);
+
+// ── WELLBEING on success screen ──
+let sWbSource=null;
+function sWbGood(){
+  document.getElementById('s-wb-good').style.borderColor='var(--green)';
+  document.getElementById('s-wb-good').style.background='rgba(39,174,96,0.1)';
+  document.getElementById('s-wb-report').style.opacity='.4';
+  document.getElementById('s-wb-qcm').style.display='none';
+}
+function sWbReport(){
+  document.getElementById('s-wb-report').style.borderColor='var(--rose-btn)';
+  document.getElementById('s-wb-report').style.background='rgba(212,116,154,0.1)';
+  document.getElementById('s-wb-good').style.opacity='.4';
+  document.getElementById('s-wb-qcm').style.display='block';
+}
+function sWbNext(source){
+  sWbSource=source;
+  document.getElementById('s-wb-step-0').style.display='none';
+  document.getElementById('s-wb-step-1').style.display='block';
+}
+function sWbSeverity(level){
+  if(level==='danger'){
+    // Immediate alert styling
+    document.getElementById('s-wb-text').style.borderColor='var(--red)';
+  }
+}
+function sWbSend(){
+  document.getElementById('s-wb-step-1').style.display='none';
+  document.getElementById('s-wb-sent').style.display='block';
+}
+
+// ── INLINE PROBLEM LOGIC ──
+const inlineState={};
+const CHIP_URGENCY={
+  '⚙️ Pump not running':'high','💧 Pipe leak':'high',
+  '🌊 Low water level':'med','🔧 Filter clogged':'med','🔌 Lights broken':'low',
+  '🪨 Broken tile / step':'med','🚿 Drain blocked':'med',
+  '🛁 Jacuzzi issue':'low','🪑 Broken lounger':'low','⚠️ Safety hazard':'high'
+};
+
+function selectProblemChip(chip,zone){
+  chip.classList.toggle('on');
+  const label=chip.textContent.trim();
+  const autoUrg=CHIP_URGENCY[label];
+  if(autoUrg&&chip.classList.contains('on')){
+    const urgBtns=document.querySelectorAll(`#${zone}-urg .ip-urg`);
+    urgBtns.forEach(b=>b.className='ip-urg');
+    const map={low:0,med:1,high:2};
+    if(urgBtns[map[autoUrg]])urgBtns[map[autoUrg]].classList.add('on-'+autoUrg);
+    inlineState[zone+'_urg']=autoUrg;
+    applyUrgencyStyle(zone,autoUrg);
+  }
+}
+
+function setInlineUrg(btn,zone,level){
+  btn.closest('.ip-urgency').querySelectorAll('.ip-urg').forEach(b=>b.className='ip-urg');
+  btn.classList.add('on-'+level);
+  inlineState[zone+'_urg']=level;
+  applyUrgencyStyle(zone,level);
+}
+
+function applyUrgencyStyle(zone,level){
+  const cat=document.getElementById('cat-'+zone);
+  const issueBtn=document.getElementById('issue-'+zone);
+  const head=document.getElementById('ip-head-'+zone);
+  const sendBtn=document.getElementById('send-'+zone);
+  if(level==='high'){
+    cat.classList.remove('problem-orange');cat.classList.add('problem-red');
+    issueBtn.classList.add('is-red');
+    if(head){head.className='ip-head red';head.textContent='🚨 Urgent issue';}
+    if(sendBtn){sendBtn.className='send-sofia-btn red';sendBtn.textContent='🚨 Send emergency to Sofia';}
+    document.getElementById('tier-red').classList.add('open');
+    S.tierGreen=false;document.getElementById('tier-green').classList.remove('on');
+  } else {
+    cat.classList.remove('problem-red');cat.classList.add('problem-orange');
+    issueBtn.classList.remove('is-red');
+    if(head){head.className='ip-head orange';head.textContent='⚠️ What\'s the problem?';}
+    if(sendBtn){sendBtn.className='send-sofia-btn';sendBtn.textContent='📤 Send to Sofia';}
+    document.getElementById('tier-orange').classList.add('open');
+    S.tierGreen=false;document.getElementById('tier-green').classList.remove('on');
+  }
+}
+
+const SOFIA_PM_REPLIES={
+  high:['🚨 Got it Kadek — dispatching tukang now. Stay safe.','On it immediately. ETA 30 min. Thank you for the alert 🙏'],
+  med:['Noted ✅ I\'ll have someone check today. Thanks Kadek.','Got it — scheduled for today. Manager informed.'],
+  low:['Thanks Kadek 🙏 Logged for this week.','Noted — I\'ll add it to the maintenance list.']
+};
+
+function sendToSofia(zone){
+  const btn=document.getElementById('send-'+zone);
+  if(!btn)return;
+  // validate: at least one chip selected OR text written
+  const chips=[...document.querySelectorAll(`#${zone}-chips .chip.on`)];
+  const txt=document.getElementById(zone+'-text');
+  if(chips.length===0&&txt&&txt.value.trim()===''){
+    txt.style.borderColor='var(--orange)';txt.placeholder='Please select a type or describe the issue';
+    txt.focus();return;
+  }
+  if(txt)txt.style.borderColor='';
+  btn.textContent='✅ Sent to Sofia';
+  btn.className='send-sofia-btn sent';
+  updateRecap();
+  const urgLevel=inlineState[zone+'_urg']||'low';
+  // Show sofia chat
+  const chatEl=document.getElementById('chat-'+zone);
+  const thread=document.getElementById('thread-'+zone);
+  if(chatEl&&thread){
+    chatEl.style.display='block';
+    // my message
+    const chipLabels=chips.map(c=>c.textContent.trim()).join(', ')||'Issue reported';
+    addScmBubble(thread,'me',chipLabels);
+    // typing then sofia reply
+    const typing=document.createElement('div');
+    typing.className='scm-msg sofia';
+    typing.innerHTML='<div class="scm-typing"><span></span><span></span><span></span></div>';
+    thread.appendChild(typing);
+    thread.scrollTop=thread.scrollHeight;
+    const replies=SOFIA_PM_REPLIES[urgLevel];
+    const reply=replies[Math.floor(Math.random()*replies.length)];
+    setTimeout(()=>{
+      typing.remove();
+      addScmBubble(thread,'sofia',reply);
+    },1400+Math.random()*600);
+  }
+}
+
+function addScmBubble(thread,who,msg){
+  const d=document.createElement('div');d.className='scm-msg '+who;
+  d.innerHTML=`<div class="scm-bubble">${msg}</div>`;
+  thread.appendChild(d);thread.scrollTop=thread.scrollHeight;
+}
+
+// Also add sofia chat + send button to orange and red tiers
+function sendToSofiaTier(tier){
+  const btn=document.getElementById('send-'+tier);
+  if(!btn)return;
+  const chips=[...document.querySelectorAll(`#${tier}-chips-tier .chip.on`)];
+  const txt=document.getElementById(tier+'-text-tier');
+  if(chips.length===0&&txt&&txt.value.trim()===''){
+    if(txt){txt.style.borderColor='var(--orange)';txt.placeholder='Please select or describe the issue';txt.focus();}
+    return;
+  }
+  if(txt)txt.style.borderColor='';
+  btn.textContent='✅ Sent';btn.className='send-sofia-btn sent';
+  const chatEl=document.getElementById('chat-'+tier);
+  const thread=document.getElementById('thread-'+tier);
+  if(chatEl&&thread){
+    chatEl.style.display='block';
+    const urgLevel=tier==='red-tier'?'high':'med';
+    const chipLabels=chips.map(c=>c.textContent.trim()).join(', ')||'Issue reported';
+    addScmBubble(thread,'me',chipLabels);
+    const typing=document.createElement('div');
+    typing.className='scm-msg sofia';
+    typing.innerHTML='<div class="scm-typing"><span></span><span></span><span></span></div>';
+    thread.appendChild(typing);
+    const replies=SOFIA_PM_REPLIES[urgLevel];
+    setTimeout(()=>{typing.remove();addScmBubble(thread,'sofia',replies[Math.floor(Math.random()*replies.length)]);},1400);
+  }
+}
+
+// SUPPLIES — with Sofia feedback on "Low"
+const SUPPLY_NAMES={chlorine:'chlorine',ph:'pH chemicals',algae:'algaecide',equipment:'pool brush / net'};
+const SUPPLY_SOFIA={
+  chlorine:'Noted Kadek 🙏 Pick up chlorine on your way to the next villa — I\'ll log it and it\'s included in your expenses. How much do you need roughly?',
+  ph:'Got it. Grab pH chemicals (soda ash + muriatic acid) — I\'ve notified manager and logged the cost. Let me know the amount.',
+  algae:'Algaecide low — noted. Get a bottle, I\'ll reimburse you. Log the receipt at the end of your mission.',
+  equipment:'Understood — new brush/net needed. I\'ll order it. No action needed from you for now.'
+};
+let supplyLowItems=[];
+let sofiaSupplyResponded=false;
+
+function supplyAllOk(){
+  S.allOk=!S.allOk;
+  document.getElementById('all-ok-btn').classList.toggle('on',S.allOk);
+  if(S.allOk){
+    ['chlorine','ph','algae','equipment'].forEach(n=>{
+      document.getElementById('cb-'+n).querySelectorAll('.s-btn').forEach(b=>b.classList.remove('ok','replaced','low'));
+      document.getElementById('cb-'+n).querySelector('.s-btn').classList.add('ok');
+      S.supplies[n]='ok';
+    });
+    supplyLowItems=[];
+    document.getElementById('supply-sofia').style.display='none';
+    // Auto-confirm pool condition green if no issues
+    if(Object.keys(inlineState).length===0){
+      S.tierGreen=true;
+      document.getElementById('tier-green').classList.add('on');
+      document.getElementById('recap-issues').style.display='none';
+    }
+  }
+}
+
+function setSupply(n,s,btn){
+  S.allOk=false;
+  document.getElementById('all-ok-btn').classList.remove('on');
+  btn.closest('.supply-btns').querySelectorAll('.s-btn').forEach(b=>b.classList.remove('ok','replaced','low'));
+  btn.classList.add(s);
+  S.supplies[n]=s;
+
+  if(s==='low'){
+    // Add to low list if not already there
+    if(!supplyLowItems.includes(n))supplyLowItems.push(n);
+    updateRecap();
+    // Show Sofia feedback
+    const sofiaEl=document.getElementById('supply-sofia');
+    const thread=document.getElementById('thread-supply');
+    sofiaEl.style.display='block';
+    // My message
+    addScmBubble(thread,'me',`${SUPPLY_NAMES[n]} is low ⚠️`);
+    // Sofia typing + reply
+    const typing=document.createElement('div');
+    typing.className='scm-msg sofia';
+    typing.innerHTML='<div class="scm-typing"><span></span><span></span><span></span></div>';
+    thread.appendChild(typing);
+    thread.scrollTop=thread.scrollHeight;
+    setTimeout(()=>{
+      typing.remove();
+      addScmBubble(thread,'sofia',SUPPLY_SOFIA[n]||'Noted — I\'ll handle the restock. 🙏');
+    },1200+Math.random()*500);
+  } else {
+    // Remove from low list
+    supplyLowItems=supplyLowItems.filter(i=>i!==n);
+    updateRecap();
+  }
+}
+
+// CONDITION TIERS
+function tierGreenToggle(){
+  S.tierGreen=!S.tierGreen;
+  document.getElementById('tier-green').classList.toggle('on',S.tierGreen);
+  if(S.tierGreen){document.getElementById('tier-orange').classList.remove('open');document.getElementById('tier-red').classList.remove('open');}
+  if('vibrate'in navigator)navigator.vibrate(30);
+}
+function tierToggle(c){
+  const el=document.getElementById('tier-'+c);
+  el.classList.toggle('open');
+  if(el.classList.contains('open')){S.tierGreen=false;document.getElementById('tier-green').classList.remove('on');}
+}
+function setUrg(btn,l){document.querySelectorAll('.urg').forEach(b=>{b.className='urg';});btn.classList.add('on-'+l);}
+
+// WELLBEING
+const WB_OPTS={
+  guest:["They spoke rudely or raised their voice","They entered the pool area in an unwanted way","They made comments about my appearance","They proposed something that made me uncomfortable","They touched me without my consent","Other"],
+  staff:["Rude words or attitude","Disrespect in front of guests","Unwanted pressure","Other"],
+  neighbor:["Aggressive words or attitude","Complaints or accusations","Other"],
+  other:["I'm not sure how to describe it","Something else happened","I prefer to explain verbally"]
+};
+function selWbGood(){document.getElementById('wb-good').classList.toggle('on');document.getElementById('wb-report').classList.remove('on');document.getElementById('wb-qcm').classList.remove('show');S.wbStatus='good';}
+function selWbReport(){document.getElementById('wb-report').classList.toggle('on');document.getElementById('wb-good').classList.remove('on');const show=document.getElementById('wb-report').classList.contains('on');document.getElementById('wb-qcm').classList.toggle('show',show);S.wbStatus=show?'report':null;resetWbSteps();}
+function resetWbSteps(){document.querySelectorAll('.wb-qcm-step').forEach(s=>s.classList.remove('active'));document.getElementById('wb-step-0').classList.add('active');}
+function wbNext(step,source){
+  if(source)S.wbSource=source;
+  document.querySelectorAll('.wb-qcm-step').forEach(s=>s.classList.remove('active'));
+  if(step===1){
+    const opts=WB_OPTS[source]||WB_OPTS.other;
+    document.getElementById('wb-q1').textContent='What happened exactly?';
+    const cont=document.getElementById('wb-opts1');cont.innerHTML='';
+    opts.forEach(o=>{const d=document.createElement('div');d.className='wb-opt';d.innerHTML=`<div class="wb-opt-icon">•</div>${o}`;d.onclick=()=>{d.classList.toggle('sel');};cont.appendChild(d);});
+    document.getElementById('wb-step-1').classList.add('active');
+  } else {document.getElementById('wb-step-'+step).classList.add('active');}
+}
+function wbBack(step){document.querySelectorAll('.wb-qcm-step').forEach(s=>s.classList.remove('active'));document.getElementById('wb-step-'+step).classList.add('active');}
+function setStar(n){S.wbRating=n;document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('on',i<n));}
+function sendWbReport(){
+  const btn=document.querySelector('.wb-report-btn');
+  btn.textContent='✅ Report sent — your manager will call you';
+  btn.style.background='linear-gradient(135deg,var(--green-dark),var(--green))';
+  btn.disabled=true;
+}
+
+// PHOTOS
+function addPhoto(input,id){Array.from(input.files).forEach(file=>{const r=new FileReader();r.onload=e=>{const el=document.createElement('div');el.className='pm';el.innerHTML=`<img src="${e.target.result}"><div class="pm-rm" onclick="this.parentElement.remove()">✕</div>`;document.getElementById(id).appendChild(el);};r.readAsDataURL(file);});input.value='';}
+
+// SUBMIT — smart end screen
+function doSubmit(){
+  // Validate with scroll-to-error
+  // Check surface
+  if(!S.cats.has('surface')){
+    scrollToError(document.getElementById('cat-surface')||document.querySelector('[data-cat="surface"]'),'Pool surface not confirmed — mark Done or report an issue');
+    return;
+  }
+  // Check chemistry
+  if(!S.cats.has('chemistry')){
+    scrollToError(document.getElementById('cat-chemistry')||document.querySelector('[data-cat="chemistry"]'),'Water chemistry not checked');
+    return;
+  }
+  // Check pump — must have done or issue
+  const pumpOk=document.getElementById('done-pump')&&document.getElementById('done-pump').classList.contains('on');
+  const pumpIssue=document.getElementById('issue-pump')&&document.getElementById('issue-pump').classList.contains('on');
+  if(!pumpOk&&!pumpIssue){
+    scrollToError(document.getElementById('cat-pump'),'Pump & filter — confirm done or report issue');
+    return;
+  }
+  // Check area
+  const areaOk=document.getElementById('done-area')&&document.getElementById('done-area').classList.contains('on');
+  const areaIssue=document.getElementById('issue-area')&&document.getElementById('issue-area').classList.contains('on');
+  if(!areaOk&&!areaIssue){
+    scrollToError(document.getElementById('cat-area'),'Pool deck — confirm done or report issue');
+    return;
+  }
+  // Pool condition
+  if(!S.tierGreen&&Object.keys(inlineState).length===0&&(!supplyLowItems||supplyLowItems.length===0)){
+    scrollToError(document.getElementById('tier-green'),'Confirm pool condition or report an issue');
+    return;
+  }
+
+  const mins=Math.round((Date.now()-S.start)/60000);
+  const hh=Math.floor(mins/60),mm=mins%60;
+  document.getElementById('s-time').textContent=hh>0?`${hh}h${mm}m`:`${mins}m`;
+  document.getElementById('s-checks').textContent=S.cats.size;
+  document.getElementById('s-chems').textContent=Object.keys(S.chems).length;
+
+  const hasEmergency=Object.values(inlineState).includes('high')||
+    [...document.querySelectorAll('.cat-block.problem-red')].length>0;
+  const hasIssue=!hasEmergency&&(
+    (supplyLowItems&&supplyLowItems.length>0)||
+    Object.keys(inlineState).some(k=>k.endsWith('_urg'))
+  );
+
+  const curH=new Date().getHours();
+  const isEvening=curH>=16;
+
+  const NEXT_MISSIONS=[
+    {name:'Villa Indah',meta:'Pererenan · 4BR · ~12 min',icon:'🌺'},
+    {name:'Villa Karma',meta:'Kerobokan · 3BR · ~8 min',icon:'🏡'},
+  ];
+  // In demo: always show next mission (remove evening block)
+  const nextMission=NEXT_MISSIONS[Math.floor(Math.random()*NEXT_MISSIONS.length)];
+
+  const sitEl=document.getElementById('s-situation');
+  const sofiaEl=document.getElementById('s-sofia-msg');
+  const sofiaText=document.getElementById('s-sofia-text');
+  const burst=document.getElementById('s-burst');
+  const quote=document.getElementById('s-quote');
+
+  const supplyLine=supplyLowItems&&supplyLowItems.length>0
+    ?`\n📦 Low: ${supplyLowItems.map(i=>SUPPLY_NAMES[i]).join(', ')} — Sofia is arranging restock.`:'';
+
+  // Sofia is always shown
+  sofiaEl.style.display='block';
+
+  if(hasEmergency){
+    burst.textContent='🚨';
+    sitEl.style.cssText='background:rgba(192,57,43,0.1);border:1.5px solid rgba(192,57,43,0.25);border-radius:var(--radius) var(--radius) 0 0;padding:14px 18px;text-align:left;font-size:13px;line-height:1.75;';
+    sitEl.innerHTML=`<div style="font-size:13px;font-weight:800;color:var(--red);margin-bottom:6px;">🚨 Emergency — escalated immediately</div>
+      <div style="color:rgba(255,255,255,0.65);">Tukang dispatched. Pool temporarily closed. Sofia is handling guest &amp; manager communication.${supplyLine}</div>`;
+    sofiaText.textContent='Emergency escalated \u2705 Tukang Wayan is on the way. Guest and manager have been informed. Great job catching this, Kadek \u2014 you kept everyone safe. This mission is done. \uD83D\uDE4F\n\nWe make a good team. \uD83C\uDF0A';
+    quote.innerHTML='"You kept the villa safe today.<br>That\'s the most important thing." 🙏';
+  } else if(hasIssue){
+    burst.textContent='⚠️';
+    sitEl.style.cssText='background:rgba(230,126,34,0.08);border:1.5px solid rgba(230,126,34,0.2);border-radius:var(--radius) var(--radius) 0 0;padding:14px 18px;text-align:left;font-size:13px;line-height:1.75;';
+    sitEl.innerHTML=`<div style="font-size:13px;font-weight:800;color:var(--orange);margin-bottom:6px;">⚠️ Issue reported & logged</div>
+      <div style="color:rgba(255,255,255,0.65);">Issue in the queue, pool stays open.${supplyLine}</div>`;
+    const restock=supplyLowItems&&supplyLowItems.length>0?' I\'ll handle the restock \u2014 costs logged, nothing needed from you.':'';
+    sofiaText.textContent='Report received, manager is in the loop. \uD83D\uDE4F'+restock+' Pool stays fully operational.\n\nThis mission is done, Kadek. Good work \u2014 you and I make a great team. \uD83C\uDF0A';
+    quote.innerHTML='"Your attention to detail makes<br>all the difference." 🌊';
+  } else {
+    burst.textContent='🌊';
+    sitEl.style.cssText='background:rgba(39,174,96,0.08);border:1.5px solid rgba(39,174,96,0.2);border-radius:var(--radius) var(--radius) 0 0;padding:14px 18px;text-align:left;font-size:13px;line-height:1.75;';
+    sitEl.innerHTML=`<div style="font-size:13px;font-weight:800;color:var(--green);margin-bottom:6px;">✅ Pool in perfect condition</div>
+      <div style="color:rgba(255,255,255,0.65);">Villa Surya pool is crystal clear. Report sent to manager. Guests will love it today.</div>`;
+    sofiaText.textContent='Everything looks perfect \u2014 report sent, manager informed. \u2705\n\nThis mission is done, Kadek. Thank you. We make a great team and the guests are going to have a wonderful day because of you. \uD83C\uDF34';
+    quote.innerHTML='"Thank you Kadek. Villa Surya looks<br>perfect — as always." 🌴';
+  }
+
+  // Next mission
+  if(nextMission){
+    document.getElementById('s-next-mission').style.display='block';
+    document.getElementById('s-next-name').textContent=nextMission.name;
+    document.getElementById('s-next-meta').textContent=nextMission.meta;
+    document.getElementById('s-next-icon').textContent=nextMission.icon;
+    document.getElementById('s-btn').style.display='none';
+  } else {
+    sofiaText.textContent+='\n\nThat\'s all for today \uD83C\uDF05 Rest well \u2014 see you tomorrow. Enjoy your evening! \uD83C\uDF34';
+    document.getElementById('s-btn').style.display='block';
+    document.getElementById('s-btn').textContent='All done 🌊';
+  }
+
+  document.querySelectorAll('body>*:not(#success)').forEach(el=>el.style.display='none');
+  document.getElementById('success').classList.add('show');
+  window.scrollTo(0,0);
+  if('vibrate'in navigator)navigator.vibrate([80,40,80,40,120]);
+}
+
+function goNextVilla(){location.reload();}
+
+// Update recap issues when inline problems are sent
+function updateRecap(){
+  const issues=[];
+  let hasHigh=false;
+
+  // Inline problem issues
+  ['pump','area'].forEach(zone=>{
+    const chips=[...document.querySelectorAll(`#${zone}-chips .chip.on`)].map(c=>c.textContent.trim());
+    if(chips.length>0){
+      const urg=inlineState[zone+'_urg']||'low';
+      if(urg==='high')hasHigh=true;
+      const urgLabel={high:'🔴 URGENT',med:'🟠 Today',low:'🟢 Minor'}[urg];
+      issues.push(`${urgLabel} · ${chips.join(', ')}`);
+    }
+  });
+
+  // Low supplies
+  if(supplyLowItems&&supplyLowItems.length>0){
+    const names=supplyLowItems.map(i=>SUPPLY_NAMES[i]||i).join(', ');
+    issues.push(`📦 Low stock: ${names}`);
+  }
+
+  const recapEl=document.getElementById('recap-issues');
+  const recapBody=document.getElementById('recap-issues-body');
+  const tierGreenEl=document.getElementById('tier-green');
+
+  if(issues.length>0){
+    recapEl.style.display='block';
+    // Colors
+    recapEl.style.background=hasHigh?'rgba(192,57,43,0.08)':'rgba(230,126,34,0.08)';
+    recapEl.style.border=`1.5px solid ${hasHigh?'rgba(192,57,43,0.25)':'rgba(230,126,34,0.2)'}`;
+    const titleEl=document.getElementById('recap-issues-title');
+    titleEl.style.color=hasHigh?'var(--red)':'var(--orange)';
+    titleEl.textContent=hasHigh?'🚨 Emergency reported':'⚠️ Issues reported';
+    recapBody.textContent=issues.join('\n');
+    // Hide green tier
+    tierGreenEl.style.display='none';
+    S.tierGreen=false;tierGreenEl.classList.remove('on');
+  } else {
+    recapEl.style.display='none';
+    // Show green again
+    tierGreenEl.style.display='flex';
+  }
+}
+
+// ── ORBITAL CLOCK — 280px PNG logos ──
+var CREW_P=[
+  {key:'poolman',  label:'Pool',    big:true,  color:'rgba(46,134,193,.9)',  fb:'🌊'},
+  {key:'cleaner',  label:'Cleaner', big:false, color:'rgba(212,116,154,.8)', fb:'🧹'},
+  {key:'gardener', label:'Garden',  big:false, color:'rgba(39,174,96,.8)',   fb:'🌿'},
+  {key:'driver',   label:'Driver',  big:false, color:'rgba(93,173,226,.8)',  fb:'🚗'},
+  {key:'tukang',   label:'Tukang',  big:false, color:'rgba(230,126,34,.8)',  fb:'🔧'},
+  {key:'massage',  label:'Massage', big:false, color:'rgba(212,116,154,.7)', fb:'💆'},
+  {key:'cooker',   label:'Cooker',  big:false, color:'rgba(201,168,76,.8)',  fb:'👨‍🍳'},
+  {key:'internet', label:'Internet',big:false, color:'rgba(0,166,147,.8)',   fb:'📶'}
+];
+var LOGOS_P={
+  poolman:'pool_man_logo_1_340.png',cleaner:'clener_girl_logo_2__340.png',
+  gardener:'garrdener_logo_1_340.png',driver:'driver_logo_1_340.png',
+  tukang:'worker_handy_man_logo_1_340.png',massage:'massage_girl_logo_1_340.png',
+  cooker:'cooker_logo_1_340.png',internet:'internet_man_logo_1_340.png'
+};
+var IMGS_P={};
+function preloadP(cb){var n=0;CREW_P.forEach(function(c){var img=new Image();img.onload=img.onerror=function(){IMGS_P[c.key]=(img.complete&&img.naturalWidth>0)?img:null;n++;if(n===CREW_P.length&&cb)cb();};img.src=LOGOS_P[c.key];});}
+function initOrbit(){
+  var canvas=document.getElementById('orbitCanvas');if(!canvas)return;
+  var ctx=canvas.getContext('2d');
+  var DPR=window.devicePixelRatio||1;
+  canvas.width=280*DPR;canvas.height=280*DPR;canvas.style.width='280px';canvas.style.height='280px';
+  ctx.scale(DPR,DPR);
+  var CX=140,CY=140,R_ORB=100,R_SEC=120,R_MIN=Math.round(R_SEC*0.9),R_HR=Math.round(R_SEC*0.5),R_OUT=130;
+  function frame(){
+    var now=new Date(),ms=now.getMilliseconds();
+    var sec=now.getSeconds()+ms/1000,min=now.getMinutes()+sec/60,hr=(now.getHours()%12)+min/60;
+    ctx.clearRect(0,0,280,280);
+    ctx.beginPath();ctx.arc(CX,CY,R_ORB,0,Math.PI*2);ctx.strokeStyle='rgba(46,134,193,0.12)';ctx.lineWidth=1;ctx.setLineDash([3,8]);ctx.stroke();ctx.setLineDash([]);
+    ctx.beginPath();ctx.arc(CX,CY,R_OUT,0,Math.PI*2);ctx.strokeStyle='rgba(201,168,76,0.10)';ctx.lineWidth=1;ctx.stroke();
+    for(var i=0;i<12;i++){var a=(i/12)*Math.PI*2-Math.PI/2,tl=i%3===0?9:4;ctx.beginPath();ctx.moveTo(CX+Math.cos(a)*(R_OUT-1),CY+Math.sin(a)*(R_OUT-1));ctx.lineTo(CX+Math.cos(a)*(R_OUT-1-tl),CY+Math.sin(a)*(R_OUT-1-tl));ctx.strokeStyle=i%3===0?'rgba(201,168,76,0.4)':'rgba(201,168,76,0.12)';ctx.lineWidth=i%3===0?1.5:1;ctx.stroke();}
+    ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+Math.cos((hr/12)*Math.PI*2-Math.PI/2)*R_HR,CY+Math.sin((hr/12)*Math.PI*2-Math.PI/2)*R_HR);ctx.strokeStyle='rgba(232,220,200,.95)';ctx.lineWidth=3;ctx.lineCap='round';ctx.stroke();
+    ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+Math.cos((min/60)*Math.PI*2-Math.PI/2)*R_MIN,CY+Math.sin((min/60)*Math.PI*2-Math.PI/2)*R_MIN);ctx.strokeStyle='rgba(232,220,200,.75)';ctx.lineWidth=1.8;ctx.lineCap='round';ctx.stroke();
+    ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+Math.cos((sec/60)*Math.PI*2-Math.PI/2)*R_SEC,CY+Math.sin((sec/60)*Math.PI*2-Math.PI/2)*R_SEC);ctx.strokeStyle='rgba(46,134,193,.95)';ctx.lineWidth=1;ctx.lineCap='round';ctx.stroke();
+    ctx.beginPath();ctx.arc(CX,CY,3.5,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,.9)';ctx.fill();
+    var t=Date.now()/1000,step=Math.PI*2/CREW_P.length,drift=-(sec/60)*Math.PI*2*0.5;
+    CREW_P.forEach(function(c,i){
+      var angle=i*step+drift,x=CX+Math.cos(angle)*R_ORB,y=CY+Math.sin(angle)*R_ORB,bubR=c.big?22:14;
+      if(c.big){var g=ctx.createRadialGradient(x,y,0,x,y,bubR+8);g.addColorStop(0,'rgba(46,134,193,0.2)');g.addColorStop(1,'transparent');ctx.beginPath();ctx.arc(x,y,bubR+8,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();}
+      ctx.beginPath();ctx.arc(x,y,bubR,0,Math.PI*2);ctx.fillStyle=c.big?'rgba(8,20,40,.95)':'rgba(240,247,255,.92)';ctx.fill();
+      ctx.strokeStyle=c.color;ctx.lineWidth=c.big?2:1.5;ctx.stroke();
+      var img=IMGS_P[c.key];
+      if(img){ctx.save();ctx.beginPath();ctx.arc(x,y,bubR-2,0,Math.PI*2);ctx.clip();ctx.drawImage(img,x-(bubR-2),y-(bubR-2),(bubR-2)*2,(bubR-2)*2);ctx.restore();}
+      else{ctx.font=(c.big?14:10)+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle=c.big?'#fff':'#333';ctx.fillText(c.fb,x,y);}
+      ctx.font=(c.big?9:7)+'px Nunito,sans-serif';ctx.textAlign='center';ctx.textBaseline='top';
+      ctx.fillStyle=c.big?'rgba(46,134,193,.9)':'rgba(30,42,60,.5)';ctx.fillText(c.label,x,y+bubR+3);
+    });
+    requestAnimationFrame(frame);
+  }
+  preloadP(null);frame();
+}
+window.addEventListener('DOMContentLoaded',function(){initOrbit();});
+
+// ── XENDIT FUNCTIONS ──
+function requestAdvance(){var btn=document.getElementById('btn-advance');if(btn.classList.contains('sent'))return;btn.classList.add('sent');btn.innerHTML='⏳ Rex sedang proses transfer...';setTimeout(function(){btn.innerHTML='✅ Transfer dikirim ke rekening kamu — cek HP';if('vibrate' in navigator)navigator.vibrate([60,30,60]);},2000);}
+function openReimb(){document.getElementById('reimb-area').classList.toggle('show');}
+function reimbPhoto(input){if(!input.files[0])return;var r=new FileReader();r.onload=function(e){var t=document.getElementById('reimb-thumb');t.src=e.target.result;t.style.display='block';document.getElementById('reimb-confirm-btn').classList.add('show');};r.readAsDataURL(input.files[0]);}
+function confirmReimb(){var btn=document.getElementById('reimb-confirm-btn');btn.textContent='⏳ Rex sedang review...';btn.style.background='var(--muted)';btn.onclick=null;setTimeout(function(){btn.textContent='✅ Penggantian disetujui — akan ditransfer hari ini';btn.style.background='var(--green)';document.getElementById('btn-reimb').classList.add('sent');document.getElementById('btn-reimb').innerHTML='✅ Penggantian biaya dikirim';if('vibrate' in navigator)navigator.vibrate([60,30,60]);},2000);}
+
+// REVEAL
+const obs=new IntersectionObserver(ee=>ee.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v');}),{threshold:.05});
+document.querySelectorAll('.fi').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Settings Client — Hidden Keys Bali</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#8B6914;--gold-light:#C9A84C;
+  --cream:#F5F0E8;--cream2:#EDE8DC;--cream3:#E5DED0;
+  --surface:rgba(0,0,0,0.04);--border:rgba(139,105,20,0.18);
+  --text:#1A1208;--muted:#6B5B3E;
+  --green:#2ECC71;--green-d:#1A7A3C;
+  --blue:#3498DB;--blue-d:#1A5A8A;
+  --violet:#6B2D8B;--red:#C0392B;--orange:#B7590A;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cream);color:var(--text);font-family:"DM Mono",monospace;min-height:100vh;}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(245,240,232,0.97);border-bottom:1px solid var(--border);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);cursor:pointer;padding:6px 12px;border:1px solid var(--border);border-radius:20px;transition:all .2s;background:transparent;font-family:"DM Mono",monospace;}
+.back-btn:hover{border-color:var(--gold);color:var(--gold);}
+.topbar-sep{width:1px;height:24px;background:var(--border);}
+.topbar-title{font-family:"Playfair Display",serif;font-size:15px;color:var(--text);}
+.topbar-title span{color:var(--gold);font-style:italic;}
+.topbar-logo-text{font-family:"Playfair Display",serif;font-size:14px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;}
+.topbar-logo-hook{color:var(--muted);font-size:9px;font-family:"Cormorant Garamond",monospace;letter-spacing:1.5px;font-style:italic;display:block;margin-top:1px;}
+
+/* DESKTOP ONLY BANNER */
+.desktop-banner{display:none;background:rgba(139,105,20,.08);border-bottom:1px solid var(--border);padding:8px 32px;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);text-align:center;}
+@media(max-width:900px){.desktop-banner{display:block;}}
+
+/* LAYOUT */
+.page-layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 60px);}
+@media(max-width:900px){.page-layout{grid-template-columns:1fr;}}
+
+/* SIDEBAR */
+.sidebar{border-right:1px solid var(--border);background:var(--cream2);padding:32px 0;}
+.sidebar-client{padding:0 24px 28px;border-bottom:1px solid var(--border);margin-bottom:20px;}
+.client-avatar-big{width:64px;height:64px;border-radius:50%;border:2.5px solid var(--gold);background:var(--cream3);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:14px;}
+.client-name-big{font-family:"Playfair Display",serif;font-size:20px;color:var(--text);margin-bottom:4px;}
+.client-meta{font-size:9px;color:var(--muted);line-height:2;}
+.client-status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:5px;}
+
+.nav-section{padding:0 16px;margin-bottom:6px;}
+.nav-section-label{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:0 8px;margin-bottom:6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;transition:all .18s;color:var(--muted);font-size:10px;letter-spacing:.5px;border:1px solid transparent;}
+.nav-item:hover{background:rgba(139,105,20,.06);color:var(--text);}
+.nav-item.active{background:rgba(139,105,20,.1);color:var(--gold);border-color:rgba(139,105,20,.2);}
+.nav-item .nav-icon{font-size:14px;width:20px;text-align:center;flex-shrink:0;}
+.nav-item .nav-label{flex:1;}
+.nav-item .nav-badge{font-size:8px;padding:2px 6px;border-radius:10px;background:rgba(46,204,113,.15);color:var(--green-d);font-weight:700;}
+.nav-item .nav-badge.warn{background:rgba(183,89,10,.12);color:var(--orange);}
+
+.sidebar-footer{padding:20px 24px 0;border-top:1px solid var(--border);margin-top:auto;}
+.danger-zone-btn{width:100%;padding:9px;border:1px solid rgba(192,57,43,.25);border-radius:8px;background:transparent;color:var(--red);font-family:"DM Mono",monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.danger-zone-btn:hover{background:rgba(192,57,43,.06);}
+
+/* MAIN CONTENT */
+.main-content{padding:40px 48px 80px;}
+@media(max-width:1100px){.main-content{padding:32px 28px 60px;}}
+
+.tab-pane{display:none;}
+.tab-pane.active{display:block;animation:fadeUp .25s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+.pane-title{font-family:"Playfair Display",serif;font-size:26px;font-weight:400;color:var(--text);margin-bottom:6px;}
+.pane-title em{color:var(--gold);font-style:italic;}
+.pane-sub{font-size:10px;color:var(--muted);margin-bottom:36px;letter-spacing:.5px;}
+
+/* CARDS */
+.settings-card{background:var(--cream2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px;}
+.card-header{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.card-header-icon{font-size:16px;}
+.card-header-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.card-header-action{margin-left:auto;font-size:9px;color:var(--gold);cursor:pointer;letter-spacing:1px;text-transform:uppercase;border:1px solid rgba(139,105,20,.25);padding:4px 10px;border-radius:12px;transition:all .2s;}
+.card-header-action:hover{background:rgba(139,105,20,.08);}
+.card-body{padding:22px;}
+.card-body.tight{padding:0;}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:700px){.form-grid{grid-template-columns:1fr;}}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+@media(max-width:800px){.form-grid-3{grid-template-columns:1fr 1fr;}}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-group.full{grid-column:1/-1;}
+.form-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
+.form-input{padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-family:"DM Mono",monospace;font-size:11px;background:var(--cream);color:var(--text);outline:none;transition:border-color .15s;}
+.form-input:focus{border-color:var(--gold);}
+.form-input:disabled{opacity:.5;cursor:not-allowed;}
+.form-select{padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-family:"DM Mono",monospace;font-size:11px;background:var(--cream);color:var(--text);outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236B5B3E'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
+.form-hint{font-size:9px;color:var(--muted);margin-top:2px;}
+.form-actions{display:flex;gap:10px;margin-top:24px;justify-content:flex-end;}
+
+/* BUTTONS */
+.btn-primary{padding:10px 22px;border-radius:8px;border:none;background:var(--gold);color:white;font-family:"DM Mono",monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.btn-primary:hover{background:#7A5D11;}
+.btn-ghost{padding:10px 22px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:"DM Mono",monospace;font-size:10px;cursor:pointer;transition:all .2s;}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+.btn-danger{padding:10px 22px;border-radius:8px;border:1px solid rgba(192,57,43,.35);background:transparent;color:var(--red);font-family:"DM Mono",monospace;font-size:10px;cursor:pointer;transition:all .2s;}
+.btn-danger:hover{background:rgba(192,57,43,.08);}
+
+/* SECTION DIVIDER */
+.section-divider{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:28px 0 16px;display:flex;align-items:center;gap:14px;}
+.section-divider::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);}
+
+/* ── TAB 1 INFOS ── */
+.avatar-upload{display:flex;align-items:center;gap:18px;margin-bottom:4px;}
+.avatar-preview{width:72px;height:72px;border-radius:50%;border:2.5px solid var(--gold);background:var(--cream3);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;overflow:hidden;}
+.avatar-preview img{width:100%;height:100%;object-fit:cover;}
+.avatar-btns{display:flex;flex-direction:column;gap:6px;}
+.avatar-btn{padding:6px 14px;border:1px solid var(--border);border-radius:6px;background:transparent;font-family:"DM Mono",monospace;font-size:9px;color:var(--muted);cursor:pointer;text-align:center;letter-spacing:.5px;transition:all .2s;}
+.avatar-btn:hover{border-color:var(--gold);color:var(--gold);}
+.avatar-hint{font-size:9px;color:var(--muted);line-height:1.7;}
+
+/* CONTRACT DATE */
+.date-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(46,204,113,.08);border:1px solid rgba(46,204,113,.2);border-radius:8px;font-size:10px;color:var(--green-d);}
+.date-chip .icon{font-size:14px;}
+
+/* ── TAB 2 VILLAS ── */
+.villa-list-item{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);transition:background .15s;cursor:pointer;}
+.villa-list-item:last-child{border-bottom:none;}
+.villa-list-item:hover{background:rgba(139,105,20,.04);}
+.vli-icon{font-size:20px;width:40px;height:40px;border-radius:8px;background:var(--cream3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.vli-info{flex:1;min-width:0;}
+.vli-name{font-family:"Playfair Display",serif;font-size:14px;color:var(--text);}
+.vli-meta{font-size:9px;color:var(--muted);margin-top:2px;}
+.vli-status{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.vli-dot{width:8px;height:8px;border-radius:50%;}
+.vli-dot.green{background:var(--green);}
+.vli-dot.orange{background:var(--orange);}
+.vli-dot.red{background:var(--red);}
+.vli-status-label{font-size:9px;color:var(--muted);}
+.vli-arrow{font-size:12px;color:var(--muted);margin-left:8px;}
+
+.add-villa-row{display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;border-top:1px solid var(--border);color:var(--gold);font-size:10px;letter-spacing:1px;text-transform:uppercase;transition:background .15s;}
+.add-villa-row:hover{background:rgba(139,105,20,.05);}
+
+/* ── TAB 3 TRUST / APP ── */
+
+/* TRUST CARD CENTRALE */
+.trust-card{background:linear-gradient(135deg,rgba(139,105,20,.08),rgba(201,168,76,.03));border:1px solid rgba(139,105,20,.25);border-radius:14px;padding:28px;margin-bottom:20px;position:relative;overflow:hidden;}
+.trust-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold-light),transparent);}
+.trust-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.trust-title{font-family:"Playfair Display",serif;font-size:18px;color:var(--text);}
+.trust-title em{color:var(--gold);font-style:italic;}
+.trust-score-badge{font-family:"Playfair Display",serif;font-size:36px;color:var(--gold);line-height:1;}
+.trust-score-label{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-align:right;margin-top:3px;}
+
+/* TRUST SLIDER VISUEL */
+.trust-bar-wrap{margin-bottom:24px;}
+.trust-bar-labels{display:flex;justify-content:space-between;font-size:8px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+.trust-bar-track{height:10px;background:var(--cream3);border-radius:5px;position:relative;cursor:pointer;}
+.trust-bar-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--green-d),var(--gold-light));transition:width .4s ease;}
+.trust-bar-thumb{position:absolute;top:50%;transform:translate(-50%,-50%);width:20px;height:20px;border-radius:50%;background:var(--cream);border:2.5px solid var(--gold);box-shadow:0 2px 8px rgba(139,105,20,.35);cursor:grab;transition:left .4s ease;}
+.trust-bar-thumb:active{cursor:grabbing;}
+
+/* TRUST PHASE BADGE */
+.trust-phase{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:20px;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px;}
+.trust-phase.p0{background:rgba(107,45,139,.1);color:var(--violet);border:1px solid rgba(107,45,139,.2);}
+.trust-phase.p1{background:rgba(52,152,219,.1);color:var(--blue-d);border:1px solid rgba(52,152,219,.2);}
+.trust-phase.p2{background:rgba(46,204,113,.1);color:var(--green-d);border:1px solid rgba(46,204,113,.2);}
+.trust-phase.p3{background:rgba(139,105,20,.1);color:var(--gold);border:1px solid rgba(139,105,20,.2);}
+.trust-phase-dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+
+/* TRUST RÉSUMÉ */
+.trust-summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:20px;}
+@media(max-width:700px){.trust-summary{grid-template-columns:1fr 1fr;}}
+.ts-box{padding:12px 14px;border-radius:8px;border:1px solid var(--border);background:var(--cream);}
+.ts-icon{font-size:13px;margin-bottom:6px;}
+.ts-label{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.ts-value{font-size:11px;color:var(--text);line-height:1.4;}
+.ts-value.green{color:var(--green-d);}
+.ts-value.muted{color:var(--muted);}
+
+/* TRUST CATÉGORIES */
+.trust-cats{display:flex;flex-direction:column;gap:2px;}
+.tc-row{display:flex;align-items:center;gap:12px;padding:11px 20px;border-bottom:1px solid var(--border);transition:background .15s;}
+.tc-row:last-child{border-bottom:none;}
+.tc-row:hover{background:rgba(139,105,20,.03);}
+.tc-name{font-size:10px;color:var(--text);flex:1;}
+.tc-bar-wrap{width:120px;flex-shrink:0;}
+.tc-bar-track{height:6px;background:var(--cream3);border-radius:3px;}
+.tc-bar-fill{height:100%;border-radius:3px;transition:width .4s;}
+.tc-pct{font-size:10px;color:var(--muted);width:32px;text-align:right;flex-shrink:0;}
+.tc-mode{font-size:8px;padding:2px 8px;border-radius:10px;letter-spacing:.5px;flex-shrink:0;min-width:72px;text-align:center;}
+.tc-mode.auto{background:rgba(46,204,113,.12);color:var(--green-d);}
+.tc-mode.notif{background:rgba(52,152,219,.1);color:var(--blue-d);}
+.tc-mode.valid{background:rgba(183,89,10,.1);color:var(--orange);}
+.tc-mode.never{background:rgba(139,105,20,.08);color:var(--muted);}
+
+/* TOGGLE SWITCH */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);}
+.toggle-row:last-child{border-bottom:none;}
+.toggle-info{flex:1;}
+.toggle-title{font-size:11px;color:var(--text);margin-bottom:2px;}
+.toggle-sub{font-size:9px;color:var(--muted);}
+.toggle-switch{position:relative;width:40px;height:22px;flex-shrink:0;}
+.toggle-switch input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;inset:0;background:var(--cream3);border:1px solid var(--border);border-radius:11px;cursor:pointer;transition:all .25s;}
+.toggle-slider::after{content:"";position:absolute;left:2px;top:2px;width:16px;height:16px;border-radius:50%;background:var(--muted);transition:all .25s;}
+.toggle-switch input:checked + .toggle-slider{background:rgba(46,204,113,.2);border-color:var(--green);}
+.toggle-switch input:checked + .toggle-slider::after{transform:translateX(18px);background:var(--green-d);}
+
+/* NOTIF PILLS */
+.notif-choices{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.notif-pill{padding:6px 14px;border:1px solid var(--border);border-radius:20px;font-size:9px;color:var(--muted);cursor:pointer;transition:all .2s;letter-spacing:.5px;}
+.notif-pill.active{border-color:var(--green-d);color:var(--green-d);background:rgba(46,204,113,.08);}
+
+/* DETAIL LEVEL */
+.detail-levels{display:flex;gap:0;}
+.dl-btn{flex:1;padding:9px;border:1px solid var(--border);background:transparent;font-family:"DM Mono",monospace;font-size:9px;color:var(--muted);cursor:pointer;transition:all .2s;letter-spacing:.5px;text-transform:uppercase;}
+.dl-btn:first-child{border-radius:6px 0 0 6px;}
+.dl-btn:last-child{border-radius:0 6px 6px 0;}
+.dl-btn+.dl-btn{border-left:none;}
+.dl-btn.active{background:var(--gold);color:white;border-color:var(--gold);}
+
+/* ── TAB 4 FINANCES ── */
+.xendit-status{display:flex;align-items:center;gap:10px;padding:14px 18px;background:rgba(46,204,113,.06);border:1px solid rgba(46,204,113,.2);border-radius:8px;margin-bottom:20px;}
+.xendit-icon{font-size:20px;}
+.xendit-info{flex:1;}
+.xendit-title{font-size:11px;color:var(--text);}
+.xendit-sub{font-size:9px;color:var(--muted);margin-top:2px;}
+.xendit-badge{font-size:8px;padding:3px 10px;border-radius:10px;background:rgba(46,204,113,.15);color:var(--green-d);font-weight:700;letter-spacing:.5px;}
+
+.bank-row{display:flex;align-items:center;gap:14px;padding:14px 18px;border:1px solid var(--border);border-radius:8px;margin-bottom:10px;background:var(--cream);}
+.bank-logo{width:36px;height:36px;border-radius:8px;background:var(--cream3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;font-family:"Playfair Display",serif;color:var(--gold);flex-shrink:0;}
+.bank-info{flex:1;}
+.bank-name{font-size:11px;color:var(--text);}
+.bank-num{font-size:9px;color:var(--muted);font-family:"DM Mono",monospace;margin-top:2px;letter-spacing:1px;}
+.bank-default{font-size:8px;padding:2px 8px;border-radius:10px;background:rgba(139,105,20,.12);color:var(--gold);}
+.bank-edit{font-size:11px;color:var(--muted);cursor:pointer;padding:6px;}
+
+/* SEUILS DÉPENSES */
+.threshold-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+@media(max-width:700px){.threshold-grid{grid-template-columns:1fr;}}
+.threshold-box{padding:16px;border-radius:10px;border:1px solid var(--border);background:var(--cream);}
+.thr-dot{width:10px;height:10px;border-radius:50%;margin-bottom:10px;}
+.thr-dot.auto{background:var(--green);}
+.thr-dot.warn{background:var(--orange);}
+.thr-dot.stop{background:var(--red);}
+.thr-label{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.thr-input{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:"DM Mono",monospace;font-size:12px;background:var(--cream2);color:var(--text);outline:none;transition:border-color .15s;}
+.thr-input:focus{border-color:var(--gold);}
+.thr-desc{font-size:8px;color:var(--muted);margin-top:6px;line-height:1.6;}
+
+/* VIREMENT TOGGLE */
+.virement-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);}
+.virement-row:last-child{border-bottom:none;}
+.virement-label{flex:1;font-size:11px;color:var(--text);}
+.virement-sub{font-size:9px;color:var(--muted);margin-top:2px;}
+.day-picker{display:flex;gap:4px;flex-wrap:wrap;}
+.day-chip{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:transparent;font-family:"DM Mono",monospace;font-size:10px;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.day-chip.active{background:var(--gold);border-color:var(--gold);color:white;}
+.day-chip:hover:not(.active){border-color:var(--gold);color:var(--gold);}
+
+/* SAVE BAR */
+.save-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(245,240,232,0.97);border-top:1px solid var(--border);backdrop-filter:blur(12px);padding:14px 48px;display:flex;align-items:center;justify-content:space-between;z-index:90;transform:translateY(100%);transition:transform .25s ease;}
+.save-bar.visible{transform:none;}
+.save-bar-info{font-size:10px;color:var(--muted);}
+.save-bar-info strong{color:var(--orange);}
+.save-bar-btns{display:flex;gap:10px;}
+
+/* NEVER SLEEPING TEASER */
+.ns-teaser{background:linear-gradient(135deg,rgba(107,45,139,.08),rgba(52,152,219,.05));border:1px solid rgba(107,45,139,.2);border-radius:12px;padding:20px;cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:16px;}
+.ns-teaser:hover{border-color:rgba(107,45,139,.35);background:linear-gradient(135deg,rgba(107,45,139,.12),rgba(52,152,219,.08));}
+.ns-icon{font-size:28px;flex-shrink:0;}
+.ns-info{flex:1;}
+.ns-title{font-family:"Playfair Display",serif;font-size:16px;color:var(--text);margin-bottom:4px;}
+.ns-sub{font-size:9px;color:var(--muted);line-height:1.7;}
+.ns-arrow{font-size:18px;color:var(--muted);}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="topbar-left">
+    <button class="back-btn" onclick="window.location.href='agency.html'">← Agence</button>
+    <div class="topbar-sep"></div>
+    <div class="topbar-title">Settings — <em>Jean-Luc Martin</em></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px;">
+    <span style="font-family:'Playfair Display',serif;font-size:13px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;">HIDDEN KEYS</span>
+    <span style="font-size:9px;color:var(--muted);font-family:'Cormorant Garamond',serif;font-style:italic;">Bali</span>
+  </div>
+</nav>
+
+<div class="desktop-banner">⚙ Page configuration — desktop recommandé</div>
+
+<div class="page-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-client">
+      <div class="client-avatar-big" id="sidebar-avatar">🧔</div>
+      <div class="client-name-big" id="sidebar-name">Jean-Luc Martin</div>
+      <div class="client-meta">
+        <span class="client-status-dot"></span>Actif depuis jan. 2024<br>
+        📍 Canggu & Berawa<br>
+        🏠 5 villas en gestion<br>
+        💬 Langue : Français
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Configuration</div>
+      <div class="nav-item active" onclick="switchTab('infos',this)">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label">Infos & identité</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('villas',this)">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Villas</span>
+        <span class="nav-badge">5</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('app',this)">
+        <span class="nav-icon">🤖</span>
+        <span class="nav-label">App & automatisation</span>
+        <span class="nav-badge warn">68%</span>
+      </div>
+      <div class="nav-item" onclick="switchTab('finances',this)">
+        <span class="nav-icon">💳</span>
+        <span class="nav-label">Finances & Xendit</span>
+      </div>
+    </div>
+
+    <div style="margin-top:28px;padding:0 24px;">
+      <div style="font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">Accès rapide</div>
+      <div style="font-size:9px;color:var(--muted);line-height:2.2;">
+        <span style="cursor:pointer;color:var(--gold);">→ Dashboard Jean-Luc</span><br>
+        <span style="cursor:pointer;color:var(--blue-d);">→ Villa Surya</span><br>
+        <span style="cursor:pointer;color:var(--blue-d);">→ Villa Karma</span><br>
+        <span style="cursor:pointer;color:var(--blue-d);">→ Villa Serenity</span>
+      </div>
+    </div>
+
+    <div style="flex:1;"></div>
+    <div class="sidebar-footer" style="margin-top:40px;">
+      <button class="danger-zone-btn" onclick="if(confirm('Archiver ce client ?')){}">Archiver ce client</button>
+    </div>
+  </aside>
+
+  <!-- CONTENT -->
+  <div class="main-content">
+
+    <!-- ══ ONGLET 1 — INFOS & IDENTITÉ ══ -->
+    <div class="tab-pane active" id="pane-infos">
+      <div class="pane-title">Infos & <em>identité</em></div>
+      <div class="pane-sub">Données du propriétaire — profil, contact, contrat</div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">📸</span>
+          <span class="card-header-title">Photo & Avatar</span>
+        </div>
+        <div class="card-body">
+          <div class="avatar-upload">
+            <div class="avatar-avatar-preview" id="avatar-preview" style="width:72px;height:72px;border-radius:50%;border:2.5px solid var(--gold);background:var(--cream3);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">🧔</div>
+            <div class="avatar-btns">
+              <button class="avatar-btn">↑ Uploader une photo</button>
+              <button class="avatar-btn">URL externe</button>
+              <button class="avatar-btn" style="color:var(--red);border-color:rgba(192,57,43,.2);">Supprimer</button>
+            </div>
+            <div class="avatar-hint">JPG ou PNG · max 2MB<br>Visible dans l'orbite agence<br>et le dashboard client</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">📋</span>
+          <span class="card-header-title">Identité</span>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <div class="form-label">Prénom</div>
+              <input class="form-input" type="text" value="Jean-Luc" oninput="markDirty()">
+            </div>
+            <div class="form-group">
+              <div class="form-label">Nom</div>
+              <input class="form-input" type="text" value="Martin" oninput="markDirty()">
+            </div>
+            <div class="form-group">
+              <div class="form-label">Emoji / Initiales</div>
+              <input class="form-input" type="text" value="🧔" maxlength="4" oninput="markDirty()">
+              <div class="form-hint">Affiché dans l'orbite si pas de photo</div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">Nationalité</div>
+              <select class="form-select" onchange="markDirty()">
+                <option selected>🇫🇷 Français</option>
+                <option>🇬🇧 Anglais</option>
+                <option>🇩🇪 Allemand</option>
+                <option>🇦🇺 Australien</option>
+                <option>🇺🇸 Américain</option>
+                <option>Autre</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <div class="form-label">Langue de communication</div>
+              <select class="form-select" onchange="markDirty()">
+                <option selected>Français</option>
+                <option>English</option>
+                <option>Deutsch</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <div class="form-label">Localisation principale</div>
+              <input class="form-input" type="text" value="Canggu & Berawa, Bali" oninput="markDirty()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">📡</span>
+          <span class="card-header-title">Contact</span>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <div class="form-label">Email</div>
+              <input class="form-input" type="email" value="jeanluc.martin@gmail.com" oninput="markDirty()">
+            </div>
+            <div class="form-group">
+              <div class="form-label">WhatsApp</div>
+              <input class="form-input" type="tel" value="+33 6 12 34 56 78" oninput="markDirty()">
+              <div class="form-hint">Utilisé pour les alertes et les notifications backup</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">📅</span>
+          <span class="card-header-title">Contrat</span>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <div class="form-label">Date de début</div>
+              <input class="form-input" type="date" value="2024-01-15" oninput="markDirty()">
+            </div>
+            <div class="form-group">
+              <div class="form-label">Statut</div>
+              <select class="form-select" onchange="markDirty()">
+                <option selected>✅ Actif</option>
+                <option>⏸ En pause</option>
+                <option>📁 Archivé</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <div class="form-label">Notes internes (agence uniquement)</div>
+              <textarea class="form-input" rows="3" style="resize:vertical;line-height:1.7;" oninput="markDirty()">Client très autonome. Préfère les résumés hebdo. Ok pour pricing auto sur Surya et Karma. Serenity : attendre validation manuelle pour tout >2M IDR.</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px;">
+        <button class="btn-ghost">Annuler</button>
+        <button class="btn-primary" onclick="saveSection('Infos')">Enregistrer</button>
+      </div>
+    </div>
+
+    <!-- ══ ONGLET 2 — VILLAS ══ -->
+    <div class="tab-pane" id="pane-villas">
+      <div class="pane-title">Villas de <em>Jean-Luc</em></div>
+      <div class="pane-sub">5 villas en gestion — cliquer pour ouvrir la fiche villa</div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">🏠</span>
+          <span class="card-header-title">Portefeuille</span>
+          <span class="card-header-action" onclick="alert('→ settings-villa.html?id=new&client=jeanluc')">+ Ajouter</span>
+        </div>
+        <div class="card-body tight">
+          <div class="villa-list-item" onclick="window.location.href='settings-villa.html?id=surya'">
+            <div class="vli-icon">🌟</div>
+            <div class="vli-info">
+              <div class="vli-name">Villa Surya</div>
+              <div class="vli-meta">5 chambres · Berawa · ID: surya</div>
+            </div>
+            <div class="vli-status">
+              <div class="vli-dot green"></div>
+              <div class="vli-status-label">RAS</div>
+            </div>
+            <div class="vli-arrow">›</div>
+          </div>
+          <div class="villa-list-item" onclick="window.location.href='settings-villa.html?id=karma'">
+            <div class="vli-icon">☯️</div>
+            <div class="vli-info">
+              <div class="vli-name">Villa Karma</div>
+              <div class="vli-meta">3 chambres · Canggu · ID: karma</div>
+            </div>
+            <div class="vli-status">
+              <div class="vli-dot green"></div>
+              <div class="vli-status-label">RAS</div>
+            </div>
+            <div class="vli-arrow">›</div>
+          </div>
+          <div class="villa-list-item" onclick="window.location.href='settings-villa.html?id=serenity'">
+            <div class="vli-icon">🌿</div>
+            <div class="vli-info">
+              <div class="vli-name">Villa Serenity</div>
+              <div class="vli-meta">2 chambres · Berawa · ID: serenity</div>
+            </div>
+            <div class="vli-status">
+              <div class="vli-dot orange"></div>
+              <div class="vli-status-label">1 alerte</div>
+            </div>
+            <div class="vli-arrow">›</div>
+          </div>
+          <div class="villa-list-item" onclick="window.location.href='settings-villa.html?id=indah'">
+            <div class="vli-icon">🌺</div>
+            <div class="vli-info">
+              <div class="vli-name">Villa Indah</div>
+              <div class="vli-meta">2 chambres · Canggu · ID: indah</div>
+            </div>
+            <div class="vli-status">
+              <div class="vli-dot green"></div>
+              <div class="vli-status-label">RAS</div>
+            </div>
+            <div class="vli-arrow">›</div>
+          </div>
+          <div class="villa-list-item" onclick="window.location.href='settings-villa.html?id=bulan'">
+            <div class="vli-icon">🌙</div>
+            <div class="vli-info">
+              <div class="vli-name">Studio Bulan</div>
+              <div class="vli-meta">1 chambre · Canggu · ID: bulan</div>
+            </div>
+            <div class="vli-status">
+              <div class="vli-dot green"></div>
+              <div class="vli-status-label">RAS</div>
+            </div>
+            <div class="vli-arrow">›</div>
+          </div>
+          <div class="add-villa-row" onclick="alert('→ settings-villa.html?id=new&client=jeanluc')">
+            <span>＋</span> Ajouter une villa à ce client
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">🔑</span>
+          <span class="card-header-title">Accès & API Hostaway</span>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group full">
+              <div class="form-label">Hostaway API Key</div>
+              <div style="display:flex;gap:8px;">
+                <input class="form-input" type="password" value="hwy_xxxxxxxxxxxxxxxxxxxxxx" style="flex:1;font-family:'DM Mono',monospace;letter-spacing:2px;" oninput="markDirty()">
+                <button class="btn-ghost" style="padding:9px 14px;white-space:nowrap;" onclick="alert('Synchronisation Hostaway lancée')">↻ Sync</button>
+              </div>
+              <div class="form-hint">Sync automatique — villas, calendriers, guests, prix, messages</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:14px;padding:12px 14px;background:rgba(46,204,113,.06);border:1px solid rgba(46,204,113,.15);border-radius:8px;">
+            <span style="font-size:16px;">✅</span>
+            <div>
+              <div style="font-size:11px;color:var(--text);">Hostaway connecté</div>
+              <div style="font-size:9px;color:var(--muted);">Dernière sync : aujourd'hui à 14:32 · 5 villas · 12 réservations</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ONGLET 3 — APP & AUTOMATISATION ══ -->
+    <div class="tab-pane" id="pane-app">
+      <div class="pane-title">App & <em>automatisation</em></div>
+      <div class="pane-sub">Curseur de confiance — ce que l'app gère vs ce que Jean-Luc garde</div>
+
+      <!-- TRUST CARD CENTRALE -->
+      <div class="trust-card">
+        <div class="trust-header">
+          <div>
+            <div class="trust-title">Carte de <em>confiance</em></div>
+            <div style="font-size:10px;color:var(--muted);margin-top:4px;">Mode actuel : Semi-auto</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="trust-score-badge" id="trust-score-display">68%</div>
+            <div class="trust-score-label">Score global</div>
+          </div>
+        </div>
+
+        <!-- PHASE BADGE -->
+        <div class="trust-phase p2" id="trust-phase-badge">
+          <div class="trust-phase-dot"></div>
+          <span id="trust-phase-label">Phase 2 — Auto avec notification</span>
+        </div>
+
+        <!-- BARRE PRINCIPALE -->
+        <div class="trust-bar-wrap">
+          <div class="trust-bar-labels">
+            <span style="font-size:14px;font-weight:700;color:var(--text);">Superhost</span>
+            <span style="font-size:14px;font-weight:700;color:var(--text);">Superghost</span>
+          </div>
+          <div class="trust-bar-track" id="trust-track" onclick="trustBarClick(event)">
+            <div class="trust-bar-fill" id="trust-fill" style="width:68%;"></div>
+            <div class="trust-bar-thumb" id="trust-thumb" style="left:68%;"></div>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:6px;text-align:center;letter-spacing:.5px;">Cliquer pour ajuster · ou modifier par catégorie ci-dessous</div>
+        </div>
+
+        <!-- RÉSUMÉ 3 BOÎTES -->
+        <div class="trust-summary">
+          <div class="ts-box">
+            <div class="ts-icon">✅</div>
+            <div class="ts-label">App gère</div>
+            <div class="ts-value green">Pricing, réponses guests, confirmation ménage</div>
+          </div>
+          <div class="ts-box">
+            <div class="ts-icon">⏸</div>
+            <div class="ts-label">Tu gardes</div>
+            <div class="ts-value muted">Dépenses >500k IDR, calendrier, plaintes</div>
+          </div>
+          <div class="ts-box">
+            <div class="ts-icon">⚡</div>
+            <div class="ts-label">En attente</div>
+            <div class="ts-value" style="color:var(--orange);">2 décisions ce mois où Jean-Luc a dit "moins souvent"</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CATÉGORIES DÉTAILLÉES -->
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">⚙️</span>
+          <span class="card-header-title">Délégation par catégorie</span>
+          <span class="card-header-action" onclick="alert('Réinitialiser toutes les catégories ?')">Réinitialiser</span>
+        </div>
+        <div class="card-body tight">
+          <div class="trust-cats" id="trust-cats">
+            <!-- généré par JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- NEVER SLEEPING TEASER -->
+      <div class="ns-teaser" onclick="alert('→ Lien vers le bloc Never Sleeping Staff dans client.html')">
+        <div class="ns-icon">🌙</div>
+        <div class="ns-info">
+          <div class="ns-title">Never Sleeping Staff</div>
+          <div class="ns-sub">Voir qui fait quoi à quelle heure pour ce client.<br>Le curseur de confiance et le bloc staff sont la même réalité, vue de deux angles.</div>
+        </div>
+        <div class="ns-arrow">›</div>
+      </div>
+
+      <div class="section-divider">Paramètres Sofia</div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">🤖</span>
+          <span class="card-header-title">Comportement Sofia</span>
+        </div>
+        <div class="card-body">
+          <div style="margin-bottom:20px;">
+            <div class="form-label" style="margin-bottom:10px;">Niveau de détail des rapports</div>
+            <div class="detail-levels" id="detail-levels">
+              <button class="dl-btn" onclick="setDetail(0,this)">Minimal</button>
+              <button class="dl-btn active" onclick="setDetail(1,this)">Standard</button>
+              <button class="dl-btn" onclick="setDetail(2,this)">Détaillé</button>
+            </div>
+            <div class="form-hint" style="margin-top:8px;">Standard = résumé hebdo + alertes · Détaillé = chaque nuit commentée</div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">Langue communications Sofia</div>
+            <select class="form-select" onchange="markDirty()">
+              <option selected>Français</option>
+              <option>English</option>
+              <option>Bahasa Indonesia</option>
+            </select>
+          </div>
+
+          <div class="section-divider" style="margin-top:24px;">Notifications</div>
+
+          <div style="margin-bottom:10px;">
+            <div class="form-label" style="margin-bottom:8px;">Canaux actifs</div>
+            <div class="notif-choices" id="notif-channels">
+              <div class="notif-pill active" onclick="toggleNotif(this)">💬 WhatsApp</div>
+              <div class="notif-pill active" onclick="toggleNotif(this)">📧 Email</div>
+              <div class="notif-pill" onclick="toggleNotif(this)">📲 Push app</div>
+            </div>
+          </div>
+
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-title">Alertes rouges uniquement sur WhatsApp</div>
+              <div class="toggle-sub">Les messages normaux passent uniquement par l'app et l'email</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" checked onchange="markDirty()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-title">Résumé hebdomadaire automatique</div>
+              <div class="toggle-sub">Envoyé chaque lundi matin — activité + chiffres de la semaine</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" checked onchange="markDirty()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-title">Suggestions Pricelabs dans le feed</div>
+              <div class="toggle-sub">Sofia affiche les recommandations pricing avec données marché</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" checked onchange="markDirty()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px;">
+        <button class="btn-ghost">Annuler</button>
+        <button class="btn-primary" onclick="saveSection('App & automatisation')">Enregistrer</button>
+      </div>
+    </div>
+
+    <!-- ══ ONGLET 4 — FINANCES & XENDIT ══ -->
+    <div class="tab-pane" id="pane-finances">
+      <div class="pane-title">Finances & <em>Xendit</em></div>
+      <div class="pane-sub">Commissions, comptes bancaires, virements, seuils de dépenses</div>
+
+      <!-- XENDIT STATUS -->
+      <div class="xendit-status">
+        <div class="xendit-icon">💳</div>
+        <div class="xendit-info">
+          <div class="xendit-title">Compte Xendit — Jean-Luc Martin</div>
+          <div class="xendit-sub">Wallet ID: xw_jeanluc_001 · Balance virtuelle aggrégée : Rp 4.280.000</div>
+        </div>
+        <div class="xendit-badge">Actif</div>
+      </div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">💰</span>
+          <span class="card-header-title">Commission & Abonnement</span>
+        </div>
+        <div class="card-body">
+          <div class="form-grid-3">
+            <div class="form-group">
+              <div class="form-label">Commission (%)</div>
+              <input class="form-input" type="number" value="15" min="0" max="50" oninput="markDirty()">
+              <div class="form-hint">Override du taux global agence</div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">Abo / villa / mois (IDR)</div>
+              <input class="form-input" type="number" value="100000" oninput="markDirty()">
+              <div class="form-hint">Facturé mensuellement · 5 villas = 500k IDR</div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">Xendit Wallet ID</div>
+              <input class="form-input" type="text" value="xw_jeanluc_001" oninput="markDirty()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">🏦</span>
+          <span class="card-header-title">Compte bancaire de destination</span>
+          <span class="card-header-action" onclick="alert('Ajouter un compte bancaire')">+ Ajouter</span>
+        </div>
+        <div class="card-body">
+          <div class="bank-row">
+            <div class="bank-logo">B</div>
+            <div class="bank-info">
+              <div class="bank-name">BCA — Jean-Luc Martin</div>
+              <div class="bank-num">1234 5678 9012</div>
+            </div>
+            <div class="bank-default">Principal</div>
+            <div class="bank-edit" onclick="alert('Modifier compte BCA')">✎</div>
+          </div>
+          <div class="bank-row" style="opacity:.6;">
+            <div class="bank-logo" style="font-size:11px;">ING</div>
+            <div class="bank-info">
+              <div class="bank-name">ING France — FR76 XXXX</div>
+              <div class="bank-num">FR76 3000 4028 3798 7654 3210 943</div>
+            </div>
+            <div style="font-size:8px;color:var(--muted);padding:2px 8px;">Secondaire</div>
+            <div class="bank-edit" onclick="alert('Modifier compte ING')">✎</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">📤</span>
+          <span class="card-header-title">Virement mensuel automatique</span>
+        </div>
+        <div class="card-body">
+          <div class="virement-row">
+            <div>
+              <div class="toggle-title">Virement automatique</div>
+              <div class="toggle-sub">Sofia déclenche le virement sans validation manuelle</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" onchange="markDirty()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="virement-row" style="flex-direction:column;align-items:flex-start;gap:10px;">
+            <div>
+              <div class="toggle-title">Jour du mois préféré</div>
+              <div class="toggle-sub">Le virement est déclenché ce jour-là chaque mois</div>
+            </div>
+            <div class="day-picker" id="day-picker">
+              <!-- JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">🚦</span>
+          <span class="card-header-title">Seuils de dépenses</span>
+        </div>
+        <div class="card-body">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:16px;line-height:1.7;">
+            Ces seuils s'appliquent à toutes les villas de ce client. Chaque villa peut avoir un override dans ses propres settings.
+          </div>
+          <div class="threshold-grid">
+            <div class="threshold-box">
+              <div class="thr-dot auto"></div>
+              <div class="thr-label">Auto · vert</div>
+              <input class="thr-input" type="text" value="500.000 IDR" oninput="markDirty()">
+              <div class="thr-desc">En dessous : Sofia paie automatiquement, juste notifié</div>
+            </div>
+            <div class="threshold-box">
+              <div class="thr-dot warn"></div>
+              <div class="thr-label">Validation · orange</div>
+              <input class="thr-input" type="text" value="2.000.000 IDR" oninput="markDirty()">
+              <div class="thr-desc">Alerte orange — l'agence confirme avant paiement</div>
+            </div>
+            <div class="threshold-box">
+              <div class="thr-dot stop"></div>
+              <div class="thr-label">Proprio · rouge</div>
+              <input class="thr-input" type="text" value="5.000.000 IDR" oninput="markDirty()">
+              <div class="thr-desc">Alerte rouge — Jean-Luc prend la décision lui-même</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ── PROFIL FISCAL CLIENT ── -->
+      <div class="section-divider" style="margin-top:8px;">Profil fiscal & taxes</div>
+
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-header-icon">🧾</span>
+          <span class="card-header-title">Profil fiscal — Jean-Luc Martin</span>
+          <span class="card-header-action" onclick="window.location.href='taxes.html?client=jeanluc'">→ Voir comptabilité globale</span>
+        </div>
+        <div class="card-body">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:16px;line-height:1.8;">
+            Ces paramètres s'appliquent à toutes les villas de Jean-Luc. Chaque villa peut avoir un override dans ses propres settings finances.
+          </div>
+
+          <div class="form-grid-3" style="margin-bottom:16px;">
+            <div class="form-group">
+              <div class="form-label">Résidence fiscale</div>
+              <select class="form-select" id="cl-residency" onchange="markDirty()">
+                <option value="resident">Résident indonésien</option>
+                <option value="non-resident" selected>Non-résident</option>
+                <option value="pt-pma">PT PMA</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <div class="form-label">Type d'entité</div>
+              <select class="form-select" id="cl-entity" onchange="markDirty()">
+                <option value="individuel" selected>Individuel</option>
+                <option value="pt">PT Indonesia</option>
+                <option value="pt-pma">PT PMA</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <div class="form-label">Convention fiscale (treaty)</div>
+              <select class="form-select" id="cl-treaty" onchange="markDirty()">
+                <option value="none">Aucune</option>
+                <option value="fr" selected>France — 15%</option>
+                <option value="sg">Singapour — 10%</option>
+                <option value="au">Australie — 15%</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-3">
+            <div class="form-group">
+              <div class="form-label">Taux PBJT (%)</div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input class="form-input" type="number" id="cl-pbjt" value="10" min="0" max="15" step="0.5" oninput="markDirty()" style="flex:1;">
+                <span style="font-size:11px;color:var(--muted);">%</span>
+              </div>
+              <div class="form-hint">Taxe hébergement · collectée sur loyer brut</div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">Taux PPh final (%)</div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <input class="form-input" type="number" id="cl-pph" value="10" min="0" max="30" step="0.5" oninput="markDirty()" style="flex:1;">
+                <span style="font-size:11px;color:var(--muted);">%</span>
+              </div>
+              <div class="form-hint">Art. 4(2) · revenus bruts · annuel</div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">Fréquence déclaration PBJT</div>
+              <select class="form-select" id="cl-pbjt-freq" onchange="markDirty()">
+                <option value="mensuelle" selected>Mensuelle</option>
+                <option value="trimestrielle">Trimestrielle</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid" style="margin-top:12px;">
+            <div class="form-group">
+              <div class="form-label">PPN / TVA</div>
+              <div style="display:flex;gap:8px;align-items:center;margin-top:6px;">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="cl-ppn" onchange="markDirty()">
+                  <span class="toggle-slider"></span>
+                </label>
+                <span style="font-size:10px;color:var(--muted);">Désactivée — activer si PKP enregistré (11%)</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">Envoi déclarations auto (Sofia)</div>
+              <div style="display:flex;gap:8px;align-items:center;margin-top:6px;">
+                <label class="toggle-switch">
+                  <input type="checkbox" checked onchange="markDirty()">
+                  <span class="toggle-slider"></span>
+                </label>
+                <span style="font-size:10px;color:var(--muted);">Sofia prépare et envoie en temps voulu</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Résumé toutes villas -->
+      <div style="display:flex;gap:10px;padding:14px 18px;background:rgba(139,105,20,.04);border:1px solid var(--border);border-radius:12px;margin-bottom:20px;">
+        <div style="flex:1;text-align:center;">
+          <div style="font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">PBJT ce mois (5 villas)</div>
+          <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--gold);">Rp 2.400.000</div>
+        </div>
+        <div style="flex:1;text-align:center;">
+          <div style="font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">PPh estimé (année)</div>
+          <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--gold);">Rp 18.600.000</div>
+        </div>
+        <div style="flex:1;text-align:center;">
+          <div style="font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Net après taxes</div>
+          <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--green-d);">$21 340</div>
+        </div>
+        <div style="display:flex;align-items:center;">
+          <button style="font-size:9px;letter-spacing:.5px;padding:7px 12px;border-radius:8px;border:1px solid var(--gold);background:transparent;color:var(--gold);cursor:pointer;" onclick="window.location.href='taxes.html?client=jeanluc'">Détails →</button>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px;">
+        <button class="btn-ghost">Annuler</button>
+        <button class="btn-primary" onclick="saveSection('Finances')">Enregistrer</button>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
+</div><!-- /page-layout -->
+
+<!-- SAVE BAR -->
+<div class="save-bar" id="save-bar">
+  <div class="save-bar-info"><strong>Modifications non enregistrées</strong> — pensez à sauvegarder</div>
+  <div class="save-bar-btns">
+    <button class="btn-ghost" onclick="discardChanges()">Annuler</button>
+    <button class="btn-primary" onclick="saveSection('tout')">Enregistrer</button>
+  </div>
+</div>
+
+<script>
+// ── INIT — lecture URL params + sessionStorage ──
+(function(){
+  const p = new URLSearchParams(window.location.search);
+  const clientId = p.get('id');
+  const name = p.get('name');
+
+  // Nom
+  if(name){
+    const el = document.getElementById('sidebar-name');
+    if(el) el.textContent = name;
+  }
+
+  // Photo depuis sessionStorage (stockée par add-client.html)
+  if(clientId){
+    let photo = null;
+    try{ photo = sessionStorage.getItem('photo_' + clientId); }catch(e){}
+    if(photo){
+      const img = `<img src="${photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+      const sb = document.getElementById('sidebar-avatar');
+      const av = document.getElementById('avatar-preview');
+      if(sb){ sb.style.padding='0'; sb.style.overflow='hidden'; sb.innerHTML=img; }
+      if(av){ av.style.padding='0'; av.innerHTML=img; }
+    }
+  }
+})();
+
+// ── NAVIGATION ONGLETS ──
+const TABS = ['infos','villas','app','finances'];
+function switchTab(id, navEl){
+  TABS.forEach(t=>{
+    document.getElementById('pane-'+t).classList.remove('active');
+  });
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('pane-'+id).classList.add('active');
+  navEl.classList.add('active');
+}
+
+// ── TRUST CATEGORIES ──
+const TRUST_CATS = [
+  {name:"Pricing Pricelabs",      pct:80, mode:"auto"},
+  {name:"Réponses guests",         pct:100,mode:"auto"},
+  {name:"Confirmation ménage",     pct:60, mode:"notif"},
+  {name:"Dépenses routines",       pct:40, mode:"valid"},
+  {name:"Dépenses urgentes",       pct:20, mode:"valid"},
+  {name:"Changements calendrier",  pct:0,  mode:"never"},
+];
+const MODE_LABELS = {auto:"Auto",notif:"Notif",valid:"Validation",never:"Manuel"};
+const MODE_COLORS = {auto:"#2ECC71",notif:"#3498DB",valid:"#B7590A",never:"#6B5B3E"};
+
+function buildTrustCats(){
+  const el = document.getElementById('trust-cats');
+  el.innerHTML = TRUST_CATS.map((c,i)=>`
+    <div class="tc-row">
+      <div class="tc-name">${c.name}</div>
+      <div class="tc-bar-wrap">
+        <div class="tc-bar-track">
+          <div class="tc-bar-fill" id="tcf-${i}" style="width:${c.pct}%;background:${MODE_COLORS[c.mode]};"></div>
+        </div>
+      </div>
+      <div class="tc-pct" id="tcp-${i}">${c.pct}%</div>
+      <div class="tc-mode ${c.mode}" id="tcm-${i}">${MODE_LABELS[c.mode]}</div>
+      <div style="display:flex;gap:4px;margin-left:8px;">
+        <button style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:transparent;cursor:pointer;font-size:9px;color:var(--muted);" onclick="adjustCat(${i},-10)">−</button>
+        <button style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:transparent;cursor:pointer;font-size:9px;color:var(--muted);" onclick="adjustCat(${i},10)">＋</button>
+      </div>
+    </div>
+  `).join('');
+}
+buildTrustCats();
+
+function adjustCat(i, delta){
+  TRUST_CATS[i].pct = Math.max(0,Math.min(100, TRUST_CATS[i].pct + delta));
+  const pct = TRUST_CATS[i].pct;
+  const mode = pct===0?"never":pct<=30?"valid":pct<=60?"notif":"auto";
+  TRUST_CATS[i].mode = mode;
+  document.getElementById('tcf-'+i).style.width = pct+'%';
+  document.getElementById('tcf-'+i).style.background = MODE_COLORS[mode];
+  document.getElementById('tcp-'+i).textContent = pct+'%';
+  document.getElementById('tcm-'+i).className = 'tc-mode '+mode;
+  document.getElementById('tcm-'+i).textContent = MODE_LABELS[mode];
+  recalcGlobalTrust();
+  markDirty();
+}
+
+function recalcGlobalTrust(){
+  const avg = Math.round(TRUST_CATS.reduce((a,c)=>a+c.pct,0)/TRUST_CATS.length);
+  document.getElementById('trust-score-display').textContent = avg+'%';
+  document.getElementById('trust-fill').style.width = avg+'%';
+  document.getElementById('trust-thumb').style.left = avg+'%';
+  // Phase
+  let phaseClass, phaseLabel;
+  if(avg<20){phaseClass='p0';phaseLabel='Phase 0 — Fantôme conseiller';}
+  else if(avg<45){phaseClass='p1';phaseLabel='Phase 1 — Suggestions actives';}
+  else if(avg<80){phaseClass='p2';phaseLabel='Phase 2 — Auto avec notification';}
+  else{phaseClass='p3';phaseLabel='Phase 3 — Superghost';}
+  const pb = document.getElementById('trust-phase-badge');
+  pb.className = 'trust-phase '+phaseClass;
+  document.getElementById('trust-phase-label').textContent = phaseLabel;
+}
+
+// TRUST BAR CLICK
+function trustBarClick(e){
+  const track = document.getElementById('trust-track');
+  const rect = track.getBoundingClientRect();
+  const pct = Math.round(Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width))*100);
+  document.getElementById('trust-fill').style.width = pct+'%';
+  document.getElementById('trust-thumb').style.left = pct+'%';
+  document.getElementById('trust-score-display').textContent = pct+'%';
+  markDirty();
+}
+
+// ── NOTIF PILLS ──
+function toggleNotif(el){
+  el.classList.toggle('active');
+  markDirty();
+}
+
+// ── DETAIL LEVEL ──
+function setDetail(idx, el){
+  document.querySelectorAll('#detail-levels .dl-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  markDirty();
+}
+
+// ── DAY PICKER ──
+const PREFERRED_DAY = 5;
+function buildDayPicker(){
+  const dp = document.getElementById('day-picker');
+  let html = '';
+  for(let d=1;d<=28;d++){
+    html += `<button class="day-chip${d===PREFERRED_DAY?' active':''}" onclick="selectDay(${d},this)">${d}</button>`;
+  }
+  dp.innerHTML = html;
+}
+buildDayPicker();
+function selectDay(d,el){
+  document.querySelectorAll('#day-picker .day-chip').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  markDirty();
+}
+
+// ── SAVE BAR ──
+let dirty = false;
+function markDirty(){
+  if(!dirty){dirty=true;document.getElementById('save-bar').classList.add('visible');}
+}
+function discardChanges(){
+  dirty=false;
+  document.getElementById('save-bar').classList.remove('visible');
+}
+function saveSection(label){
+  dirty=false;
+  document.getElementById('save-bar').classList.remove('visible');
+  // flash confirm
+  const btn = event.target;
+  const orig = btn.textContent;
+  btn.textContent = '✓ Enregistré';
+  btn.style.background = 'var(--green-d)';
+  setTimeout(()=>{btn.textContent=orig;btn.style.background='';},1800);
+}
+
+// ── FADE IN ──
+document.querySelectorAll('.settings-card,.pane-title,.pane-sub,.trust-card,.ns-teaser').forEach((el,i)=>{
+  el.style.opacity='0';el.style.transform='translateY(10px)';el.style.transition=`opacity .35s ${i*0.04}s ease, transform .35s ${i*0.04}s ease`;
+  setTimeout(()=>{el.style.opacity='1';el.style.transform='none';},50);
+});
+</script>
+</body>
+</html>

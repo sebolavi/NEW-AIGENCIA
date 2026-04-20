@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taxes & Conformité — BaliAgencia</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:     #F5F0E8;
+  --cream-d:   #EDE7D9;
+  --gold:      #8B6914;
+  --gold-lt:   #C9A84C;
+  --green-d:   #1A7A4A;
+  --green:     #27AE60;
+  --green-lt:  #2ECC71;
+  --blue:      #3498DB;
+  --violet:    #7C3AED;
+  --orange:    #E67E22;
+  --red:       #E74C3C;
+  --dark:      #1A1510;
+  --mid:       #4A3F30;
+  --muted:     #8A7A68;
+  --border:    rgba(139,105,20,0.18);
+  --shadow:    0 2px 16px rgba(26,21,16,0.10);
+  --radius:    12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--dark);
+  font-size: 14px;
+  min-height: 100vh;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--dark);
+  color: var(--cream);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid var(--gold);
+}
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.topbar-back {
+  font-size: 12px; color: var(--gold-lt); cursor: pointer;
+  display: flex; align-items: center; gap: 4px;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: .5px;
+}
+.topbar-back:hover { color: var(--cream); }
+.topbar-title { font-family: 'Playfair Display', serif; font-size: 17px; color: var(--cream); }
+.topbar-sub { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+.topbar-badge {
+  background: var(--red); color: #fff;
+  font-size: 10px; padding: 2px 7px; border-radius: 99px;
+  font-family: 'DM Mono', monospace; letter-spacing: .5px;
+  animation: pulse-red 2s ease-in-out infinite;
+}
+@keyframes pulse-red {
+  0%,100% { opacity: 1; }
+  50% { opacity: .6; }
+}
+
+/* ── LEVEL SELECTOR (agence / client / villa) ── */
+.level-bar {
+  background: var(--dark);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+}
+.level-btn {
+  padding: 10px 18px;
+  font-size: 12px;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  letter-spacing: .5px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all .2s;
+}
+.level-btn.active { color: var(--gold-lt); border-bottom-color: var(--gold); }
+.level-btn:hover:not(.active) { color: var(--cream-d); }
+.level-chevron { color: var(--muted); font-size: 10px; padding: 0 2px; }
+
+/* ── ALERT BANNER ── */
+.alert-banner {
+  background: linear-gradient(90deg, #7f1d1d, #991b1b);
+  color: #fecaca;
+  padding: 10px 20px;
+  font-size: 12px;
+  font-family: 'DM Mono', monospace;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.alert-banner .ab-left { display: flex; align-items: center; gap: 8px; }
+.alert-banner .ab-dot {
+  width: 8px; height: 8px; background: #f87171;
+  border-radius: 50%;
+  animation: pulse-red 1.4s ease-in-out infinite;
+}
+.alert-banner a { color: #fca5a5; text-decoration: underline; cursor: pointer; }
+.alert-banner-dismiss { cursor: pointer; opacity: .6; font-size: 16px; }
+.alert-banner-dismiss:hover { opacity: 1; }
+
+/* ── MAIN ── */
+.main { padding: 20px; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+
+/* ── CARDS ── */
+.card {
+  background: #fff;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.card-header {
+  padding: 14px 18px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  color: var(--dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-body { padding: 16px 18px; }
+.card-actions { display: flex; align-items: center; gap: 8px; }
+
+/* ── SITUATION AUJOURD'HUI ── */
+.situation-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+@media(max-width:600px){ .situation-grid { grid-template-columns: 1fr 1fr; } }
+
+.situ-item {
+  background: var(--cream);
+  border-radius: 8px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+}
+.situ-label {
+  font-size: 10px;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.situ-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--dark);
+}
+.situ-val.green { color: var(--green-d); }
+.situ-val.red { color: var(--red); }
+.situ-val.orange { color: var(--orange); }
+.situ-val.blue { color: var(--blue); }
+.situ-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-family: 'DM Mono', monospace;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-top: 4px;
+  letter-spacing: .5px;
+}
+.badge-estimated { background: rgba(230,126,34,0.12); color: var(--orange); }
+.badge-calculated { background: rgba(52,152,219,0.12); color: var(--blue); }
+.badge-paid       { background: rgba(39,174,96,0.12); color: var(--green-d); }
+.badge-declared   { background: rgba(124,58,237,0.12); color: var(--violet); }
+.badge-due        { background: rgba(231,76,60,0.15); color: var(--red); }
+
+.situ-divider {
+  grid-column: 1/-1;
+  height: 1px;
+  background: var(--border);
+  margin: 2px 0;
+}
+
+.net-row {
+  grid-column: 1/-1;
+  background: var(--dark);
+  color: var(--cream);
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.net-row .net-label { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted); letter-spacing: .5px; }
+.net-row .net-val { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--gold-lt); }
+
+/* période selector */
+.period-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--cream);
+  border-radius: 8px;
+  padding: 3px;
+  border: 1px solid var(--border);
+}
+.period-tab {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  border-radius: 5px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all .15s;
+}
+.period-tab.active { background: var(--dark); color: var(--gold-lt); }
+
+/* ── PRÉVISIONS mini chart ── */
+.prev-chart { display: flex; align-items: flex-end; gap: 6px; height: 64px; padding: 4px 0; }
+.prev-bar-wrap { display: flex; flex-direction: column; align-items: center; flex: 1; gap: 3px; }
+.prev-bar-stack { display: flex; flex-direction: column; justify-content: flex-end; width: 100%; height: 52px; gap: 1px; border-radius: 4px 4px 0 0; overflow: hidden; }
+.prev-bar-seg { width: 100%; transition: height .3s; }
+.prev-bar-label { font-size: 9px; font-family: 'DM Mono', monospace; color: var(--muted); }
+.prev-legend { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+.prev-legend-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; }
+.prev-legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+/* ── PROFIL FISCAL ── */
+.profil-compact {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+@media(max-width:480px){ .profil-compact { grid-template-columns: 1fr; } }
+.profil-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+  gap: 8px;
+}
+.profil-pill-label { color: var(--muted); font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .5px; text-transform: uppercase; display: block; margin-bottom: 2px; }
+.profil-pill-val { color: var(--dark); font-weight: 600; }
+.profil-pill .status-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.status-green { background: var(--green); }
+.status-orange { background: var(--orange); }
+.status-red { background: var(--red); animation: pulse-red 1.5s infinite; }
+.status-blue { background: var(--blue); }
+
+/* ── SETTINGS INLINE (expandable) ── */
+.expand-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer;
+  padding: 10px 18px;
+  font-size: 12px;
+  color: var(--gold);
+  font-family: 'DM Mono', monospace;
+  letter-spacing: .5px;
+  border-top: 1px solid var(--border);
+  background: var(--cream-d);
+  transition: background .15s;
+}
+.expand-toggle:hover { background: var(--cream); }
+.expand-arrow { transition: transform .2s; font-size: 10px; }
+.expand-arrow.open { transform: rotate(180deg); }
+
+.expand-body {
+  display: none;
+  padding: 16px 18px;
+  border-top: 1px solid var(--border);
+  background: #FDFAF4;
+}
+.expand-body.open { display: block; }
+
+/* Settings form */
+.settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media(max-width:480px){ .settings-grid { grid-template-columns: 1fr; } }
+.field-group { display: flex; flex-direction: column; gap: 4px; }
+.field-label {
+  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  color: var(--muted);
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+.field-input, .field-select {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--dark);
+  outline: none;
+  transition: border-color .15s;
+}
+.field-input:focus, .field-select:focus { border-color: var(--gold); }
+.field-select { cursor: pointer; }
+.field-row { display: flex; align-items: center; gap: 8px; }
+.field-unit { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; white-space: nowrap; }
+
+.toggle-switch {
+  position: relative; width: 36px; height: 20px; flex-shrink: 0;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; inset: 0; background: #ccc;
+  border-radius: 20px; cursor: pointer; transition: background .2s;
+}
+.toggle-slider:before {
+  content: ''; position: absolute;
+  width: 14px; height: 14px; background: #fff;
+  border-radius: 50%; left: 3px; top: 3px;
+  transition: transform .2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
+.toggle-switch input:checked + .toggle-slider { background: var(--green); }
+.toggle-switch input:checked + .toggle-slider:before { transform: translateX(16px); }
+
+.settings-section-title {
+  font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  color: var(--gold);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  margin-top: 16px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.settings-section-title:first-child { margin-top: 0; }
+
+.btn-save {
+  background: var(--dark);
+  color: var(--gold-lt);
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  letter-spacing: .5px;
+  cursor: pointer;
+  margin-top: 14px;
+  transition: background .15s;
+}
+.btn-save:hover { background: var(--gold); color: #fff; }
+
+.btn-sm {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  color: var(--mid);
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.btn-sm:hover { border-color: var(--gold); color: var(--gold); }
+.btn-sm.gold { border-color: var(--gold); color: var(--gold); }
+.btn-sm.red { border-color: var(--red); color: var(--red); }
+
+/* ── CONFORMITÉ DOCUMENTS ── */
+.doc-list { display: flex; flex-direction: column; gap: 8px; }
+.doc-row {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  gap: 10px;
+  transition: background .15s;
+}
+.doc-row:hover { background: var(--cream-d); }
+.doc-row.urgent { border-color: rgba(231,76,60,0.4); background: rgba(231,76,60,0.04); }
+.doc-row.warning { border-color: rgba(230,126,34,0.4); background: rgba(230,126,34,0.04); }
+.doc-info { flex: 1; min-width: 0; }
+.doc-name { font-size: 13px; font-weight: 500; color: var(--dark); }
+.doc-sub { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 1px; }
+.doc-status { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.doc-icon { font-size: 16px; }
+.doc-actions { display: flex; gap: 6px; align-items: center; }
+
+/* deadline chip */
+.deadline-chip {
+  font-size: 9px;
+  font-family: 'DM Mono', monospace;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: .5px;
+}
+.deadline-red { background: rgba(231,76,60,0.12); color: var(--red); }
+.deadline-orange { background: rgba(230,126,34,0.12); color: var(--orange); }
+.deadline-green { background: rgba(39,174,96,0.12); color: var(--green-d); }
+
+/* ── SOFIA AUDIT ── */
+.sofia-header {
+  display: flex; align-items: center; gap: 10px;
+}
+.sofia-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-lt) 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(139,105,20,.3);
+}
+.sofia-intro { flex: 1; }
+.sofia-name { font-family: 'Playfair Display', serif; font-size: 14px; color: var(--dark); }
+.sofia-tagline { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+
+.sofia-insights { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.insight-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: var(--cream);
+  border-radius: 8px;
+  padding: 12px 14px;
+  border-left: 3px solid transparent;
+}
+.insight-row.info    { border-left-color: var(--blue); }
+.insight-row.savings { border-left-color: var(--green); }
+.insight-row.warning { border-left-color: var(--orange); }
+.insight-row.urgent  { border-left-color: var(--red); }
+.insight-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.insight-text { flex: 1; }
+.insight-title { font-size: 13px; font-weight: 500; color: var(--dark); }
+.insight-sub { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+.insight-cta { font-size: 11px; color: var(--gold); font-family: 'DM Mono', monospace; cursor: pointer; margin-top: 4px; }
+.insight-cta:hover { color: var(--gold-lt); }
+
+.btn-audit {
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px;
+  background: linear-gradient(90deg, var(--dark) 0%, #2A2010 100%);
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  color: var(--gold-lt);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  letter-spacing: .5px;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-audit:hover { background: var(--gold); color: #fff; }
+
+/* ── HISTORIQUE TABLE ── */
+.hist-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.hist-table th {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .7px;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: right;
+}
+.hist-table th:first-child { text-align: left; }
+.hist-table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid rgba(139,105,20,.08);
+  text-align: right;
+  font-family: 'DM Mono', monospace;
+  color: var(--mid);
+}
+.hist-table td:first-child { text-align: left; color: var(--dark); font-family: 'DM Sans', sans-serif; font-size: 13px; }
+.hist-table tr:last-child td { border-bottom: none; }
+.hist-table tr:hover td { background: var(--cream); }
+.hist-table .total-row td { font-weight: 600; color: var(--dark); border-top: 2px solid var(--border); }
+
+/* ── AGENCE VIEW ── */
+.client-accordion { display: flex; flex-direction: column; gap: 8px; }
+.client-acc-row {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.client-acc-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px;
+  cursor: pointer;
+  gap: 10px;
+  transition: background .15s;
+}
+.client-acc-header:hover { background: var(--cream-d); }
+.client-acc-name { font-weight: 600; font-size: 14px; color: var(--dark); }
+.client-acc-sub { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 1px; }
+.client-acc-kpis { display: flex; gap: 16px; align-items: center; }
+.client-acc-kpi { text-align: right; }
+.client-acc-kpi .k-val { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--dark); font-weight: 500; }
+.client-acc-kpi .k-label { font-size: 9px; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: .5px; }
+.client-acc-arrow { font-size: 10px; color: var(--muted); transition: transform .2s; flex-shrink: 0; }
+.client-acc-arrow.open { transform: rotate(180deg); }
+.client-acc-body { display: none; border-top: 1px solid var(--border); }
+.client-acc-body.open { display: block; }
+
+/* villa sub-rows */
+.villa-sub-list { display: flex; flex-direction: column; }
+.villa-sub-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px 10px 28px;
+  border-bottom: 1px solid rgba(139,105,20,.06);
+  gap: 10px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background .15s;
+}
+.villa-sub-row:last-child { border-bottom: none; }
+.villa-sub-row:hover { background: rgba(139,105,20,.04); }
+.villa-sub-name { font-size: 13px; color: var(--dark); font-weight: 500; flex: 1; }
+.villa-sub-kpis { display: flex; gap: 12px; align-items: center; }
+.villa-sub-kpi { text-align: right; font-family: 'DM Mono', monospace; }
+.villa-sub-kpi .sv { font-size: 12px; color: var(--mid); }
+.villa-sub-kpi .sl { font-size: 9px; color: var(--muted); letter-spacing: .5px; }
+
+/* alerts count */
+.alert-count {
+  background: var(--red); color: #fff;
+  border-radius: 50%; width: 18px; height: 18px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 9px; font-family: 'DM Mono', monospace;
+  flex-shrink: 0;
+}
+.alert-count.orange { background: var(--orange); }
+
+/* ── EXPORT ── */
+.export-row {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  padding: 14px 18px;
+  border-top: 1px solid var(--border);
+  background: var(--cream-d);
+}
+
+/* ── TABS (sous-onglets niveau) ── */
+.view-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); background: #fff; }
+.view-tab {
+  padding: 10px 18px;
+  font-size: 12px;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: .5px;
+  cursor: pointer;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all .15s;
+}
+.view-tab.active { color: var(--gold); border-bottom-color: var(--gold); background: var(--cream-d); }
+.view-tab:hover:not(.active) { color: var(--dark); }
+
+/* ── HIDDEN VIEWS ── */
+.view-content { display: none; }
+.view-content.active { display: block; }
+
+/* ── UTILS ── */
+.row { display: flex; align-items: center; gap: 8px; }
+.spacer { flex: 1; }
+.muted { color: var(--muted); }
+.mono { font-family: 'DM Mono', monospace; }
+.mt8 { margin-top: 8px; }
+.mt12 { margin-top: 12px; }
+.separator { height: 1px; background: var(--border); margin: 12px 0; }
+.tag {
+  display: inline-block;
+  font-size: 9px;
+  font-family: 'DM Mono', monospace;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: .5px;
+  border: 1px solid;
+}
+.tag-na { background: rgba(138,122,104,.08); color: var(--muted); border-color: var(--border); }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-back" onclick="history.back()">← comptabilité</div>
+    <div>
+      <div class="topbar-title">Taxes & Conformité</div>
+      <div class="topbar-sub">Villa Lotus · Seminyak · avril 2026</div>
+    </div>
+  </div>
+  <div class="row">
+    <span class="topbar-badge">1 alerte</span>
+  </div>
+</div>
+
+<!-- LEVEL SELECTOR -->
+<div class="level-bar">
+  <div class="level-btn" onclick="setLevel('agence')">🏢 Agence</div>
+  <div class="level-chevron">›</div>
+  <div class="level-btn" onclick="setLevel('client')">👤 Jean-Luc</div>
+  <div class="level-chevron">›</div>
+  <div class="level-btn active" onclick="setLevel('villa')">🏠 Villa Lotus</div>
+</div>
+
+<!-- ALERT BANNER (visible seulement si alerte) -->
+<div class="alert-banner" id="alertBanner">
+  <div class="ab-left">
+    <div class="ab-dot"></div>
+    <span>PBJT avril 2026 — échéance dans <strong>6 jours</strong> · IDR 4,800,000 à déclarer · <a onclick="">Voir détails →</a></span>
+  </div>
+  <span class="alert-banner-dismiss" onclick="document.getElementById('alertBanner').style.display='none'">✕</span>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main" id="mainContent">
+
+  <!-- ─── VUE VILLA (défaut) ─── -->
+  <div id="view-villa">
+
+    <!-- SOUS-ONGLETS -->
+    <div class="card" style="overflow:visible">
+      <div class="view-tabs">
+        <div class="view-tab active" onclick="switchTab('situation')">Situation</div>
+        <div class="view-tab" onclick="switchTab('previsions')">Prévisions</div>
+        <div class="view-tab" onclick="switchTab('conformite')">Conformité</div>
+        <div class="view-tab" onclick="switchTab('sofia')">Sofia ✦</div>
+        <div class="view-tab" onclick="switchTab('historique')">Historique</div>
+      </div>
+
+      <!-- TAB: SITUATION -->
+      <div class="view-content active" id="tab-situation">
+        <div class="card-header">
+          <div class="card-title">📊 Situation au jour J</div>
+          <div class="card-actions">
+            <div class="period-tabs">
+              <div class="period-tab active" onclick="setPeriod(this,'mois')">Mois</div>
+              <div class="period-tab" onclick="setPeriod(this,'trim')">Trim.</div>
+              <div class="period-tab" onclick="setPeriod(this,'annee')">Année</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="situation-grid">
+            <div class="situ-item">
+              <div class="situ-label">Revenu brut</div>
+              <div class="situ-val green">$4 800</div>
+              <div><span class="situ-badge badge-calculated">Calculé</span></div>
+            </div>
+            <div class="situ-item">
+              <div class="situ-label">PBJT collecté</div>
+              <div class="situ-val blue">$480</div>
+              <div><span class="situ-badge badge-due">À déclarer</span></div>
+            </div>
+            <div class="situ-item">
+              <div class="situ-label">Impôt location est.</div>
+              <div class="situ-val orange">$480</div>
+              <div><span class="situ-badge badge-estimated">Estimé 10%</span></div>
+            </div>
+            <div class="situ-item">
+              <div class="situ-label">Taxe foncière (PBB)</div>
+              <div class="situ-val">$58</div>
+              <div><span class="situ-badge badge-estimated">Accrual/12</span></div>
+            </div>
+            <div class="situ-item">
+              <div class="situ-label">TVA / PPN</div>
+              <div class="situ-val muted">—</div>
+              <div><span class="situ-badge tag-na">Désactivée</span></div>
+            </div>
+            <div class="situ-item">
+              <div class="situ-label">Levy touriste Bali</div>
+              <div class="situ-val">$30</div>
+              <div><span class="situ-badge badge-declared">Suivi seul.</span></div>
+            </div>
+            <div class="net-row">
+              <div>
+                <div class="net-label">Net après taxes estimées</div>
+                <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px;">$4 800 − $480 − $480 − $58</div>
+              </div>
+              <div class="net-val">$3 782</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROFIL FISCAL COMPACT -->
+        <div class="expand-toggle" onclick="toggleExpand('profil')">
+          <span>⚙ Profil fiscal — Résident · Art.4(2) 10% · Individuel</span>
+          <span class="expand-arrow" id="arrow-profil">▼</span>
+        </div>
+        <div class="expand-body" id="expand-profil">
+          <div class="profil-compact">
+            <div class="profil-pill">
+              <div>
+                <div class="profil-pill-label">Résidence fiscale</div>
+                <div class="profil-pill-val">Résident Indonésie</div>
+              </div>
+              <div class="status-dot status-green"></div>
+            </div>
+            <div class="profil-pill">
+              <div>
+                <div class="profil-pill-label">Entité juridique</div>
+                <div class="profil-pill-val">Individuel (Perorangan)</div>
+              </div>
+              <div class="status-dot status-blue"></div>
+            </div>
+            <div class="profil-pill">
+              <div>
+                <div class="profil-pill-label">Régime impôt location</div>
+                <div class="profil-pill-val">Art. 4(2) — 10% brut</div>
+              </div>
+              <div class="status-dot status-green"></div>
+            </div>
+            <div class="profil-pill">
+              <div>
+                <div class="profil-pill-label">Jours en Indonésie</div>
+                <div class="profil-pill-val">210 j / 12 mois</div>
+              </div>
+              <div class="status-dot status-green"></div>
+            </div>
+          </div>
+
+          <div class="separator"></div>
+          <div class="settings-section-title">Modifier le profil fiscal</div>
+          <div class="settings-grid">
+            <div class="field-group">
+              <label class="field-label">Résidence fiscale</label>
+              <select class="field-select" id="taxResidency" onchange="updateProfil()">
+                <option value="resident" selected>Résident (> 183 j)</option>
+                <option value="non_resident">Non-résident</option>
+                <option value="unknown">Inconnu — simuler les 2</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Type d'entité</label>
+              <select class="field-select" id="entityType" onchange="updateProfil()">
+                <option value="individual" selected>Individuel (Perorangan)</option>
+                <option value="pt_pma">PT PMA</option>
+                <option value="local_pt">PT Local</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Jours en Indonésie (12 mois)</label>
+              <div class="field-row">
+                <input type="number" class="field-input" id="daysIndonesia" value="210" min="0" max="365" style="flex:1" onchange="updateProfil()">
+                <span class="field-unit">jours</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">NPWP</label>
+              <input type="text" class="field-input" placeholder="12.345.678.9-012.345">
+            </div>
+          </div>
+
+          <!-- Treaty section (visible si non-résident) -->
+          <div id="treatySection" style="display:none;margin-top:12px;">
+            <div class="settings-section-title">Convention fiscale (treaty)</div>
+            <div class="settings-grid">
+              <div class="field-group">
+                <label class="field-label">Pays de résidence</label>
+                <select class="field-select">
+                  <option>France 🇫🇷</option>
+                  <option>Australie 🇦🇺</option>
+                  <option>Pays-Bas 🇳🇱</option>
+                  <option>Singapour 🇸🇬</option>
+                  <option>Autre</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Taux réduit treaty</label>
+                <div class="field-row">
+                  <input type="number" class="field-input" value="10" style="flex:1">
+                  <span class="field-unit">%</span>
+                </div>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Certificate of Domicile</label>
+                <div class="field-row" style="gap:10px;align-items:center">
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="codAvailable">
+                    <span class="toggle-slider"></span>
+                  </label>
+                  <span style="font-size:12px;color:var(--mid)">Disponible</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PT PMA section -->
+          <div id="ptpmaSection" style="display:none;margin-top:12px;">
+            <div class="settings-section-title">Données PT PMA</div>
+            <div class="settings-grid">
+              <div class="field-group">
+                <label class="field-label">Nom de la société</label>
+                <input type="text" class="field-input" placeholder="PT Lotus Bali Sejahtera">
+              </div>
+              <div class="field-group">
+                <label class="field-label">Taux IS (CIT)</label>
+                <div class="field-row">
+                  <input type="number" class="field-input" value="22" style="flex:1">
+                  <span class="field-unit">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-save" onclick="saveProfil()">✓ Enregistrer le profil</button>
+        </div>
+
+        <!-- TAXES SETTINGS EXPANDABLE -->
+        <div class="expand-toggle" onclick="toggleExpand('taxsettings')">
+          <span>⚙ Paramètres des taxes · PBJT 10% · PBB annuel · PPN désactivée</span>
+          <span class="expand-arrow" id="arrow-taxsettings">▼</span>
+        </div>
+        <div class="expand-body" id="expand-taxsettings">
+          <div class="settings-section-title">PBJT — Taxe d'hébergement locale</div>
+          <div class="settings-grid">
+            <div class="field-group">
+              <label class="field-label">Taux PBJT</label>
+              <div class="field-row">
+                <input type="number" class="field-input" value="10" style="flex:1">
+                <span class="field-unit">%</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Modalité</label>
+              <select class="field-select">
+                <option value="included">Inclus dans le prix</option>
+                <option value="added_on_top">En sus du prix</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Base de calcul</label>
+              <select class="field-select">
+                <option>Revenu brut réservations</option>
+                <option>Revenu net plateforme</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Fréquence déclaration</label>
+              <select class="field-select">
+                <option>Mensuelle</option>
+                <option>Trimestrielle</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="settings-section-title" style="margin-top:16px">PBB-P2 — Taxe foncière</div>
+          <div class="settings-grid">
+            <div class="field-group">
+              <label class="field-label">Méthode</label>
+              <select class="field-select" id="pbbMethod" onchange="togglePBB()">
+                <option value="fixed">Montant fixe annuel</option>
+                <option value="formula">Calcul NJOP</option>
+              </select>
+            </div>
+            <div class="field-group" id="pbb-fixed-field">
+              <label class="field-label">Montant annuel PBB</label>
+              <div class="field-row">
+                <input type="number" class="field-input" value="700000" style="flex:1">
+                <span class="field-unit">IDR</span>
+              </div>
+            </div>
+            <div class="field-group" id="pbb-njop-field" style="display:none">
+              <label class="field-label">Valeur NJOP</label>
+              <div class="field-row">
+                <input type="number" class="field-input" placeholder="2500000000" style="flex:1">
+                <span class="field-unit">IDR</span>
+              </div>
+            </div>
+            <div class="field-group" id="pbb-rate-field" style="display:none">
+              <label class="field-label">Taux local</label>
+              <div class="field-row">
+                <input type="number" class="field-input" value="0.1" step="0.01" style="flex:1">
+                <span class="field-unit">%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section-title" style="margin-top:16px">TVA / PPN</div>
+          <div class="settings-grid">
+            <div class="field-group">
+              <label class="field-label">PPN sur nuitées hébergement</label>
+              <div class="field-row" style="gap:10px;align-items:center">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="ppnEnabled">
+                  <span class="toggle-slider"></span>
+                </label>
+                <span style="font-size:12px;color:var(--muted)">Désactivée (recommandé)</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Taux PPN (si activée)</label>
+              <div class="field-row">
+                <input type="number" class="field-input" value="11" style="flex:1">
+                <span class="field-unit">%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section-title" style="margin-top:16px">Levy Bali touriste étranger</div>
+          <div class="settings-grid">
+            <div class="field-group">
+              <label class="field-label">Suivi activé</label>
+              <div class="field-row" style="gap:10px;align-items:center">
+                <label class="toggle-switch">
+                  <input type="checkbox" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+                <span style="font-size:12px;color:var(--mid)">Suivi informatif</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Montant par touriste étranger</label>
+              <div class="field-row">
+                <input type="number" class="field-input" value="150000" style="flex:1">
+                <span class="field-unit">IDR</span>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-save">✓ Enregistrer les paramètres</button>
+        </div>
+      </div>
+
+      <!-- TAB: PRÉVISIONS -->
+      <div class="view-content" id="tab-previsions">
+        <div class="card-header">
+          <div class="card-title">📈 Prévisions taxes</div>
+          <div class="card-actions">
+            <div class="period-tabs">
+              <div class="period-tab" onclick="setPeriod(this,'3m')">3 mois</div>
+              <div class="period-tab active" onclick="setPeriod(this,'6m')">6 mois</div>
+              <div class="period-tab" onclick="setPeriod(this,'12m')">12 mois</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="prev-chart" id="prevChart"></div>
+          <div class="prev-legend">
+            <div class="prev-legend-item"><div class="prev-legend-dot" style="background:var(--green-d)"></div>Revenu net</div>
+            <div class="prev-legend-item"><div class="prev-legend-dot" style="background:var(--blue)"></div>PBJT</div>
+            <div class="prev-legend-item"><div class="prev-legend-dot" style="background:var(--orange)"></div>Impôt est.</div>
+            <div class="prev-legend-item"><div class="prev-legend-dot" style="background:var(--muted)"></div>PBB accrual</div>
+          </div>
+          <div class="separator"></div>
+          <div class="situation-grid">
+            <div class="situ-item">
+              <div class="situ-label">Total taxes 6 mois</div>
+              <div class="situ-val red">$6 348</div>
+              <div><span class="situ-badge badge-estimated">Estimé</span></div>
+            </div>
+            <div class="situ-item">
+              <div class="situ-label">% du revenu brut</div>
+              <div class="situ-val orange">21.8%</div>
+              <div><span class="situ-badge badge-calculated">Calculé</span></div>
+            </div>
+            <div class="situ-item">
+              <div class="situ-label">Prochain paiement</div>
+              <div class="situ-val red">J-6</div>
+              <div><span class="situ-badge badge-due">PBJT mai</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: CONFORMITE -->
+      <div class="view-content" id="tab-conformite">
+        <div class="card-header">
+          <div class="card-title">📋 Documents légaux & conformité</div>
+          <div class="card-actions">
+            <button class="btn-sm" onclick="toggleExpand('docSettings')">⚙ Paramètres</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="doc-list">
+            <div class="doc-row urgent">
+              <div class="doc-icon">❌</div>
+              <div class="doc-info">
+                <div class="doc-name">NIB — Nomor Induk Berusaha</div>
+                <div class="doc-sub">Obligatoire depuis mars 2026 · Délistage OTA si absent</div>
+              </div>
+              <div class="doc-status">
+                <span class="deadline-chip deadline-red">URGENT</span>
+              </div>
+              <div class="doc-actions">
+                <button class="btn-sm red">Obtenir →</button>
+                <button class="btn-sm">📎 Upload</button>
+              </div>
+            </div>
+
+            <div class="doc-row">
+              <div class="doc-icon">✅</div>
+              <div class="doc-info">
+                <div class="doc-name">TDUP / Licence Villa KBLI 55193</div>
+                <div class="doc-sub">Enregistré · Renouvellement juin 2027</div>
+              </div>
+              <div class="doc-status">
+                <span class="deadline-chip deadline-green">Valide</span>
+              </div>
+              <div class="doc-actions">
+                <button class="btn-sm">👁 Voir</button>
+              </div>
+            </div>
+
+            <div class="doc-row warning">
+              <div class="doc-icon">⚠️</div>
+              <div class="doc-info">
+                <div class="doc-name">PBG — Permis construire commercial</div>
+                <div class="doc-sub">Document uploadé · Vérification en cours</div>
+              </div>
+              <div class="doc-status">
+                <span class="deadline-chip deadline-orange">En cours</span>
+              </div>
+              <div class="doc-actions">
+                <button class="btn-sm">👁 Voir</button>
+                <button class="btn-sm">📎 Update</button>
+              </div>
+            </div>
+
+            <div class="doc-row">
+              <div class="doc-icon">✅</div>
+              <div class="doc-info">
+                <div class="doc-name">SLF — Certificat de sécurité bâtiment</div>
+                <div class="doc-sub">Valide jusqu'à déc. 2026</div>
+              </div>
+              <div class="doc-status">
+                <span class="deadline-chip deadline-green">Valide</span>
+              </div>
+              <div class="doc-actions">
+                <button class="btn-sm">👁 Voir</button>
+              </div>
+            </div>
+
+            <div class="doc-row">
+              <div class="doc-icon">✅</div>
+              <div class="doc-info">
+                <div class="doc-name">NPWP — Numéro fiscal contribuable</div>
+                <div class="doc-sub">12.345.678.9-012.345</div>
+              </div>
+              <div class="doc-status">
+                <span class="deadline-chip deadline-green">Enregistré</span>
+              </div>
+              <div class="doc-actions">
+                <button class="btn-sm">✏️ Modifier</button>
+              </div>
+            </div>
+
+            <div class="doc-row">
+              <div class="doc-icon">—</div>
+              <div class="doc-info">
+                <div class="doc-name">Pondok Wisata</div>
+                <div class="doc-sub">Non applicable — réservé aux citoyens indonésiens (≤5 chambres)</div>
+              </div>
+              <div class="doc-status">
+                <span class="tag tag-na">N/A étranger</span>
+              </div>
+              <div class="doc-actions"></div>
+            </div>
+
+            <div class="doc-row">
+              <div class="doc-icon">✅</div>
+              <div class="doc-info">
+                <div class="doc-name">UKL-UPL — Étude d'impact environnemental</div>
+                <div class="doc-sub">Déposé · validé sept. 2024</div>
+              </div>
+              <div class="doc-status">
+                <span class="deadline-chip deadline-green">Valide</span>
+              </div>
+              <div class="doc-actions">
+                <button class="btn-sm">👁 Voir</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- doc settings expandable -->
+        <div class="expand-toggle" onclick="toggleExpand('docSettings')">
+          <span>⚙ Configurer les documents requis pour cette villa</span>
+          <span class="expand-arrow" id="arrow-docSettings">▼</span>
+        </div>
+        <div class="expand-body" id="expand-docSettings">
+          <div class="settings-section-title">Documents actifs</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="field-row" style="justify-content:space-between">
+              <span style="font-size:13px">NIB</span>
+              <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="field-row" style="justify-content:space-between">
+              <span style="font-size:13px">TDUP / KBLI 55193</span>
+              <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="field-row" style="justify-content:space-between">
+              <span style="font-size:13px">PBG</span>
+              <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="field-row" style="justify-content:space-between">
+              <span style="font-size:13px">SLF</span>
+              <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="field-row" style="justify-content:space-between">
+              <span style="font-size:13px">Pondok Wisata</span>
+              <label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="field-row" style="justify-content:space-between">
+              <span style="font-size:13px">UKL-UPL</span>
+              <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+          <div class="settings-grid" style="margin-top:12px">
+            <div class="field-group">
+              <label class="field-label">Rappel avant échéance</label>
+              <select class="field-select">
+                <option>30 jours</option>
+                <option selected>60 jours</option>
+                <option>90 jours</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn-save">✓ Enregistrer</button>
+        </div>
+
+        <div class="export-row">
+          <button class="btn-sm gold">📥 Export conformité PDF</button>
+          <button class="btn-sm">📤 Envoyer récap au client</button>
+        </div>
+      </div>
+
+      <!-- TAB: SOFIA -->
+      <div class="view-content" id="tab-sofia">
+        <div class="card-header">
+          <div class="sofia-header">
+            <div class="sofia-avatar">✦</div>
+            <div class="sofia-intro">
+              <div class="sofia-name">Sofia — Audit fiscal</div>
+              <div class="sofia-tagline">Analyse IA · mise à jour avril 2026 · KBLI 2025 intégré</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="sofia-insights">
+
+            <div class="insight-row urgent">
+              <div class="insight-icon">🔴</div>
+              <div class="insight-text">
+                <div class="insight-title">NIB manquant — risque délistage Airbnb</div>
+                <div class="insight-sub">Depuis le 31 mars 2026, toutes les villas listées sur OTA doivent avoir un NIB vérifié. Sans NIB, la villa peut être retirée des plateformes. Délai d'obtention estimé : 3–8 semaines via OSS.</div>
+                <div class="insight-cta">→ Lancer la procédure OSS</div>
+              </div>
+            </div>
+
+            <div class="insight-row savings">
+              <div class="insight-icon">💚</div>
+              <div class="insight-text">
+                <div class="insight-title">Passage en PT PMA — économie potentielle</div>
+                <div class="insight-sub">Avec le régime actuel individuel, impôt 10% sur le brut = ~$5 760/an. Via PT PMA (IS 22% sur le profit), en tenant compte des charges déductibles, l'imposition effective pourrait descendre à 12–14% du brut selon le taux de charges. Consultez un fiscaliste.</div>
+                <div class="insight-cta">→ Simuler le scénario PT PMA</div>
+              </div>
+            </div>
+
+            <div class="insight-row warning">
+              <div class="insight-icon">⚠️</div>
+              <div class="insight-text">
+                <div class="insight-title">KBLI 2025 — mise à jour classification requise</div>
+                <div class="insight-sub">Peraturan BPS No. 7/2025 (publié déc. 2025) introduit de nouvelles classifications. Les entreprises ont jusqu'à mi-2026 pour aligner leur NIB/OSS avec le nouveau KBLI. La villa est classée 55193 — vérifier la conformité avec le notaire.</div>
+                <div class="insight-cta">→ Vérifier le KBLI en cours</div>
+              </div>
+            </div>
+
+            <div class="insight-row info">
+              <div class="insight-icon">ℹ️</div>
+              <div class="insight-text">
+                <div class="insight-title">PBG — délai de validation à surveiller</div>
+                <div class="insight-sub">Le PBG (remplaçant l'IMB) est en cours de vérification. Sans PBG validé, le NIB ne peut pas être vérifié sur OSS pour les activités commerciales. Priorité : relancer le dossier PBG.</div>
+                <div class="insight-cta">→ Voir le statut PBG</div>
+              </div>
+            </div>
+
+            <div class="insight-row info">
+              <div class="insight-icon">📊</div>
+              <div class="insight-text">
+                <div class="insight-title">PBJT inclus vs. en sus — impact sur l'ADR affiché</div>
+                <div class="insight-sub">PBJT actuellement "inclus dans le prix". Si vous le passez "en sus", l'ADR affiché perçu par le guest reste le même, mais le revenu opérateur augmente de ~10%. À analyser selon la politique tarifaire de la villa.</div>
+                <div class="insight-cta">→ Simuler l'impact</div>
+              </div>
+            </div>
+
+          </div>
+
+          <button class="btn-audit" onclick="runAudit()">
+            <span>✦</span>
+            <span>Lancer un audit fiscal complet Sofia</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB: HISTORIQUE -->
+      <div class="view-content" id="tab-historique">
+        <div class="card-header">
+          <div class="card-title">🗓 Historique 12 mois</div>
+          <div class="card-actions">
+            <button class="btn-sm gold">📥 CSV</button>
+            <button class="btn-sm">📤 Envoyer</button>
+          </div>
+        </div>
+        <div class="card-body" style="padding:0;overflow-x:auto">
+          <table class="hist-table">
+            <thead>
+              <tr>
+                <th>Mois</th>
+                <th>Brut</th>
+                <th>PBJT</th>
+                <th>Impôt</th>
+                <th>PBB</th>
+                <th>Net</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody id="histTableBody"></tbody>
+          </table>
+        </div>
+        <div class="export-row">
+          <button class="btn-sm gold">📄 Récap PDF annuel</button>
+          <button class="btn-sm">📤 Envoyer à Jean-Luc</button>
+          <button class="btn-sm">📊 Envoyer au comptable</button>
+        </div>
+      </div>
+
+    </div><!-- /card -->
+  </div><!-- /view-villa -->
+
+
+  <!-- ─── VUE CLIENT (toutes villas) ─── -->
+  <div id="view-client" style="display:none">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">👤 Jean-Luc — Toutes les propriétés</div>
+        <div class="card-actions">
+          <div class="period-tabs">
+            <div class="period-tab active">Mois</div>
+            <div class="period-tab">Trim.</div>
+            <div class="period-tab">Année</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="situation-grid">
+          <div class="situ-item">
+            <div class="situ-label">Revenu brut total</div>
+            <div class="situ-val green">$28 400</div>
+            <div><span class="situ-badge badge-calculated">6 propriétés</span></div>
+          </div>
+          <div class="situ-item">
+            <div class="situ-label">PBJT total</div>
+            <div class="situ-val blue">$2 840</div>
+            <div><span class="situ-badge badge-due">2 à déclarer</span></div>
+          </div>
+          <div class="situ-item">
+            <div class="situ-label">Impôt estimé</div>
+            <div class="situ-val orange">$2 840</div>
+            <div><span class="situ-badge badge-estimated">Estimé</span></div>
+          </div>
+          <div class="net-row">
+            <div>
+              <div class="net-label">Net après taxes estimées</div>
+            </div>
+            <div class="net-val">$22 370</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- villas list -->
+      <div style="border-top:1px solid var(--border)">
+        <div id="clientVillaList"></div>
+      </div>
+
+      <div class="expand-toggle" onclick="toggleExpand('clientProfil')">
+        <span>⚙ Profil fiscal Jean-Luc · Résident · Individuel · Art.4(2)</span>
+        <span class="expand-arrow" id="arrow-clientProfil">▼</span>
+      </div>
+      <div class="expand-body" id="expand-clientProfil">
+        <div class="settings-grid">
+          <div class="field-group">
+            <label class="field-label">Résidence fiscale</label>
+            <select class="field-select"><option selected>Résident Indonésie</option><option>Non-résident</option></select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Entité juridique</label>
+            <select class="field-select"><option selected>Individuel</option><option>PT PMA</option></select>
+          </div>
+        </div>
+        <button class="btn-save">✓ Enregistrer</button>
+      </div>
+
+      <div class="export-row">
+        <button class="btn-sm gold">📥 Export global CSV</button>
+        <button class="btn-sm">📄 Récap PDF client</button>
+        <button class="btn-sm">📤 Envoyer à Jean-Luc</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── VUE AGENCE ─── -->
+  <div id="view-agence" style="display:none">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🏢 Agence — Vue globale taxes</div>
+        <div class="card-actions">
+          <div class="period-tabs">
+            <div class="period-tab active">Mois</div>
+            <div class="period-tab">Trim.</div>
+            <div class="period-tab">Année</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="situation-grid">
+          <div class="situ-item">
+            <div class="situ-label">Revenu brut portefeuille</div>
+            <div class="situ-val green">$148 200</div>
+            <div><span class="situ-badge badge-calculated">12 clients</span></div>
+          </div>
+          <div class="situ-item">
+            <div class="situ-label">PBJT total collecté</div>
+            <div class="situ-val blue">$14 820</div>
+            <div><span class="situ-badge badge-declared">8 déclarés</span></div>
+          </div>
+          <div class="situ-item">
+            <div class="situ-label">Alertes conformité</div>
+            <div class="situ-val red">7</div>
+            <div><span class="situ-badge badge-due">NIB manquants</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="border-top:1px solid var(--border);padding:16px 18px">
+        <div class="client-accordion" id="agenceAccordion"></div>
+      </div>
+      <div class="export-row">
+        <button class="btn-sm gold">📥 Export agence CSV</button>
+        <button class="btn-sm">📄 Rapport compliance</button>
+        <button class="btn-sm">📤 Envoyer à tous les clients</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+// ── DATA MOCK ──────────────────────────────────────────────
+const MONTHS = ['Mai 25','Juin 25','Juil 25','Août 25','Sep 25','Oct 25','Nov 25','Déc 25','Jan 26','Fév 26','Mars 26','Avr 26'];
+const HIST_DATA = [
+  { brut:4200, pbjt:420, impot:420, pbb:58, statut:'paid' },
+  { brut:5100, pbjt:510, impot:510, pbb:58, statut:'paid' },
+  { brut:6800, pbjt:680, impot:680, pbb:58, statut:'paid' },
+  { brut:7200, pbjt:720, impot:720, pbb:58, statut:'paid' },
+  { brut:4400, pbjt:440, impot:440, pbb:58, statut:'paid' },
+  { brut:3900, pbjt:390, impot:390, pbb:58, statut:'declared' },
+  { brut:4100, pbjt:410, impot:410, pbb:58, statut:'declared' },
+  { brut:5600, pbjt:560, impot:560, pbb:58, statut:'declared' },
+  { brut:4800, pbjt:480, impot:480, pbb:58, statut:'calculated' },
+  { brut:4200, pbjt:420, impot:420, pbb:58, statut:'calculated' },
+  { brut:5000, pbjt:500, impot:500, pbb:58, statut:'calculated' },
+  { brut:4800, pbjt:480, impot:480, pbb:58, statut:'estimated' },
+];
+
+const CLIENT_VILLAS = [
+  { name:'Karma Guesthouse', type:'hotel', brut:'$9 200', pbjt:'$920', statut:'paid', alerts:0 },
+  { name:'Villa Lotus', type:'villa', brut:'$4 800', pbjt:'$480', statut:'due', alerts:1 },
+  { name:'Villa Ocean Breeze', type:'villa', brut:'$5 400', pbjt:'$540', statut:'calculated', alerts:1 },
+  { name:'Villa Jungle', type:'villa', brut:'$3 200', pbjt:'$320', statut:'paid', alerts:0 },
+  { name:'Villa Rice Field', type:'villa', brut:'$2 800', pbjt:'$280', statut:'declared', alerts:0 },
+  { name:'Villa Cliff Edge', type:'villa', brut:'$3 000', pbjt:'$300', statut:'estimated', alerts:0 },
+];
+
+const AGENCE_CLIENTS = [
+  { name:'Jean-Luc Martin', villas:6, brut:'$28 400', pbjt:'$2 840', alerts:2, status:'warning' },
+  { name:'Sophie Delacroix', villas:3, brut:'$14 600', pbjt:'$1 460', alerts:0, status:'green' },
+  { name:'Thomas Berger', villas:4, brut:'$22 100', pbjt:'$2 210', alerts:3, status:'red' },
+  { name:'Maria Santos', villas:2, brut:'$9 800', pbjt:'$980', alerts:1, status:'warning' },
+];
+
+const STATUS_LABELS = { paid:'Payé', declared:'Déclaré', calculated:'Calculé', estimated:'Estimé', due:'À payer' };
+const STATUS_CLASSES = { paid:'badge-paid', declared:'badge-declared', calculated:'badge-calculated', estimated:'badge-estimated', due:'badge-due' };
+const fmt = v => '$' + v.toLocaleString('fr-FR');
+
+// ── INIT ──────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  buildHistTable();
+  buildPrevChart();
+  buildClientVillas();
+  buildAgenceAccordion();
+});
+
+function buildHistTable() {
+  const tbody = document.getElementById('histTableBody');
+  let totalBrut=0,totalPbjt=0,totalImpot=0,totalPbb=0,totalNet=0;
+  tbody.innerHTML = HIST_DATA.map((d,i) => {
+    const net = d.brut - d.pbjt - d.impot - d.pbb;
+    totalBrut+=d.brut; totalPbjt+=d.pbjt; totalImpot+=d.impot; totalPbb+=d.pbb; totalNet+=net;
+    return `<tr>
+      <td>${MONTHS[i]}</td>
+      <td>${fmt(d.brut)}</td>
+      <td>${fmt(d.pbjt)}</td>
+      <td>${fmt(d.impot)}</td>
+      <td>${fmt(d.pbb)}</td>
+      <td style="color:var(--green-d);font-weight:500">${fmt(net)}</td>
+      <td><span class="situ-badge ${STATUS_CLASSES[d.statut]}">${STATUS_LABELS[d.statut]}</span></td>
+    </tr>`;
+  }).join('') + `<tr class="total-row">
+    <td>TOTAL</td>
+    <td>${fmt(totalBrut)}</td>
+    <td>${fmt(totalPbjt)}</td>
+    <td>${fmt(totalImpot)}</td>
+    <td>${fmt(totalPbb)}</td>
+    <td style="color:var(--green-d)">${fmt(totalNet)}</td>
+    <td></td>
+  </tr>`;
+}
+
+function buildPrevChart() {
+  const months = ['Mai','Juin','Juil','Août','Sep','Oct'];
+  const data = [
+    { brut:5200, pbjt:520, impot:520, pbb:58 },
+    { brut:6800, pbjt:680, impot:680, pbb:58 },
+    { brut:7400, pbjt:740, impot:740, pbb:58 },
+    { brut:5600, pbjt:560, impot:560, pbb:58 },
+    { brut:4900, pbjt:490, impot:490, pbb:58 },
+    { brut:5100, pbjt:510, impot:510, pbb:58 },
+  ];
+  const maxBrut = Math.max(...data.map(d=>d.brut));
+  const wrap = document.getElementById('prevChart');
+  wrap.innerHTML = data.map((d,i) => {
+    const h = 52;
+    const total = d.pbjt + d.impot + d.pbb;
+    const netH = Math.round((d.brut-total)/maxBrut * h);
+    const pbjtH = Math.round(d.pbjt/maxBrut * h);
+    const impotH = Math.round(d.impot/maxBrut * h);
+    const pbbH = Math.round(d.pbb/maxBrut * h);
+    return `<div class="prev-bar-wrap">
+      <div class="prev-bar-stack">
+        <div class="prev-bar-seg" style="height:${netH}px;background:var(--green-d);opacity:.85"></div>
+        <div class="prev-bar-seg" style="height:${impotH}px;background:var(--orange);opacity:.8"></div>
+        <div class="prev-bar-seg" style="height:${pbjtH}px;background:var(--blue);opacity:.8"></div>
+        <div class="prev-bar-seg" style="height:${pbbH}px;background:var(--muted);opacity:.6"></div>
+      </div>
+      <div class="prev-bar-label">${months[i]}</div>
+    </div>`;
+  }).join('');
+}
+
+function buildClientVillas() {
+  const list = document.getElementById('clientVillaList');
+  list.innerHTML = CLIENT_VILLAS.map(v => `
+    <div class="villa-sub-row" onclick="setLevel('villa')">
+      <div class="villa-sub-name">${v.type === 'hotel' ? '🏨' : '🏠'} ${v.name}</div>
+      <div class="villa-sub-kpis">
+        <div class="villa-sub-kpi">
+          <div class="sv">${v.brut}</div>
+          <div class="sl">BRUT</div>
+        </div>
+        <div class="villa-sub-kpi">
+          <div class="sv">${v.pbjt}</div>
+          <div class="sl">PBJT</div>
+        </div>
+        <span class="situ-badge ${STATUS_CLASSES[v.statut]}" style="font-size:9px">${STATUS_LABELS[v.statut]}</span>
+        ${v.alerts > 0 ? `<span class="alert-count">${v.alerts}</span>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function buildAgenceAccordion() {
+  const acc = document.getElementById('agenceAccordion');
+  acc.innerHTML = AGENCE_CLIENTS.map((c,i) => `
+    <div class="client-acc-row">
+      <div class="client-acc-header" onclick="toggleAcc(${i})">
+        <div>
+          <div class="client-acc-name">👤 ${c.name}</div>
+          <div class="client-acc-sub">${c.villas} propriétés · Bali</div>
+        </div>
+        <div class="client-acc-kpis">
+          <div class="client-acc-kpi">
+            <div class="k-val">${c.brut}</div>
+            <div class="k-label">Brut</div>
+          </div>
+          <div class="client-acc-kpi">
+            <div class="k-val">${c.pbjt}</div>
+            <div class="k-label">PBJT</div>
+          </div>
+          ${c.alerts > 0 ? `<span class="alert-count ${c.status==='warning'?'orange':''}">${c.alerts}</span>` : ''}
+        </div>
+        <div class="client-acc-arrow" id="acc-arrow-${i}">▼</div>
+      </div>
+      <div class="client-acc-body" id="acc-body-${i}">
+        ${CLIENT_VILLAS.slice(0,c.villas).map(v => `
+          <div class="villa-sub-row">
+            <div class="villa-sub-name">${v.type === 'hotel' ? '🏨' : '🏠'} ${v.name}</div>
+            <div class="villa-sub-kpis">
+              <div class="villa-sub-kpi">
+                <div class="sv">${v.brut}</div>
+                <div class="sl">BRUT</div>
+              </div>
+              <div class="villa-sub-kpi">
+                <div class="sv">${v.pbjt}</div>
+                <div class="sl">PBJT</div>
+              </div>
+              <span class="situ-badge ${STATUS_CLASSES[v.statut]}" style="font-size:9px">${STATUS_LABELS[v.statut]}</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── INTERACTIONS ──────────────────────────────────────────
+function setLevel(level) {
+  document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+  const idx = level === 'agence' ? 0 : level === 'client' ? 2 : 4;
+  document.querySelectorAll('.level-btn')[idx === 0 ? 0 : idx === 2 ? 1 : 2].classList.add('active');
+  document.getElementById('view-villa').style.display = level === 'villa' ? '' : 'none';
+  document.getElementById('view-client').style.display = level === 'client' ? '' : 'none';
+  document.getElementById('view-agence').style.display = level === 'agence' ? '' : 'none';
+}
+
+function switchTab(id) {
+  document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.view-content').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+}
+
+function toggleExpand(id) {
+  const body = document.getElementById('expand-' + id);
+  const arrow = document.getElementById('arrow-' + id);
+  if (!body) return;
+  const open = body.classList.toggle('open');
+  if (arrow) arrow.classList.toggle('open', open);
+}
+
+function toggleAcc(i) {
+  const body = document.getElementById('acc-body-' + i);
+  const arrow = document.getElementById('acc-arrow-' + i);
+  const open = body.classList.toggle('open');
+  if (arrow) arrow.classList.toggle('open', open);
+}
+
+function setPeriod(el, period) {
+  el.closest('.period-tabs').querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function updateProfil() {
+  const residency = document.getElementById('taxResidency').value;
+  const entity = document.getElementById('entityType').value;
+  const treaty = document.getElementById('treatySection');
+  const pma = document.getElementById('ptpmaSection');
+  if (treaty) treaty.style.display = residency === 'non_resident' ? '' : 'none';
+  if (pma) pma.style.display = entity === 'pt_pma' ? '' : 'none';
+}
+
+function togglePBB() {
+  const method = document.getElementById('pbbMethod').value;
+  document.getElementById('pbb-fixed-field').style.display = method === 'fixed' ? '' : 'none';
+  document.getElementById('pbb-njop-field').style.display = method === 'formula' ? '' : 'none';
+  document.getElementById('pbb-rate-field').style.display = method === 'formula' ? '' : 'none';
+}
+
+function saveProfil() {
+  const btn = event.target;
+  btn.textContent = '✓ Enregistré';
+  btn.style.background = 'var(--green-d)';
+  btn.style.borderColor = 'var(--green-d)';
+  btn.style.color = '#fff';
+  setTimeout(() => {
+    btn.textContent = '✓ Enregistrer le profil';
+    btn.style.background = '';
+    btn.style.borderColor = '';
+    btn.style.color = '';
+  }, 2000);
+}
+
+function runAudit() {
+  const btn = event.target.closest('.btn-audit');
+  btn.textContent = '✦ Analyse en cours…';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.innerHTML = '<span>✦</span><span>Audit terminé — 5 points détectés</span>';
+    btn.disabled = false;
+    btn.style.background = 'var(--green-d)';
+    btn.style.borderColor = 'var(--green)';
+  }, 2200);
+}
+
+// new Function validation
+try { new Function('return true')(); } catch(e) { console.error('JS validation failed', e); }
+</script>
+</body>
+</html>

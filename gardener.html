@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Gardener · BALIAGENCIA</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F0F5F0;--bg2:#E4EEE4;--bg3:#D6E8D6;
+  --dark:#1A2218;--dark2:#1E2A1C;--dark3:#0E1A0C;
+  --text:#222A20;--muted:#6A7A68;--muted2:#A0AE9E;
+  --green:#27AE60;--green-soft:#E8F5EE;--green-mid:#A8D5B8;--green-dark:#1E8449;
+  --green2:#2ECC71;--green2-soft:#EAFAF1;
+  --gold:#C9A84C;--gold-light:#E8C97A;
+  --orange:#E67E22;--orange-soft:#FEF0E3;--orange-mid:#F0A060;
+  --red:#C0392B;--red-soft:#FDECEA;--red-mid:#E74C3C;
+  --blue:#2980B9;--blue-soft:#EBF5FB;
+  --forest:#1A5C28;--forest2:#145220;
+  --rose:#FDF0F6;--rose-btn:#D4749A;--rose-dark:#A84870;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.05);
+  --shadow:0 2px 14px rgba(0,0,0,0.09);
+  --radius:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;max-width:430px;margin:0 auto;}
+
+/* ── TOPBAR ── */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(240,245,240,0.97);border-bottom:1px solid var(--border);padding:0 16px;height:54px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);}
+.tb-logo{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;}
+.tb-right{display:flex;align-items:center;gap:8px;}
+.tb-back{font-size:11px;font-weight:800;color:var(--muted);padding:5px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border);cursor:pointer;text-decoration:none;transition:all .2s;}
+.tb-back:hover{border-color:var(--green);color:var(--green);}
+.lang-toggle{display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:20px;background:var(--bg3);border:1px solid var(--border);cursor:pointer;font-size:10px;font-weight:700;color:var(--muted);transition:all .2s;}
+.lang-toggle:hover{border-color:var(--gold);color:var(--gold);}
+.lang-active{color:var(--dark);font-weight:800;}
+
+/* ── AVATAR HERO — grande icône remplaçable ── */
+.hero{background:linear-gradient(160deg,#1A3A1E 0%,#0F2A12 60%,#162A14 100%);padding:32px 22px 0;position:relative;overflow:hidden;text-align:center;}
+.hero-leaf{position:absolute;right:-20px;top:-20px;font-size:120px;opacity:0.05;transform:rotate(-20deg);pointer-events:none;}
+.hero-leaf2{position:absolute;left:-15px;bottom:30px;font-size:90px;opacity:0.04;transform:rotate(30deg);pointer-events:none;}
+
+/* Avatar principal — grand, remplaçable */
+.gardener-avatar-wrap{position:relative;display:inline-block;margin-bottom:14px;cursor:pointer;}
+.gardener-avatar{width:108px;height:108px;border-radius:50%;background:linear-gradient(135deg,rgba(39,174,96,0.25),rgba(39,174,96,0.08));border:3px solid rgba(39,174,96,0.5);display:flex;align-items:center;justify-content:center;font-size:56px;box-shadow:0 0 32px rgba(39,174,96,0.2),0 0 0 8px rgba(39,174,96,0.06);position:relative;overflow:hidden;transition:all .3s;}
+.gardener-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;position:absolute;top:0;left:0;}
+.gardener-avatar-edit{position:absolute;bottom:4px;right:4px;width:28px;height:28px;border-radius:50%;background:rgba(39,174,96,0.9);border:2px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,0.3);}
+.gardener-avatar-hint{font-size:10px;color:rgba(255,255,255,0.3);margin-top:4px;font-style:italic;}
+.gardener-name{font-size:18px;font-weight:800;color:#fff;margin-bottom:2px;}
+.gardener-role{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(39,174,96,0.7);font-family:'DM Mono',monospace;margin-bottom:18px;}
+
+/* Greeting */
+.hero-greeting{font-size:26px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:6px;}
+.hero-greeting em{color:var(--gold);font-style:italic;font-family:'Playfair Display',serif;font-size:28px;font-weight:400;}
+.hero-tagline{font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:20px;line-height:1.6;}
+
+/* mission card */
+.mission-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px;text-align:left;margin-bottom:0;}
+.mc-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.mc-dot{width:10px;height:10px;border-radius:50%;background:var(--green2);box-shadow:0 0 8px rgba(46,204,113,0.6);flex-shrink:0;animation:pulse-g 2s infinite;}
+@keyframes pulse-g{0%,100%{box-shadow:0 0 8px rgba(46,204,113,0.6);}50%{box-shadow:0 0 16px rgba(46,204,113,1);}}
+.mc-villa{font-size:16px;font-weight:800;color:#fff;flex:1;}
+.mc-pill{font-size:10px;padding:3px 10px;border-radius:20px;background:rgba(46,204,113,0.2);color:var(--green-mid);border:1px solid rgba(46,204,113,0.3);font-weight:700;}
+.mc-problem{font-size:13px;color:rgba(255,255,255,0.75);line-height:1.6;padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;border-left:2px solid rgba(46,204,113,0.5);margin-bottom:10px;}
+.mc-photo{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:18px;text-align:center;font-size:26px;margin-bottom:10px;}
+.mc-photo span{display:block;font-size:10px;color:rgba(255,255,255,0.3);margin-top:4px;}
+.mc-tags{display:flex;gap:7px;flex-wrap:wrap;}
+.mc-tag{font-size:10px;padding:4px 10px;border-radius:20px;font-weight:700;}
+.t-loc{background:rgba(41,128,185,0.2);color:#7EC8F0;border:1px solid rgba(41,128,185,0.3);}
+.t-eta{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.45);border:1px solid rgba(255,255,255,0.1);}
+.t-rep{background:rgba(201,168,76,0.1);color:var(--gold-light);border:1px solid rgba(201,168,76,0.2);}
+
+/* accept */
+.mission-actions{display:grid;grid-template-columns:1fr auto;gap:8px;padding:16px 22px 22px;}
+.accept-btn{padding:14px;border-radius:12px;background:linear-gradient(135deg,var(--forest),var(--green));color:#fff;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 16px rgba(39,174,96,0.3);transition:all .25s;}
+.accept-btn.on{background:rgba(39,174,96,0.12);border:1.5px solid var(--green);box-shadow:none;color:var(--green);cursor:default;}
+.accept-sub{font-size:9px;color:rgba(255,255,255,0.3);text-align:center;padding-bottom:16px;font-style:italic;}
+.decline-btn{padding:14px 16px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;}
+
+/* MISSION BODY */
+.mbody{display:none;}
+.mbody.show{display:block;}
+
+/* CLOCK */
+.clock-section{background:linear-gradient(180deg,#0F2A12 0%,var(--dark3) 100%);padding:22px 20px 24px;display:flex;flex-direction:column;align-items:center;}
+.clock-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.18);margin-bottom:16px;font-family:'DM Mono',monospace;}
+.clock-wrap{position:relative;width:280px;height:280px;}
+#orbitCanvas{position:absolute;top:0;left:0;width:280px;height:280px;}
+.clock-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:74px;height:74px;border-radius:50%;overflow:hidden;border:2px solid rgba(39,174,96,0.5);z-index:10;background:rgba(39,174,96,0.08);display:flex;align-items:center;justify-content:center;font-size:30px;}
+.clock-center img{width:100%;height:100%;object-fit:cover;border-radius:50%;position:absolute;top:0;left:0;display:none;}
+.clock-tagline{font-size:11px;color:rgba(255,255,255,0.25);margin-top:14px;text-align:center;max-width:260px;line-height:1.75;font-style:italic;}
+.clock-tagline em{color:var(--gold-light);font-style:normal;font-weight:800;}
+
+/* GENERIC BLOCK */
+.block{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin:12px 20px 0;}
+.block-title{font-size:13px;font-weight:800;color:var(--dark);margin-bottom:3px;display:flex;align-items:center;gap:8px;}
+.block-sub{font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.5;}
+
+/* TOOLS */
+.tools-rect{border-radius:12px;padding:16px 18px;margin:12px 20px 0;border:2px solid var(--green-mid);background:var(--green-soft);cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:14px;}
+.tools-rect.on{background:var(--green);border-color:var(--green);box-shadow:0 4px 16px rgba(39,174,96,0.28);}
+.tr-icon{font-size:26px;flex-shrink:0;}
+.tr-info{flex:1;}
+.tr-title{font-size:14px;font-weight:800;color:var(--green-dark);}
+.tools-rect.on .tr-title{color:#fff;}
+.tr-list{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5;}
+.tools-rect.on .tr-list{color:rgba(255,255,255,0.7);}
+.tr-check{font-size:22px;flex-shrink:0;transition:all .2s;}
+
+/* mission tools */
+.mission-tools{border-radius:12px;margin:8px 20px 0;overflow:hidden;border:1.5px solid rgba(39,174,96,0.25);background:#fff;transition:border-color .25s;}
+.mission-tools.has-missing{border-color:var(--orange);}
+.mt-header{padding:14px 18px;display:flex;align-items:center;gap:12px;}
+.mt-icon{font-size:20px;flex-shrink:0;}
+.mt-info{flex:1;}
+.mt-title{font-size:13px;font-weight:800;color:var(--dark);}
+.mt-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.mt-items{border-top:1px solid rgba(39,174,96,0.1);padding:0 18px 14px;}
+.mt-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border2);}
+.mt-item:last-child{border-bottom:none;}
+.mt-item-icon{font-size:18px;width:24px;text-align:center;}
+.mt-item-info{flex:1;}
+.mt-item-name{font-size:12px;font-weight:700;color:var(--dark);}
+.mt-item-note{font-size:10px;color:var(--muted);margin-top:1px;}
+.mt-yn{display:flex;gap:6px;}
+.yn{padding:6px 12px;border-radius:20px;font-size:11px;font-weight:800;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;}
+.yn.yes{border-color:var(--green);color:var(--green);background:var(--green-soft);}
+.yn.no{border-color:var(--red-mid);color:var(--red-mid);background:var(--red-soft);}
+
+/* buy box */
+.buy-box{background:var(--dark2);border-radius:12px;margin:0 20px;padding:18px;display:none;border:1px solid rgba(230,126,34,0.2);}
+.buy-box.show{display:block;}
+.bb-title{font-size:12px;font-weight:800;color:var(--orange-mid);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.bb-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.06);}
+.bb-item:last-of-type{border-bottom:none;}
+.bb-chk{width:20px;height:20px;border-radius:5px;border:1.5px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--green);cursor:pointer;flex-shrink:0;transition:all .2s;}
+.bb-chk.on{background:var(--green);border-color:var(--green);color:#fff;}
+.bb-item-name{flex:1;font-size:12px;color:rgba(255,255,255,0.75);}
+.bb-item-price{font-family:'DM Mono',monospace;font-size:11px;color:var(--orange-mid);}
+.bb-extra{margin-top:10px;}
+.bb-extra-lbl{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:6px;}
+.bb-extra-input{width:100%;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);color:#fff;font-family:'Nunito',sans-serif;font-size:12px;outline:none;transition:border-color .2s;}
+.bb-extra-input:focus{border-color:rgba(230,126,34,0.4);}
+.bb-extra-input::placeholder{color:rgba(255,255,255,0.2);}
+.bb-total{display:flex;justify-content:space-between;padding-top:10px;border-top:1px solid rgba(255,255,255,0.08);margin-top:8px;}
+.bb-total-lbl{font-size:12px;font-weight:800;color:rgba(255,255,255,0.6);}
+.bb-total-val{font-family:'DM Mono',monospace;font-size:14px;color:var(--orange-mid);}
+.rex-box{margin-top:10px;padding:14px;background:rgba(201,168,76,0.07);border:1px solid rgba(201,168,76,0.22);border-radius:10px;display:none;}
+.rex-box.show{display:block;}
+.rex-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.rex-ava{width:28px;height:28px;border-radius:50%;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.35);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.rex-name{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-family:'DM Mono',monospace;}
+.rex-live{display:flex;align-items:center;gap:4px;margin-left:auto;}
+.rex-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pg 1.5s infinite;}
+@keyframes pg{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.rex-live-txt{font-size:9px;color:var(--green);font-weight:700;font-family:'DM Mono',monospace;}
+.rex-msg{font-size:12px;color:rgba(255,255,255,0.6);line-height:1.65;margin-bottom:8px;}
+.rex-status{padding:9px 12px;border-radius:8px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:7px;transition:all .5s;}
+.rex-status.proc{background:var(--orange-soft);color:var(--orange);}
+.rex-status.conf{background:var(--green-soft);color:var(--green-dark);}
+.receipt-wrap{margin-top:10px;}
+.receipt-upload{padding:12px;border:1.5px dashed rgba(255,255,255,0.15);border-radius:10px;text-align:center;cursor:pointer;background:rgba(255,255,255,0.03);transition:all .2s;}
+.receipt-upload:hover{border-color:rgba(230,126,34,0.4);}
+.ru-ico{font-size:18px;margin-bottom:3px;}
+.ru-txt strong{display:block;font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:1px;}
+.ru-txt span{font-size:10px;color:rgba(255,255,255,0.25);}
+input[type=file]{display:none;}
+.photos-mini{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+.pm{width:54px;height:54px;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);position:relative;}
+.pm img{width:100%;height:100%;object-fit:cover;}
+.pm-rm{position:absolute;top:2px;right:2px;width:15px;height:15px;border-radius:50%;background:rgba(231,76,60,0.85);color:#fff;font-size:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+
+/* ROADMAP */
+.rmap{display:flex;flex-direction:column;}
+.rmap-step{display:flex;gap:14px;padding:10px 0;position:relative;}
+.rmap-step:not(:last-child)::after{content:'';position:absolute;left:15px;top:36px;bottom:-2px;width:2px;background:var(--border2);}
+.rmap-dot{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid var(--border);background:var(--bg2);transition:all .3s;}
+.rmap-dot.done{background:var(--green);border-color:var(--green);color:#fff;}
+.rmap-dot.active{background:var(--green-soft);border-color:var(--green);}
+.rmap-info{flex:1;padding-top:5px;}
+.rmap-lbl{font-size:12px;font-weight:800;color:var(--dark);}
+.rmap-sub{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.5;}
+.rmap-eta{font-size:10px;color:var(--green-dark);font-family:'DM Mono',monospace;margin-top:2px;}
+.sofia-tracking{margin-top:12px;padding:10px 12px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:8px;font-size:11px;color:rgba(201,168,76,0.7);display:flex;align-items:center;gap:8px;}
+
+/* DOORBELL */
+.doorbell-btn{width:100%;padding:13px 18px;border-radius:12px;background:transparent;border:1.5px solid rgba(39,174,96,0.3);color:var(--green);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:9px;margin-top:8px;}
+.doorbell-btn:hover{background:var(--green-soft);}
+.doorbell-msg{margin-top:8px;padding:10px 14px;background:var(--green-soft);border:1px solid rgba(39,174,96,0.2);border-radius:8px;font-size:11px;color:var(--green-dark);line-height:1.6;display:none;}
+.doorbell-msg.show{display:block;}
+
+/* 3 STEPS */
+.intervention-wrap{margin:12px 20px 0;}
+.intervention-title{font-size:13px;font-weight:800;color:var(--dark);margin-bottom:10px;}
+.step-big{border-radius:14px;margin-bottom:8px;overflow:hidden;border:1.5px solid transparent;transition:all .3s;}
+.step-big.s-blue{background:linear-gradient(135deg,#163A5F,#1A4A7A);border-color:rgba(41,128,185,0.3);}
+.step-big.s-orange{background:linear-gradient(135deg,#4A2A08,#6A3A10);border-color:rgba(230,126,34,0.3);}
+.step-big.s-green{background:linear-gradient(135deg,#1A5A28,#1E7030);border-color:rgba(39,174,96,0.3);}
+.step-big.done{background:linear-gradient(135deg,#1E6A38,#27AE60)!important;border-color:rgba(39,174,96,0.4)!important;box-shadow:0 3px 14px rgba(39,174,96,0.18);}
+.sbh{display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;}
+.sbh-num{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.sbh-info{flex:1;}
+.sbh-name{font-size:16px;font-weight:800;color:#fff;}
+.sbh-sub{font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px;}
+.sbh-badge{font-size:10px;padding:5px 10px;border-radius:20px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.55);font-weight:700;white-space:nowrap;}
+.step-big.done .sbh-badge{background:rgba(255,255,255,0.2);color:#fff;}
+.sbb{display:none;padding:0 20px 20px;border-top:1px solid rgba(255,255,255,0.1);}
+.sbb.open{display:block;}
+.sbb-hint{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.65;margin:12px 0 14px;}
+.photo-slot{padding:16px;border:1.5px dashed rgba(255,255,255,0.2);border-radius:10px;text-align:center;cursor:pointer;background:rgba(255,255,255,0.04);transition:all .2s;margin-bottom:12px;}
+.photo-slot:hover{border-color:rgba(255,255,255,0.4);}
+.photo-slot.has-photo{border-style:solid;border-color:rgba(255,255,255,0.3);padding:0;overflow:hidden;}
+.photo-slot.has-photo img{width:100%;max-height:180px;object-fit:cover;display:block;}
+.ps-icon{font-size:26px;margin-bottom:5px;}
+.ps-label{font-size:11px;font-weight:700;color:rgba(255,255,255,0.6);}
+.ps-sub{font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px;}
+.step-btn{width:100%;padding:13px;border-radius:10px;background:rgba(255,255,255,0.14);border:1.5px solid rgba(255,255,255,0.22);color:#fff;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.step-btn:hover{background:rgba(255,255,255,0.22);}
+.goodbye{margin-top:12px;padding:12px 14px;background:rgba(255,255,255,0.08);border-radius:10px;font-size:12px;color:rgba(255,255,255,0.75);line-height:1.65;border-left:2px solid rgba(255,255,255,0.2);}
+
+/* MID-SHOP */
+.midshop-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:calc(100% - 40px);margin:10px 20px 0;padding:16px 18px;border-radius:14px;background:var(--orange-soft);border:2px solid var(--orange);color:var(--orange);font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:all .25s;box-shadow:0 3px 12px rgba(230,126,34,0.18);}
+.midshop-btn:hover{background:var(--orange);color:#fff;}
+.midshop-btn-icon{font-size:24px;}
+.midshop-section{display:none;margin:8px 20px 0;background:var(--dark2);border-radius:var(--radius);padding:20px;border:1px solid rgba(230,126,34,0.3);}
+.midshop-section.show{display:block;}
+.ms-title{font-size:13px;font-weight:800;color:var(--orange-mid);margin-bottom:8px;}
+.ms-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:12px;line-height:1.5;}
+.ms-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.ms-chip{padding:7px 12px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);font-size:11px;font-weight:700;color:rgba(255,255,255,0.5);cursor:pointer;transition:all .2s;}
+.ms-chip.on{border-color:var(--orange);color:var(--orange-mid);background:rgba(230,126,34,0.1);}
+.ms-extra{width:100%;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);color:#fff;font-family:'Nunito',sans-serif;font-size:12px;outline:none;margin-bottom:10px;}
+.ms-extra::placeholder{color:rgba(255,255,255,0.2);}
+.ms-confirm{width:100%;padding:13px;border-radius:10px;background:rgba(230,126,34,0.15);border:1.5px solid rgba(230,126,34,0.3);color:var(--orange-mid);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;}
+
+/* L4 */
+.l4-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:calc(100% - 40px);margin:8px 20px 0;padding:14px 18px;border-radius:14px;background:rgba(231,76,60,0.08);border:2px solid rgba(231,76,60,0.3);color:var(--red-mid);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:all .25s;}
+.l4-btn:hover{background:rgba(231,76,60,0.15);}
+.l4-btn-icon{font-size:20px;}
+.l4-section{display:none;margin:0 20px 0;background:linear-gradient(135deg,#3A1A1A,#2A1010);border-radius:14px;padding:20px;border:1px solid rgba(231,76,60,0.25);}
+.l4-section.show{display:block;}
+.l4-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.l4-sofia{font-size:28px;}
+.l4-title{font-size:14px;font-weight:800;color:#fff;}
+.l4-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;}
+.l4-msg{font-size:12px;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:14px;padding:12px;background:rgba(255,255,255,0.04);border-radius:8px;}
+.l4-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.l4-opt{display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;cursor:pointer;transition:all .2s;}
+.l4-opt.on{background:rgba(231,76,60,0.1);border-color:rgba(231,76,60,0.3);}
+.l4-opt-icon{font-size:20px;flex-shrink:0;}
+.l4-opt-name{font-size:12px;font-weight:800;color:#fff;}
+.l4-opt-sub{font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px;}
+.l4-note{font-size:11px;color:rgba(255,255,255,0.35);line-height:1.65;padding:10px 12px;border:1px solid rgba(255,255,255,0.06);border-radius:8px;font-style:italic;}
+
+/* WELLBEING */
+.wb-wrap{background:var(--rose);border-radius:var(--radius);margin:12px 20px 0;padding:20px;}
+.wb-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);margin-bottom:6px;font-family:'DM Mono',monospace;}
+.wb-title{font-size:17px;font-weight:800;color:var(--dark);margin-bottom:4px;}
+.wb-sub{font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.5;}
+.wb-good,.wb-rep{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;cursor:pointer;border:1.5px solid transparent;transition:all .2s;margin-bottom:8px;}
+.wb-good{background:var(--green-soft);border-color:var(--green-mid);}
+.wb-good.on{background:var(--green);border-color:var(--green-dark);}
+.wb-good.on .wb-good-text{color:#fff;}
+.wb-good.on .wb-good-sub{color:rgba(255,255,255,0.7);}
+.wb-good-icon{font-size:22px;flex-shrink:0;}
+.wb-good-text{font-size:13px;font-weight:800;color:var(--green-dark);}
+.wb-good-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+.wb-rep{background:rgba(212,116,154,0.1);border-color:rgba(212,116,154,0.25);}
+.wb-rep.on{background:rgba(212,116,154,0.2);border-color:var(--rose-btn);}
+.wb-rep-text{font-size:13px;font-weight:800;color:var(--rose-dark);}
+.wb-rep-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+.wb-qcm{display:none;background:#fff;border-radius:12px;padding:16px;margin-top:10px;border:1px solid rgba(212,116,154,0.2);}
+.wb-qcm.show{display:block;}
+.wb-step{display:none;}
+.wb-step.active{display:block;}
+.wb-q{font-size:13px;font-weight:800;color:var(--dark);margin-bottom:12px;}
+.wb-cats{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px;}
+.wb-cat{padding:8px 13px;border-radius:20px;font-size:11px;font-weight:700;border:1.5px solid rgba(212,116,154,0.25);background:transparent;color:var(--muted);cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;}
+.wb-cat.sel{border-color:var(--rose-btn);color:var(--rose-dark);background:rgba(212,116,154,0.1);}
+.wb-opts{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.wb-opt{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg2);border-radius:8px;cursor:pointer;border:1.5px solid transparent;transition:all .2s;}
+.wb-opt.sel{background:rgba(212,116,154,0.1);border-color:rgba(212,116,154,0.3);}
+.wb-opt-icon{font-size:14px;flex-shrink:0;}
+.wb-textarea{width:100%;padding:10px 12px;border-radius:8px;background:var(--bg2);border:1.5px solid var(--border);font-family:'Nunito',sans-serif;font-size:12px;color:var(--text);outline:none;resize:none;min-height:70px;display:none;}
+.wb-next-btn{margin-top:10px;background:rgba(212,116,154,0.2);border:1px solid rgba(212,116,154,0.4);border-radius:8px;color:rgba(168,72,112,0.9);padding:10px 14px;width:100%;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer;}
+.stars{display:flex;gap:8px;margin-bottom:12px;}
+.star{font-size:26px;cursor:pointer;opacity:0.3;transition:all .2s;}
+.star.on{opacity:1;}
+.wb-send{width:100%;padding:13px;border-radius:10px;background:linear-gradient(135deg,var(--rose-dark),var(--rose-btn));color:#fff;border:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;margin-top:10px;}
+.wb-severity{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.wb-sev{flex:1;min-width:80px;padding:12px 8px;border-radius:10px;text-align:center;cursor:pointer;border:1.5px solid var(--border);font-size:11px;font-weight:800;transition:all .2s;}
+.wb-sev.mild{border-color:rgba(39,174,96,0.3);color:var(--green);}
+.wb-sev.mild.sel{background:var(--green-soft);}
+.wb-sev.medium{border-color:rgba(230,126,34,0.3);color:var(--orange);}
+.wb-sev.medium.sel{background:var(--orange-soft);}
+.wb-sev.serious{border-color:rgba(231,76,60,0.3);color:var(--red-mid);}
+.wb-sev.serious.sel{background:var(--red-soft);}
+.wb-back{font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:'Nunito',sans-serif;margin-bottom:10px;padding:4px 0;}
+.wb-confirm{padding:14px;background:var(--green-soft);border:1px solid var(--green-mid);border-radius:10px;text-align:center;}
+.wb-confirm-icon{font-size:36px;margin-bottom:8px;}
+.wb-confirm-text{font-size:13px;font-weight:800;color:var(--green-dark);}
+.wb-confirm-sub{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5;}
+#wb-red-alert-msg{display:none;margin-top:10px;padding:10px 12px;background:var(--red-soft);border:1px solid rgba(231,76,60,0.25);border-radius:8px;font-size:11px;color:var(--red-mid);line-height:1.6;}
+
+/* SUBMIT */
+.submit-area{margin:16px 20px 24px;padding:16px;background:var(--green-soft);border-radius:14px;border:2px solid var(--green-mid);}
+.submit-btn{width:100%;padding:16px;border-radius:12px;background:linear-gradient(135deg,var(--forest),var(--green));color:#fff;border:none;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 18px rgba(39,174,96,0.3);transition:all .25s;}
+.submit-btn:hover{box-shadow:0 6px 24px rgba(39,174,96,0.45);}
+.submit-note{font-size:10px;color:var(--green-dark);text-align:center;margin-top:8px;opacity:0.7;font-style:italic;}
+
+/* SUCCESS */
+.success-screen{display:none;min-height:100vh;background:linear-gradient(160deg,#0F2A12,#1A3A1E);flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;}
+.success-screen.show{display:flex;}
+.ss-icon{font-size:80px;margin-bottom:20px;animation:pop .5s cubic-bezier(.175,.885,.32,1.275);}
+@keyframes pop{0%{transform:scale(0);}100%{transform:scale(1);}}
+.ss-title{font-size:28px;font-weight:800;color:#fff;margin-bottom:8px;}
+.ss-sub{font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:28px;line-height:1.7;}
+.ss-stats{display:flex;gap:16px;margin-bottom:28px;}
+.ss-stat{background:rgba(255,255,255,0.07);border-radius:12px;padding:14px 20px;border:1px solid rgba(255,255,255,0.1);}
+.ss-stat-num{font-size:22px;font-weight:800;color:var(--green2);}
+.ss-stat-lbl{font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px;}
+.ss-undo{padding:10px 22px;border-radius:20px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.4);font-family:'Nunito',sans-serif;font-size:12px;cursor:pointer;}
+
+/* PASS MODAL */
+.pass-modal{position:fixed;inset:0;z-index:200;display:none;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);align-items:flex-end;}
+.pass-modal-inner{background:linear-gradient(160deg,#1A3A1E,#0F2A12);border-radius:24px 24px 0 0;padding:28px 22px 40px;width:100%;max-width:430px;margin:0 auto;}
+.pm-title{font-size:18px;font-weight:800;color:#fff;margin-bottom:6px;}
+.pm-sub{font-size:12px;color:rgba(255,255,255,0.45);margin-bottom:20px;line-height:1.6;}
+.pass-reason-opt{padding:12px 14px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);margin-bottom:8px;cursor:pointer;font-size:13px;font-weight:700;color:rgba(255,255,255,0.7);transition:all .2s;}
+.pass-reason-opt.sel{background:rgba(39,174,96,0.15);border-color:rgba(39,174,96,0.4);color:#fff;}
+.pass-time-opt{padding:10px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);font-size:11px;font-weight:700;color:rgba(255,255,255,0.55);cursor:pointer;text-align:center;transition:all .2s;}
+.pass-time-opt.sel{background:rgba(39,174,96,0.15);border-color:rgba(39,174,96,0.35);color:#fff;}
+
+/* FADE IN */
+.fi{opacity:0;transform:translateY(18px);transition:opacity .45s ease,transform .45s ease;}
+.fi.v{opacity:1;transform:none;}
+
+/* ── XENDIT PAYMENT BLOCK ── */
+.pay-block{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin:12px 20px 0;overflow:hidden;border-left:3px solid var(--green);}
+.pay-header{padding:14px 16px 10px;display:flex;align-items:center;gap:10px;}
+.pay-icon{font-size:22px;}
+.pay-title{font-size:13px;font-weight:800;color:var(--dark);}
+.pay-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.pay-salary-row{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 14px;}
+.pay-salary-lbl{font-size:12px;color:var(--muted);}
+.pay-salary-amt{font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:var(--green);}
+.pay-btns{padding:0 16px 16px;display:flex;flex-direction:column;gap:8px;}
+.pay-btn-advance{width:100%;padding:12px 16px;border-radius:10px;background:linear-gradient(135deg,rgba(41,128,185,0.12),rgba(41,128,185,0.06));border:1.5px solid rgba(41,128,185,0.3);color:var(--blue);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .25s;}
+.pay-btn-advance:hover{background:rgba(41,128,185,0.15);}
+.pay-btn-advance.sent{background:rgba(39,174,96,0.1);border-color:var(--green-mid);color:var(--green-dark);cursor:default;}
+.pay-btn-reimb{width:100%;padding:12px 16px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.06));border:1.5px solid rgba(201,168,76,0.3);color:var(--gold);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .25s;}
+.pay-btn-reimb:hover{background:rgba(201,168,76,0.18);}
+.pay-btn-reimb.sent{background:rgba(39,174,96,0.1);border-color:var(--green-mid);color:var(--green-dark);cursor:default;}
+.pay-receipt-area{padding:0 16px 16px;display:none;}
+.pay-receipt-area.show{display:block;}
+.pay-receipt-label{font-size:11px;color:var(--muted);margin-bottom:8px;}
+.pay-receipt-upload{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;border:1.5px dashed rgba(201,168,76,0.4);background:rgba(201,168,76,0.04);cursor:pointer;}
+.pay-receipt-upload input{display:none;}
+.pay-receipt-thumb{width:48px;height:48px;border-radius:8px;object-fit:cover;display:none;}
+.pay-confirm-btn{margin-top:10px;width:100%;padding:12px;border-radius:10px;background:var(--green);border:none;color:#fff;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;display:none;}
+.pay-confirm-btn.show{display:block;}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="tb-logo">BALI·AGENCIA</div>
+  <div class="tb-right">
+    <a class="tb-back" href="manager.html" id="back-btn">← Manager</a>
+    <div class="lang-toggle" onclick="cycleLang()">
+      <span class="lang-active" id="lang-cur">ID</span>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-leaf">🌿</div>
+  <div class="hero-leaf2">🌱</div>
+
+  <!-- Avatar principal — grand, remplaçable par photo -->
+  <div style="display:flex;flex-direction:column;align-items:center;">
+    <label style="cursor:pointer;" title="Tap to change photo">
+      <div class="gardener-avatar-wrap">
+        <div class="gardener-avatar" id="gardener-avatar">
+          <img id="gardener-avatar-img" src="" alt="" style="display:none;">
+          <span id="gardener-avatar-emoji">🌿</span>
+        </div>
+        <div class="gardener-avatar-edit">📷</div>
+      </div>
+      <input type="file" accept="image/*" capture="user" id="avatar-input" onchange="changeAvatar(this)">
+    </label>
+    <div class="gardener-avatar-hint">Tap to replace with your photo</div>
+    <div class="gardener-name" id="hero-name">Wayan G.</div>
+    <div class="gardener-role">Gardener · BALIAGENCIA</div>
+  </div>
+
+  <!-- Sofia -->
+  <div class="sofia-hero" style="margin-top:8px;">
+    <div class="sofia-photo">✨</div>
+    <div class="sofia-name">Sofia · Always here</div>
+  </div>
+
+  <div class="hero-greeting" id="hero-greeting">Selamat pagi, <em>Wayan</em> 🌱</div>
+  <div class="hero-tagline" id="hero-tagline">Tanaman yang sehat membuat tamu merasa di surga.<br>Hari ini kamu yang buat perbedaan.</div>
+
+  <!-- Mission card -->
+  <div class="mission-card">
+    <div class="mc-top">
+      <div class="mc-dot"></div>
+      <div class="mc-villa" id="mission-villa">Villa Surya · Seminyak</div>
+      <div class="mc-pill" id="mission-status">Gardening</div>
+    </div>
+    <div class="mc-problem" id="mission-desc">
+      🌿 Taman depan perlu dipangkas — tamu check-in besok siang. Fokus: pagar hidup kanan, pohon palem di kolam, dan bersihkan daun kering di deck.
+    </div>
+    <div class="mc-photo">
+      <span>🏡</span>
+      <span>Villa Surya · Jl. Sunset Road 42 · Code: 4782</span>
+    </div>
+    <div class="mc-tags">
+      <span class="mc-tag t-loc">📍 Seminyak</span>
+      <span class="mc-tag t-eta">⏱ ~3–4 jam</span>
+      <span class="mc-tag t-rep">👤 Jean-Luc M.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ACCEPT ACTIONS -->
+<div class="mission-actions">
+  <button class="accept-btn" id="accept-btn" onclick="acceptMission()">🌿 Accept mission</button>
+  <button class="decline-btn" onclick="openPassModal()">✕</button>
+</div>
+<div class="accept-sub" id="accept-sub">Sofia is waiting for your confirmation · 2 min to respond</div>
+
+<!-- PASS MODAL -->
+<div class="pass-modal" id="pass-modal" style="display:none;">
+  <div class="pass-modal-inner">
+    <div class="pm-title">Can't take this one?</div>
+    <div class="pm-sub">No problem — tell us why so Sofia can find someone else.</div>
+    <div id="pass-step-1">
+      <div class="pass-reason-opt" onclick="selectPassReason(this,'sick')">😷 I'm not feeling well</div>
+      <div class="pass-reason-opt" onclick="selectPassReason(this,'tools')">🌿 I don't have the right tools</div>
+      <div class="pass-reason-opt" onclick="selectPassReason(this,'location')">📍 Too far from me</div>
+      <div class="pass-reason-opt" onclick="selectPassReason(this,'other')">💬 Other reason</div>
+    </div>
+    <div id="pass-step-2" style="display:none;">
+      <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.7);margin-bottom:12px;">When will you be available?</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;" id="pass-times">
+        <div class="pass-time-opt" onclick="selectPassTime(this,'1h')">In 1h</div>
+        <div class="pass-time-opt" onclick="selectPassTime(this,'2h')">In 2h</div>
+        <div class="pass-time-opt" onclick="selectPassTime(this,'3h')">In 3h</div>
+        <div class="pass-time-opt" onclick="selectPassTime(this,'5h')">In 5h</div>
+        <div class="pass-time-opt" onclick="selectPassTime(this,'tomorrow')">Tomorrow AM</div>
+        <div class="pass-time-opt" onclick="selectPassTime(this,'unknown')">I'll let you know</div>
+      </div>
+    </div>
+    <button id="pass-confirm-btn" style="display:none;width:100%;margin-top:16px;padding:14px;border-radius:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;" onclick="confirmPass()">Send — Sofia will handle it</button>
+    <button style="width:100%;margin-top:8px;padding:10px;border-radius:10px;background:transparent;border:none;color:rgba(255,255,255,0.25);font-family:'Nunito',sans-serif;font-size:12px;cursor:pointer;" onclick="closePassModal()">← Actually, I'll take it</button>
+  </div>
+</div>
+
+<!-- SUCCESS SCREEN -->
+<div class="success-screen" id="success">
+  <div class="ss-icon">🌿</div>
+  <div class="ss-title" id="s-title">Mission complete!</div>
+  <div class="ss-sub" id="s-sub">Taman sudah bersih — tamu akan terkesan. Terima kasih Wayan! 🙏</div>
+  <div class="ss-stats">
+    <div class="ss-stat"><div class="ss-stat-num" id="s-time">–</div><div class="ss-stat-lbl">Duration</div></div>
+    <div class="ss-stat"><div class="ss-stat-num" id="s-steps">0</div><div class="ss-stat-lbl">Steps done</div></div>
+    <div class="ss-stat"><div class="ss-stat-num" id="s-photos">0</div><div class="ss-stat-lbl">Photos</div></div>
+  </div>
+  <button class="ss-undo" onclick="undoSubmit()">↩ Back to mission</button>
+</div>
+
+<!-- MISSION BODY -->
+<div class="mbody" id="mbody">
+
+  <!-- CLOCK -->
+  <div class="clock-section fi" style="transition-delay:.03s">
+    <div class="clock-lbl">Your constellation · Villa Surya</div>
+    <div class="clock-wrap">
+      <canvas id="orbitCanvas" width="280" height="280"></canvas>
+      <div class="clock-center" id="clock-center-div">
+        <img id="clock-avatar-img" src="" alt="">
+        <span id="clock-center-emoji">🌿</span>
+      </div>
+    </div>
+    <div class="clock-tagline">Un jardin impeccable dit aux guests :<br><em>quelqu'un tient à vous ici.</em> 🌺</div>
+  </div>
+
+  <!-- ── XENDIT — MODE SALAIRE FIXE ── -->
+  <div class="pay-block fi" style="transition-delay:.05s" id="pay-block">
+    <div class="pay-header">
+      <div class="pay-icon">💸</div>
+      <div>
+        <div class="pay-title">Pembayaran · Rex</div>
+        <div class="pay-sub">Gaji bulanan tetap · Mode salary fisso</div>
+      </div>
+    </div>
+    <div class="pay-salary-row">
+      <span class="pay-salary-lbl">Gaji bulan ini</span>
+      <span class="pay-salary-amt" id="pay-salary-amt">Rp 4.500.000</span>
+    </div>
+    <div class="pay-btns">
+      <button class="pay-btn-advance" id="btn-advance" onclick="requestAdvance()">
+        💳 Perlu uang muka untuk beli bahan?
+      </button>
+      <button class="pay-btn-reimb" id="btn-reimb" onclick="openReimb()">
+        🧾 Minta penggantian biaya (upload struk)
+      </button>
+    </div>
+    <div class="pay-receipt-area" id="reimb-area">
+      <div class="pay-receipt-label">Upload foto struk / nota pembelian</div>
+      <label class="pay-receipt-upload">
+        <span>📸 Foto struk</span>
+        <input type="file" accept="image/*" capture="environment" onchange="reimbPhoto(this)">
+        <img class="pay-receipt-thumb" id="reimb-thumb">
+      </label>
+      <button class="pay-confirm-btn" id="reimb-confirm-btn" onclick="confirmReimb()">✅ Kirim ke Rex untuk diproses</button>
+    </div>
+  </div>
+
+  <!-- TOOLS RECT 1 — outils de base -->
+  <div class="tools-rect fi" style="transition-delay:.06s" id="base-tools" onclick="toggleBase()">
+    <div class="tr-icon">🌿</div>
+    <div class="tr-info">
+      <div class="tr-title" id="base-title">I have all my garden tools</div>
+      <div class="tr-list">Parang · Gunting pangkas · Sapu lidi · Ember · Sarung tangan</div>
+    </div>
+    <div class="tr-check" id="base-check">○</div>
+  </div>
+
+  <!-- TOOLS RECT 2 — items spécifiques -->
+  <div class="mission-tools fi" style="transition-delay:.08s" id="mission-tools">
+    <div class="mt-header">
+      <div class="mt-icon">✂️</div>
+      <div class="mt-info">
+        <div class="mt-title">Special items for this mission</div>
+        <div class="mt-sub">Do you have these specific materials?</div>
+      </div>
+    </div>
+    <div class="mt-items">
+      <div class="mt-item">
+        <div class="mt-item-icon">🪣</div>
+        <div class="mt-item-info">
+          <div class="mt-item-name">Pupuk kompos / fertilizer</div>
+          <div class="mt-item-note">For palm tree base</div>
+        </div>
+        <div class="mt-yn">
+          <button class="yn" onclick="ynPick(this,'yes','pupuk')">Yes</button>
+          <button class="yn" onclick="ynPick(this,'no','pupuk')">No</button>
+        </div>
+      </div>
+      <div class="mt-item">
+        <div class="mt-item-icon">🌱</div>
+        <div class="mt-item-info">
+          <div class="mt-item-name">Tanah pot / potting soil</div>
+          <div class="mt-item-note">To fill gaps in pots</div>
+        </div>
+        <div class="mt-yn">
+          <button class="yn" onclick="ynPick(this,'yes','tanah')">Yes</button>
+          <button class="yn" onclick="ynPick(this,'no','tanah')">No</button>
+        </div>
+      </div>
+      <div class="mt-item">
+        <div class="mt-item-icon">🧴</div>
+        <div class="mt-item-info">
+          <div class="mt-item-name">Pestisida / insecticide spray</div>
+          <div class="mt-item-note">If leaf damage spotted</div>
+        </div>
+        <div class="mt-yn">
+          <button class="yn" onclick="ynPick(this,'yes','pest')">Yes</button>
+          <button class="yn" onclick="ynPick(this,'no','pest')">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUY BOX -->
+  <div class="buy-box fi" style="transition-delay:.09s" id="buy-box">
+    <div class="bb-title">🛒 Items to buy at the shop</div>
+    <div id="bb-items"></div>
+    <div class="bb-extra">
+      <div class="bb-extra-lbl">Anything else?</div>
+      <input class="bb-extra-input" type="text" placeholder="Describe anything else you need...">
+    </div>
+    <div class="bb-total">
+      <span class="bb-total-lbl">Estimated total</span>
+      <span class="bb-total-val" id="bb-total">Rp 0</span>
+    </div>
+    <div class="rex-box" id="rex-box">
+      <div class="rex-top">
+        <div class="rex-ava">🦊</div>
+        <div><div class="rex-name">Rex · Finance</div></div>
+        <div class="rex-live"><div class="rex-dot"></div><span class="rex-live-txt">Live</span></div>
+      </div>
+      <div class="rex-msg">This amount needs a transfer. <strong>Don't pay yet.</strong> I'm sending money to your account right now — wait for the confirmation below 👇</div>
+      <div class="rex-status proc" id="rex-status">⏳ Processing transfer...</div>
+    </div>
+    <div class="receipt-wrap">
+      <label>
+        <div class="receipt-upload">
+          <div class="ru-ico">🧾</div>
+          <div class="ru-txt"><strong>Photo of receipt</strong><span>After you've paid</span></div>
+        </div>
+        <input type="file" accept="image/*" capture="environment" onchange="addPhoto(this,'receipt-photos')">
+      </label>
+      <div class="photos-mini" id="receipt-photos"></div>
+    </div>
+  </div>
+
+  <!-- ROADMAP -->
+  <div class="block fi" style="transition-delay:.11s">
+    <div class="block-title">🗺️ Your route</div>
+    <div class="rmap">
+      <div class="rmap-step">
+        <div class="rmap-dot done">✓</div>
+        <div class="rmap-info"><div class="rmap-lbl">📍 Your location</div></div>
+      </div>
+      <div class="rmap-step" id="shop-step" style="display:none;">
+        <div class="rmap-dot active">🛒</div>
+        <div class="rmap-info">
+          <div class="rmap-lbl">Toko pertanian terdekat</div>
+          <div class="rmap-sub">Pupuk · tanah pot · spray</div>
+          <div class="rmap-eta" id="shop-eta">~5 min</div>
+        </div>
+      </div>
+      <div class="rmap-step">
+        <div class="rmap-dot">🏡</div>
+        <div class="rmap-info">
+          <div class="rmap-lbl">Villa Surya · Seminyak</div>
+          <div class="rmap-sub">Jl. Sunset Road 42 · Code: 4782</div>
+          <div class="rmap-eta" id="villa-eta">~8 min</div>
+        </div>
+      </div>
+    </div>
+    <div class="sofia-tracking">
+      <span>✨</span><span>Sofia is tracking your route and will notify the manager of your ETA — you don't need to do anything.</span>
+    </div>
+  </div>
+
+  <!-- AT THE VILLA -->
+  <div class="block fi" style="transition-delay:.13s">
+    <div class="block-title">🏡 At the villa</div>
+    <div class="block-sub">Door code: <strong>4782</strong> · If locked, use garden gate (left side). If nobody:</div>
+    <button class="doorbell-btn" onclick="sofiaCall()">🔔 Gate is locked — Sofia, call the manager</button>
+    <div class="doorbell-msg" id="doorbell-msg">✨ On it — Sofia is calling the manager right now. Wait a moment 🙏</div>
+  </div>
+
+  <!-- 3 STEPS -->
+  <div class="intervention-wrap fi" style="transition-delay:.15s">
+    <div class="intervention-title">🌿 Garden work</div>
+
+    <!-- STEP 1 — Before photo -->
+    <div class="step-big s-blue" id="step1">
+      <div class="sbh" onclick="toggleSb('step1')">
+        <div class="sbh-num" id="s1n">📸</div>
+        <div class="sbh-info"><div class="sbh-name">Before photo</div><div class="sbh-sub">Full garden — before you start</div></div>
+        <div class="sbh-badge" id="s1b">Open</div>
+      </div>
+      <div class="sbb" id="step1-body">
+        <div class="sbb-hint">Take a wide photo of the garden before any work. This shows the starting state and protects you.</div>
+        <label>
+          <div class="photo-slot" id="photo-before">
+            <div class="ps-icon">📸</div>
+            <div class="ps-label">Photo BEFORE</div>
+            <div class="ps-sub">Tap to take</div>
+          </div>
+          <input type="file" accept="image/*" capture="environment" onchange="setSlotPhoto(this,'photo-before','step1','s1n','s1b')">
+        </label>
+      </div>
+    </div>
+
+    <!-- STEP 2 — Garden work checklist -->
+    <div class="step-big s-orange" id="step2">
+      <div class="sbh" onclick="toggleSb('step2')">
+        <div class="sbh-num" id="s2n">✂️</div>
+        <div class="sbh-info"><div class="sbh-name">Garden work</div><div class="sbh-sub">Trim · clean · fertilize</div></div>
+        <div class="sbh-badge" id="s2b">Open</div>
+      </div>
+      <div class="sbb" id="step2-body">
+        <div class="sbb-hint">
+          🌿 Pangkas pagar hidup kanan dengan rapi · Potong daun palem kering di kolam · Sapu daun di deck · Siram tanaman · Beri pupuk jika ada · Buang semua sampah daun ke kantong.
+        </div>
+        <!-- Garden checklist -->
+        <div id="garden-checklist" style="margin-bottom:14px;">
+          <div class="garden-check-item" id="gc-pagar" onclick="toggleGC('gc-pagar')">
+            <div style="width:22px;height:22px;border-radius:6px;border:1.5px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:all .2s;" id="gc-pagar-chk">○</div>
+            <span style="font-size:12px;color:rgba(255,255,255,0.7);flex:1;">🌳 Pagar hidup kanan — dipangkas</span>
+          </div>
+          <div class="garden-check-item" id="gc-palem" onclick="toggleGC('gc-palem')">
+            <div style="width:22px;height:22px;border-radius:6px;border:1.5px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:all .2s;" id="gc-palem-chk">○</div>
+            <span style="font-size:12px;color:rgba(255,255,255,0.7);flex:1;">🌴 Palem kolam — daun kering dibuang</span>
+          </div>
+          <div class="garden-check-item" id="gc-deck" onclick="toggleGC('gc-deck')">
+            <div style="width:22px;height:22px;border-radius:6px;border:1.5px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:all .2s;" id="gc-deck-chk">○</div>
+            <span style="font-size:12px;color:rgba(255,255,255,0.7);flex:1;">🧹 Deck — disapu bersih</span>
+          </div>
+          <div class="garden-check-item" id="gc-siram" onclick="toggleGC('gc-siram')">
+            <div style="width:22px;height:22px;border-radius:6px;border:1.5px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:all .2s;" id="gc-siram-chk">○</div>
+            <span style="font-size:12px;color:rgba(255,255,255,0.7);flex:1;">💧 Semua tanaman — disiram</span>
+          </div>
+          <div class="garden-check-item" id="gc-sampah" onclick="toggleGC('gc-sampah')">
+            <div style="width:22px;height:22px;border-radius:6px;border:1.5px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:all .2s;" id="gc-sampah-chk">○</div>
+            <span style="font-size:12px;color:rgba(255,255,255,0.7);flex:1;">🗑️ Sampah daun — dibuang</span>
+          </div>
+        </div>
+        <button class="step-btn" onclick="markStep('step2','s2n','s2b')">✓ Garden done — everything clean</button>
+      </div>
+    </div>
+
+    <!-- STEP 3 — After photo -->
+    <div class="step-big s-green" id="step3">
+      <div class="sbh" onclick="toggleSb('step3')">
+        <div class="sbh-num" id="s3n">✅</div>
+        <div class="sbh-info"><div class="sbh-name">Done — after photo</div><div class="sbh-sub">Beautiful result before you leave</div></div>
+        <div class="sbh-badge" id="s3b">Open</div>
+      </div>
+      <div class="sbb" id="step3-body">
+        <div class="sbb-hint">Take a wide AFTER photo of the full garden — same angle as before. Clean your tools and take all clippings with you.</div>
+        <label>
+          <div class="photo-slot" id="photo-after">
+            <div class="ps-icon">📸</div>
+            <div class="ps-label">Photo AFTER</div>
+            <div class="ps-sub">The beautiful result</div>
+          </div>
+          <input type="file" accept="image/*" capture="environment" onchange="setSlotPhoto(this,'photo-after','step3','s3n','s3b')">
+        </label>
+        <div class="goodbye" id="goodbye" style="display:none;">
+          🙏 <strong>Bagus sekali Wayan!</strong> Taman sekarang siap menyambut tamu. Kalau ada orang di villa saat kamu selesai — senyum saja dan katakan <em>"Garden all clean, ready for your guests"</em>. Itu sudah cukup. Sampai ketemu di misi berikutnya 🌿
+        </div>
+      </div>
+    </div>
+
+    <!-- MID-SHOP orange -->
+    <button class="midshop-btn" onclick="toggleMidshop()">
+      <span class="midshop-btn-icon">🛒</span>
+      <span>I need something — quick shop run</span>
+    </button>
+    <div class="midshop-section" id="midshop">
+      <div class="ms-title">What's missing?</div>
+      <div class="ms-sub">Select what you need — Sofia updates the manager, Rex handles the money.</div>
+      <div class="ms-chips">
+        <div class="ms-chip" onclick="this.classList.toggle('on')">More fertilizer</div>
+        <div class="ms-chip" onclick="this.classList.toggle('on')">Potting soil</div>
+        <div class="ms-chip" onclick="this.classList.toggle('on')">Insecticide spray</div>
+        <div class="ms-chip" onclick="this.classList.toggle('on')">Replacement pot</div>
+        <div class="ms-chip" onclick="this.classList.toggle('on')">Garden wire</div>
+        <div class="ms-chip" onclick="this.classList.toggle('on')">Other</div>
+      </div>
+      <input class="ms-extra" type="text" placeholder="Describe what you need...">
+      <button class="ms-confirm" onclick="confirmMidshop()">✅ Sofia, I'm going to the shop — back soon</button>
+    </div>
+
+    <!-- L4 red -->
+    <button class="l4-btn" onclick="showL4()">
+      <span class="l4-btn-icon">🚨</span>
+      <span>I found a serious problem</span>
+    </button>
+    <div class="l4-section" id="l4-section">
+      <div class="l4-head">
+        <div class="l4-sofia">✨</div>
+        <div><div class="l4-title">Sofia is taking over</div><div class="l4-sub">Document it — we handle the rest</div></div>
+      </div>
+      <div class="l4-msg">Wayan, kamu sudah melakukan hal yang benar dengan melaporkan ini. Ada masalah yang perlu lebih dari pekerjaan taman biasa. Sofia sedang menghubungi manager sekarang. Ceritakan apa yang kamu temukan:</div>
+      <div class="l4-opts">
+        <div class="l4-opt" onclick="this.classList.toggle('on')"><div class="l4-opt-icon">🌊</div><div><div class="l4-opt-name">Water leak or pipe visible</div><div class="l4-opt-sub">Near irrigation or walls</div></div></div>
+        <div class="l4-opt" onclick="this.classList.toggle('on')"><div class="l4-opt-icon">🐛</div><div><div class="l4-opt-name">Pest infestation</div><div class="l4-opt-sub">Beyond normal spray treatment</div></div></div>
+        <div class="l4-opt" onclick="this.classList.toggle('on')"><div class="l4-opt-icon">🌳</div><div><div class="l4-opt-name">Tree damage / dangerous branch</div><div class="l4-opt-sub">Risk to guests or structure</div></div></div>
+        <div class="l4-opt" onclick="this.classList.toggle('on')"><div class="l4-opt-icon">🏚️</div><div><div class="l4-opt-name">Wall or fence damage</div><div class="l4-opt-sub">Structural issue found</div></div></div>
+      </div>
+      <div class="l4-note">Take a photo below and Sofia will include it in the report to the manager. You don't need to call anyone.</div>
+      <label style="display:block;margin-top:10px;">
+        <div class="photo-slot" id="photo-l4" style="border-color:rgba(231,76,60,0.3);">
+          <div class="ps-icon">📸</div>
+          <div class="ps-label">Photo of the problem</div>
+          <div class="ps-sub">Tap to take</div>
+        </div>
+        <input type="file" accept="image/*" capture="environment" onchange="setL4Photo(this)">
+      </label>
+    </div>
+  </div>
+
+  <!-- WELLBEING -->
+  <div class="wb-wrap fi" style="transition-delay:.18s">
+    <div class="wb-lbl">For you · Confidential · Manager only</div>
+    <div class="wb-title">How was your day? 🌸</div>
+    <div class="wb-sub">Just between you and the team. You matter to us.</div>
+    <div class="wb-good" id="wb-good" onclick="selGood()">
+      <div class="wb-good-icon">😊</div>
+      <div><div class="wb-good-text">All good — smooth mission!</div><div class="wb-good-sub">No issues, everything fine</div></div>
+    </div>
+    <div class="wb-rep" id="wb-rep" onclick="selRep()">
+      <div style="font-size:22px;">😢</div>
+      <div><div class="wb-rep-text">I have something to tell you</div><div class="wb-rep-sub">Something made me uncomfortable today</div></div>
+    </div>
+    <div class="wb-qcm" id="wb-qcm">
+      <!-- Step 0 — who -->
+      <div class="wb-step active" id="wb-s0">
+        <div class="wb-q">Who made you feel this way?</div>
+        <div class="wb-cats">
+          <button class="wb-cat" onclick="wbN(1,'guest')">A guest</button>
+          <button class="wb-cat" onclick="wbN(1,'owner')">The owner</button>
+          <button class="wb-cat" onclick="wbN(1,'colleague')">A colleague</button>
+          <button class="wb-cat" onclick="wbN(1,'manager')">The manager</button>
+          <button class="wb-cat" onclick="wbN(1,'other')">Other</button>
+        </div>
+      </div>
+      <!-- Step 1 — what -->
+      <div class="wb-step" id="wb-s1">
+        <button class="wb-back" onclick="wbB(0)">← Back</button>
+        <div class="wb-q" id="wb-q1">What happened?</div>
+        <div class="wb-opts" id="wb-o1"></div>
+      </div>
+      <!-- Step 2 — severity -->
+      <div class="wb-step" id="wb-s2">
+        <button class="wb-back" onclick="wbB(1)">← Back</button>
+        <div class="wb-q">How serious was it?</div>
+        <div class="wb-severity">
+          <div class="wb-sev mild" onclick="wbSeverity('mild')">😕<br><span style="font-size:10px;">Minor</span></div>
+          <div class="wb-sev medium" onclick="wbSeverity('medium')">😟<br><span style="font-size:10px;">Medium</span></div>
+          <div class="wb-sev serious" onclick="wbSeverity('serious')">😰<br><span style="font-size:10px;">Serious</span></div>
+        </div>
+      </div>
+      <!-- Step 3 — rating + text -->
+      <div class="wb-step" id="wb-s3">
+        <button class="wb-back" onclick="wbB(2)">← Back</button>
+        <div class="wb-q">How are you feeling now?</div>
+        <div class="stars">
+          <span class="star" onclick="setStar(1)">⭐</span>
+          <span class="star" onclick="setStar(2)">⭐</span>
+          <span class="star" onclick="setStar(3)">⭐</span>
+          <span class="star" onclick="setStar(4)">⭐</span>
+          <span class="star" onclick="setStar(5)">⭐</span>
+        </div>
+        <textarea class="wb-textarea" id="wb-text" placeholder="Tell us in your own words (optional)..." style="display:block;"></textarea>
+        <button class="wb-send" onclick="sendWbReport()">Send report to manager 🙏</button>
+      </div>
+      <!-- Step 4 — confirm -->
+      <div class="wb-step" id="wb-s4">
+        <div class="wb-confirm">
+          <div class="wb-confirm-icon">💚</div>
+          <div class="wb-confirm-text">Thank you for telling us, Wayan.</div>
+          <div class="wb-confirm-sub">Your manager has been notified. You're not alone — we're here for you. Take care of yourself. 🌿</div>
+        </div>
+        <div id="wb-red-alert-msg">🚨 This has been flagged as serious. Your manager will contact you directly today. You did the right thing by telling us.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-area fi" style="transition-delay:.20s">
+    <button class="submit-btn" onclick="doSubmit()">
+      🌿 Mission complete — send report
+    </button>
+    <div class="submit-note">Before/after photos + checklist sent automatically to manager & owner</div>
+  </div>
+
+</div><!-- end mbody -->
+
+<script>
+// ── STATE ──
+const S = {
+  accepted:false, start:null, steps:new Set(), photos:0,
+  baseOk:false, missing:{}, rexTimer:null,
+  wbSource:null, wbSeverity:null, wbRating:0,
+  avatarSrc:null,
+  lang:localStorage.getItem('bali_lang')||'ID'
+};
+const LANGS=['ID','BALI','EN'];
+
+// WELLBEING options
+const WB_OPTS = {
+  guest:['Disrespectful attitude','Inappropriate request','Shouting or aggression','Refused to let me work','Other'],
+  owner:['Unclear instructions','Late payment','Disrespectful','Unreasonable demands','Other'],
+  colleague:['Did not show up','Left work incomplete','Argument','Rude behaviour','Other'],
+  manager:['Unclear instructions','Too much pressure','Disrespectful','Unfair treatment','Other'],
+  other:['Personal safety concern','Accident or injury','Health issue','Exhaustion','Other']
+};
+
+const PRICES = {pupuk:25000, tanah:18000, pest:32000};
+const NAMES  = {pupuk:'Pupuk kompos', tanah:'Tanah pot', pest:'Pestisida spray'};
+
+// GARDEN CHECKLIST state
+const gcDone = {};
+
+// ── LANG ──
+function cycleLang() {
+  const i = LANGS.indexOf(S.lang);
+  S.lang = LANGS[(i+1)%LANGS.length];
+  localStorage.setItem('bali_lang', S.lang);
+  document.getElementById('lang-cur').textContent = S.lang;
+  updateGreeting();
+}
+function updateGreeting() {
+  const h = new Date().getHours();
+  const greet = h<12 ? {ID:'Selamat pagi',BALI:'Rahajeng semeng',EN:'Good morning'} :
+                h<17 ? {ID:'Selamat siang',BALI:'Rahajeng tengai',EN:'Good afternoon'} :
+                       {ID:'Selamat sore',BALI:'Rahajeng sanja',EN:'Good evening'};
+  const taglines = {
+    ID:'Tanaman yang sehat membuat tamu merasa di surga.<br>Hari ini kamu yang buat perbedaan.',
+    BALI:'Tukad sane becik ngawinang tamiu seneng ring swarga.<br>Nenten wenten sane pateh kadi gawen ragane mangkin.',
+    EN:'A beautiful garden tells guests someone cares.<br>Today, that someone is you.'
+  };
+  document.getElementById('hero-greeting').innerHTML = `${greet[S.lang]}, <em id="greeted-name">Wayan</em> 🌱`;
+  document.getElementById('hero-tagline').innerHTML = taglines[S.lang];
+}
+
+// ── AVATAR — pyramidal upload ──
+function changeAvatar(input) {
+  const file = input.files[0]; if(!file) return;
+  const r = new FileReader();
+  r.onload = e => {
+    S.avatarSrc = e.target.result;
+    // Hero avatar
+    const img = document.getElementById('gardener-avatar-img');
+    const emoji = document.getElementById('gardener-avatar-emoji');
+    img.src = S.avatarSrc; img.style.display='block'; emoji.style.display='none';
+    // Topbar (si ajout futur)
+    // Clock center
+    const clockImg = document.getElementById('clock-avatar-img');
+    const clockEmoji = document.getElementById('clock-center-emoji');
+    if(clockImg && clockEmoji) {
+      clockImg.src = S.avatarSrc; clockImg.style.display='block'; clockEmoji.style.display='none';
+    }
+    // localStorage pour pyramide — manager peut voir
+    try { localStorage.setItem('gardener_avatar', S.avatarSrc); } catch(e){}
+    if('vibrate' in navigator) navigator.vibrate(40);
+  };
+  r.readAsDataURL(file); input.value='';
+}
+// Restore avatar on load
+window.addEventListener('DOMContentLoaded', () => {
+  try {
+    const saved = localStorage.getItem('gardener_avatar');
+    if(saved) {
+      S.avatarSrc = saved;
+      const img = document.getElementById('gardener-avatar-img');
+      const emoji = document.getElementById('gardener-avatar-emoji');
+      img.src=saved; img.style.display='block'; emoji.style.display='none';
+    }
+  } catch(e){}
+  S.lang = localStorage.getItem('bali_lang')||'ID';
+  document.getElementById('lang-cur').textContent = S.lang;
+  updateGreeting();
+  // Manager link param
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('manager')) {
+    document.getElementById('back-btn').href = 'manager.html?manager='+params.get('manager');
+  }
+});
+
+// ── PASS MODAL ──
+let passReason=null, passTime=null;
+function openPassModal() { document.getElementById('pass-modal').style.display='flex'; }
+function closePassModal() { document.getElementById('pass-modal').style.display='none'; }
+function selectPassReason(el, reason) {
+  passReason=reason;
+  document.querySelectorAll('.pass-reason-opt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('pass-step-2').style.display='block';
+  document.getElementById('pass-confirm-btn').style.display='none';
+}
+function selectPassTime(el, time) {
+  passTime=time;
+  document.querySelectorAll('.pass-time-opt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('pass-confirm-btn').style.display='block';
+}
+function confirmPass() {
+  document.getElementById('pass-modal').style.display='none';
+  const heroCard = document.querySelector('.mission-card');
+  const actions = document.querySelector('.mission-actions');
+  const timeMsg = passTime==='tomorrow'?' Sofia will think of you tomorrow morning.' :
+                  passTime&&passTime!=='unknown'?` Sofia will ping you again in ~${passTime}.` :
+                  ' Just let us know when you\'re free.';
+  heroCard.innerHTML=`<div style="text-align:center;padding:14px 0;">
+    <div style="font-size:44px;margin-bottom:12px;">🙏</div>
+    <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:8px;">No worries, Wayan.</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.75;">Sofia is already finding someone else.${timeMsg}<br><br>Take care of yourself. See you soon. 🌿</div>
+  </div>`;
+  actions.style.display='none';
+  document.getElementById('accept-sub').style.display='none';
+}
+
+// ── ACCEPT ──
+function acceptMission() {
+  if(S.accepted) return;
+  S.accepted=true; S.start=Date.now();
+  const btn=document.getElementById('accept-btn');
+  btn.classList.add('on'); btn.innerHTML='✅ Mission accepted'; btn.onclick=null;
+  document.getElementById('accept-sub').style.display='none';
+  setTimeout(()=>{
+    document.getElementById('mbody').classList.add('show');
+    document.getElementById('mbody').scrollIntoView({behavior:'smooth',block:'start'});
+    const obs=new IntersectionObserver(ee=>ee.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v');}),{threshold:.05});
+    document.querySelectorAll('.mbody .fi').forEach(el=>obs.observe(el));
+    drawOrbit();
+  },400);
+  if('vibrate' in navigator) navigator.vibrate([60,30,60]);
+}
+
+// ── BASE TOOLS ──
+function toggleBase() {
+  S.baseOk=!S.baseOk;
+  document.getElementById('base-tools').classList.toggle('on',S.baseOk);
+  document.getElementById('base-check').textContent=S.baseOk?'✓':'○';
+  document.getElementById('base-title').textContent=S.baseOk?'All garden tools ✓':'I have all my garden tools';
+  if('vibrate' in navigator) navigator.vibrate(30);
+}
+
+// ── XENDIT — ADVANCE + REIMBURSEMENT ──
+function requestAdvance(){
+  var btn=document.getElementById('btn-advance');
+  if(btn.classList.contains('sent'))return;
+  btn.classList.add('sent');
+  btn.innerHTML='⏳ Rex sedang proses transfer...';
+  setTimeout(function(){
+    btn.innerHTML='✅ Transfer dikirim ke rekening kamu — cek HP';
+    if('vibrate' in navigator)navigator.vibrate([60,30,60]);
+  },2000);
+}
+function openReimb(){
+  var area=document.getElementById('reimb-area');
+  area.classList.toggle('show');
+}
+function reimbPhoto(input){
+  if(!input.files[0])return;
+  var r=new FileReader();
+  r.onload=function(e){
+    var thumb=document.getElementById('reimb-thumb');
+    thumb.src=e.target.result;thumb.style.display='block';
+    document.getElementById('reimb-confirm-btn').classList.add('show');
+  };
+  r.readAsDataURL(input.files[0]);
+}
+function confirmReimb(){
+  var btn=document.getElementById('reimb-confirm-btn');
+  btn.textContent='⏳ Rex sedang review...';btn.style.background='var(--muted)';btn.onclick=null;
+  setTimeout(function(){
+    btn.textContent='✅ Penggantian disetujui — akan ditransfer hari ini';
+    btn.style.background='var(--green)';
+    document.getElementById('btn-reimb').classList.add('sent');
+    document.getElementById('btn-reimb').innerHTML='✅ Penggantian biaya dikirim';
+    if('vibrate' in navigator)navigator.vibrate([60,30,60]);
+  },2000);
+}
+
+// ── GARDEN CHECKLIST ──
+function toggleGC(id) {
+  gcDone[id]=!gcDone[id];
+  const chk=document.getElementById(id+'-chk');
+  const item=document.getElementById(id);
+  if(gcDone[id]){
+    chk.textContent='✓'; chk.style.background='var(--green)'; chk.style.borderColor='var(--green)'; chk.style.color='#fff';
+    item.style.opacity='0.55';
+  } else {
+    chk.textContent='○'; chk.style.background='rgba(255,255,255,0.06)'; chk.style.borderColor='rgba(255,255,255,0.25)'; chk.style.color='';
+    item.style.opacity='1';
+  }
+  if('vibrate' in navigator) navigator.vibrate(20);
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('#garden-checklist .garden-check-item').forEach(el=>{
+    el.style.cssText='display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:opacity .2s;';
+  });
+});
+
+// ── YN MISSION TOOLS ──
+function ynPick(btn,val,item) {
+  const row=btn.closest('.mt-yn');
+  const already=btn.classList.contains(val);
+  row.querySelectorAll('.yn').forEach(b=>b.classList.remove('yes','no'));
+  if(!already){
+    btn.classList.add(val);
+    if(val==='no') S.missing[item]=true; else delete S.missing[item];
+  } else { delete S.missing[item]; }
+  updateBuyBox();
+}
+function updateBuyBox() {
+  const keys=Object.keys(S.missing);
+  const box=document.getElementById('buy-box');
+  if(!keys.length){box.classList.remove('show');return;}
+  box.classList.add('show');
+  document.getElementById('mission-tools').classList.add('has-missing');
+  document.getElementById('shop-step').style.display='flex';
+  let total=0,html='';
+  keys.forEach(k=>{
+    const p=PRICES[k]||0; total+=p;
+    html+=`<div class="bb-item"><div class="bb-chk" onclick="this.classList.toggle('on')">✓</div><div class="bb-item-name">${NAMES[k]||k}</div><div class="bb-item-price">Rp ${p.toLocaleString('id-ID')}</div></div>`;
+  });
+  document.getElementById('bb-items').innerHTML=html;
+  document.getElementById('bb-total').textContent='Rp '+total.toLocaleString('id-ID');
+  const rex=document.getElementById('rex-box');
+  if(total>=75000){
+    rex.classList.add('show');
+    if(!S.rexTimer){
+      S.rexTimer=setTimeout(()=>{
+        const st=document.getElementById('rex-status');
+        st.className='rex-status conf';
+        st.innerHTML='✅ Transfer dikonfirmasi — Rp '+total.toLocaleString('id-ID')+' sudah dikirim. Kamu bisa bayar sekarang.';
+      },4000);
+    }
+  } else {
+    rex.classList.remove('show');
+    if(S.rexTimer){clearTimeout(S.rexTimer);S.rexTimer=null;}
+  }
+}
+
+// ── PHOTOS ──
+function addPhoto(input,id) {
+  Array.from(input.files).forEach(file=>{
+    const r=new FileReader();r.onload=e=>{
+      const el=document.createElement('div');el.className='pm';
+      el.innerHTML=`<img src="${e.target.result}"><div class="pm-rm" onclick="this.parentElement.remove();S.photos=Math.max(0,S.photos-1)">✕</div>`;
+      document.getElementById(id).appendChild(el);S.photos++;
+    };r.readAsDataURL(file);
+  });input.value='';
+}
+function setSlotPhoto(input,slotId,stepId,numId,badgeId) {
+  const file=input.files[0];if(!file)return;
+  const r=new FileReader();r.onload=e=>{
+    const slot=document.getElementById(slotId);
+    slot.classList.add('has-photo');slot.innerHTML=`<img src="${e.target.result}">`;
+    S.photos++;S.steps.add(stepId);
+    document.getElementById(numId).textContent='✓';
+    document.getElementById(badgeId).textContent='✓ Done';
+    document.getElementById(stepId).classList.add('done');
+    if(stepId==='step3'){
+      const g=document.getElementById('goodbye');g.style.display='block';
+      g.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+    if('vibrate' in navigator)navigator.vibrate(40);
+  };r.readAsDataURL(file);input.value='';
+}
+function setL4Photo(input) {
+  const file=input.files[0];if(!file)return;
+  const r=new FileReader();r.onload=e=>{
+    const slot=document.getElementById('photo-l4');
+    slot.classList.add('has-photo');slot.innerHTML=`<img src="${e.target.result}">`;
+    S.photos++;
+    if('vibrate' in navigator)navigator.vibrate(40);
+  };r.readAsDataURL(file);input.value='';
+}
+
+// ── STEPS ──
+function toggleSb(id){document.getElementById(id+'-body').classList.toggle('open');}
+function markStep(stepId,numId,badgeId){
+  document.getElementById(stepId).classList.add('done');
+  document.getElementById(numId).textContent='✓';
+  document.getElementById(badgeId).textContent='✓ Done';
+  S.steps.add(stepId);
+  if('vibrate' in navigator)navigator.vibrate(40);
+}
+
+// ── DOORBELL ──
+function sofiaCall(){document.getElementById('doorbell-msg').classList.add('show');if('vibrate' in navigator)navigator.vibrate([30,20,30]);}
+
+// ── MID-SHOP ──
+function toggleMidshop(){
+  document.querySelectorAll('.yn').forEach(b=>b.classList.remove('yes','no'));
+  S.missing={};document.getElementById('buy-box').classList.remove('show');
+  document.getElementById('midshop').classList.toggle('show');
+}
+function confirmMidshop(){
+  alert('✨ Sofia: Got it Wayan — I\'ll let the manager know you\'ll be back in ~15 min. Take your time 🙏');
+  document.getElementById('midshop').classList.remove('show');
+}
+
+// ── L4 ──
+function showL4(){
+  document.querySelectorAll('.yn').forEach(b=>b.classList.remove('yes','no'));
+  S.missing={};document.getElementById('buy-box').classList.remove('show');
+  document.getElementById('l4-section').classList.toggle('show');
+}
+
+// ── WELLBEING ──
+function selGood(){document.getElementById('wb-good').classList.toggle('on');document.getElementById('wb-rep').classList.remove('on');document.getElementById('wb-qcm').classList.remove('show');}
+function selRep(){
+  document.getElementById('wb-rep').classList.toggle('on');
+  document.getElementById('wb-good').classList.remove('on');
+  document.getElementById('wb-qcm').classList.toggle('show',document.getElementById('wb-rep').classList.contains('on'));
+  document.querySelectorAll('.wb-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('wb-s0').classList.add('active');
+}
+function wbN(step,source){
+  if(source) S.wbSource=source;
+  document.querySelectorAll('.wb-step').forEach(s=>s.classList.remove('active'));
+  if(step===1){
+    const opts=WB_OPTS[source]||WB_OPTS.other;
+    document.getElementById('wb-q1').textContent='What happened? (tap all that apply)';
+    const cont=document.getElementById('wb-o1');cont.innerHTML='';
+    opts.forEach(o=>{
+      const isOther=o==='Other';
+      const d=document.createElement('div');d.className='wb-opt';
+      d.innerHTML=`<div class="wb-opt-icon">${isOther?'✏️':'•'}</div><span>${o}</span>`;
+      d.onclick=()=>{
+        d.classList.toggle('sel');
+        if(isOther){
+          let ta=cont.querySelector('.wb-other-ta');
+          if(!ta){ta=document.createElement('textarea');ta.className='wb-textarea wb-other-ta';ta.placeholder='Tell us in your own words...';ta.style.marginTop='8px';cont.insertBefore(ta,cont.querySelector('.wb-next-btn'));}
+          ta.style.display=d.classList.contains('sel')?'block':'none';
+        }
+      };
+      cont.appendChild(d);
+    });
+    const nb=document.createElement('button');
+    nb.className='wb-next-btn';nb.textContent='Continue →';
+    nb.onclick=()=>wbN(2);cont.appendChild(nb);
+    document.getElementById('wb-s1').classList.add('active');
+  } else {
+    document.getElementById('wb-s'+step).classList.add('active');
+  }
+}
+function wbB(s){document.querySelectorAll('.wb-step').forEach(x=>x.classList.remove('active'));document.getElementById('wb-s'+s).classList.add('active');}
+function setStar(n){S.wbRating=n;document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('on',i<n));}
+function wbSeverity(level){S.wbSeverity=level;wbN(3);}
+function sendWbReport(){
+  document.querySelectorAll('.wb-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('wb-s4').classList.add('active');
+  if(S.wbSeverity==='serious')document.getElementById('wb-red-alert-msg').style.display='block';
+  if('vibrate' in navigator)navigator.vibrate([60,30,60]);
+}
+
+// ── SUBMIT — reversible ──
+function doSubmit(){
+  const mins=Math.round((Date.now()-S.start)/60000);
+  const h=Math.floor(mins/60),m=mins%60;
+  document.getElementById('s-time').textContent=h>0?`${h}h${m}m`:`${mins}m`;
+  document.getElementById('s-steps').textContent=S.steps.size;
+  document.getElementById('s-photos').textContent=S.photos;
+  document.getElementById('mbody').style.display='none';
+  document.querySelector('.hero').style.display='none';
+  document.getElementById('success').classList.add('show');
+  window.scrollTo(0,0);
+  if('vibrate' in navigator)navigator.vibrate([80,40,80,40,120]);
+}
+function undoSubmit(){
+  document.getElementById('success').classList.remove('show');
+  document.getElementById('mbody').style.display='block';
+  document.querySelector('.hero').style.display='block';
+  window.scrollTo(0,document.getElementById('mbody').offsetTop-60);
+}
+
+// ── ORBIT CLOCK — PNG logos ──
+var CREW_G=[
+  {key:'gardener', label:'Gardener', big:true,  color:'rgba(39,174,96,.9)',  fb:'🌿'},
+  {key:'cleaner',  label:'Cleaner',  big:false, color:'rgba(212,116,154,.8)',fb:'🧹'},
+  {key:'poolman',  label:'Pool',     big:false, color:'rgba(41,128,185,.8)', fb:'🌊'},
+  {key:'driver',   label:'Driver',   big:false, color:'rgba(93,173,226,.8)', fb:'🚗'},
+  {key:'tukang',   label:'Tukang',   big:false, color:'rgba(230,126,34,.8)', fb:'🔧'},
+  {key:'massage',  label:'Massage',  big:false, color:'rgba(212,116,154,.7)',fb:'💆'},
+  {key:'cooker',   label:'Cooker',   big:false, color:'rgba(201,168,76,.8)', fb:'👨‍🍳'},
+  {key:'internet', label:'Internet', big:false, color:'rgba(0,166,147,.8)',  fb:'📶'}
+];
+var LOGOS_G={
+  gardener:'garrdener_logo_1_340.png',
+  cleaner:'clener_girl_logo_2__340.png',
+  poolman:'pool_man_logo_1_340.png',
+  driver:'driver_logo_1_340.png',
+  tukang:'worker_handy_man_logo_1_340.png',
+  massage:'massage_girl_logo_1_340.png',
+  cooker:'cooker_logo_1_340.png',
+  internet:'internet_man_logo_1_340.png'
+};
+var IMGS_G={};
+function preloadG(cb){
+  var n=0,total=CREW_G.length;
+  CREW_G.forEach(function(c){
+    var img=new Image();
+    img.onload=img.onerror=function(){
+      IMGS_G[c.key]=(img.complete&&img.naturalWidth>0)?img:null;
+      n++;if(n===total&&cb)cb();
+    };
+    img.src=LOGOS_G[c.key];
+  });
+}
+function drawOrbit(){
+  const canvas=document.getElementById('orbitCanvas');if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const DPR=window.devicePixelRatio||1;
+  canvas.width=280*DPR;canvas.height=280*DPR;canvas.style.width='280px';canvas.style.height='280px';
+  ctx.scale(DPR,DPR);
+  const CX=140,CY=140,R_ORB=100,R_SEC=120,R_MIN=Math.round(R_SEC*0.9),R_HR=Math.round(R_SEC*0.5),R_OUT=130;
+  // preload avatar for clock center
+  let avatarReady=false,avatarImage=null;
+  if(S.avatarSrc){
+    avatarImage=new Image();
+    avatarImage.onload=()=>{avatarReady=true;};
+    avatarImage.src=S.avatarSrc;
+  }
+  function frame(){
+    const now=new Date(),ms=now.getMilliseconds();
+    const sec=now.getSeconds()+ms/1000,min=now.getMinutes()+sec/60,hr=(now.getHours()%12)+min/60;
+    ctx.clearRect(0,0,280,280);
+    // rings
+    ctx.beginPath();ctx.arc(CX,CY,R_ORB,0,Math.PI*2);ctx.strokeStyle='rgba(39,174,96,0.12)';ctx.lineWidth=1;ctx.setLineDash([3,8]);ctx.stroke();ctx.setLineDash([]);
+    ctx.beginPath();ctx.arc(CX,CY,R_OUT,0,Math.PI*2);ctx.strokeStyle='rgba(201,168,76,0.10)';ctx.lineWidth=1;ctx.stroke();
+    // ticks
+    for(var i=0;i<12;i++){var a=(i/12)*Math.PI*2-Math.PI/2,tl=i%3===0?9:4;ctx.beginPath();ctx.moveTo(CX+Math.cos(a)*(R_OUT-1),CY+Math.sin(a)*(R_OUT-1));ctx.lineTo(CX+Math.cos(a)*(R_OUT-1-tl),CY+Math.sin(a)*(R_OUT-1-tl));ctx.strokeStyle=i%3===0?'rgba(201,168,76,0.4)':'rgba(201,168,76,0.12)';ctx.lineWidth=i%3===0?1.5:1;ctx.stroke();}
+    // hands
+    ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+Math.cos((hr/12)*Math.PI*2-Math.PI/2)*R_HR,CY+Math.sin((hr/12)*Math.PI*2-Math.PI/2)*R_HR);ctx.strokeStyle='rgba(232,220,200,.95)';ctx.lineWidth=3;ctx.lineCap='round';ctx.stroke();
+    ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+Math.cos((min/60)*Math.PI*2-Math.PI/2)*R_MIN,CY+Math.sin((min/60)*Math.PI*2-Math.PI/2)*R_MIN);ctx.strokeStyle='rgba(232,220,200,.75)';ctx.lineWidth=1.8;ctx.lineCap='round';ctx.stroke();
+    ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+Math.cos((sec/60)*Math.PI*2-Math.PI/2)*R_SEC,CY+Math.sin((sec/60)*Math.PI*2-Math.PI/2)*R_SEC);ctx.strokeStyle='rgba(39,174,96,.95)';ctx.lineWidth=1;ctx.lineCap='round';ctx.stroke();
+    ctx.beginPath();ctx.arc(CX,CY,3.5,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,.9)';ctx.fill();
+    // center avatar
+    if(avatarReady&&avatarImage){
+      ctx.save();ctx.beginPath();ctx.arc(CX,CY,34,0,Math.PI*2);ctx.clip();
+      ctx.drawImage(avatarImage,CX-34,CY-34,68,68);ctx.restore();
+      ctx.beginPath();ctx.arc(CX,CY,34,0,Math.PI*2);ctx.strokeStyle='rgba(39,174,96,0.5)';ctx.lineWidth=2;ctx.stroke();
+    }
+    // crew PNG bubbles
+    const t=Date.now()/1000,step=Math.PI*2/CREW_G.length,drift=-(sec/60)*Math.PI*2*0.5;
+    CREW_G.forEach(function(c,i){
+      const angle=i*step+drift,x=CX+Math.cos(angle)*R_ORB,y=CY+Math.sin(angle)*R_ORB;
+      const bubR=c.big?22:14;
+      if(c.big){var g=ctx.createRadialGradient(x,y,0,x,y,bubR+8);g.addColorStop(0,'rgba(39,174,96,0.2)');g.addColorStop(1,'transparent');ctx.beginPath();ctx.arc(x,y,bubR+8,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();}
+      ctx.beginPath();ctx.arc(x,y,bubR,0,Math.PI*2);ctx.fillStyle=c.big?'rgba(15,40,20,.95)':'rgba(240,248,242,.92)';ctx.fill();
+      ctx.strokeStyle=c.color;ctx.lineWidth=c.big?2:1.5;ctx.stroke();
+      var img=IMGS_G[c.key];
+      if(img){ctx.save();ctx.beginPath();ctx.arc(x,y,bubR-2,0,Math.PI*2);ctx.clip();ctx.drawImage(img,x-(bubR-2),y-(bubR-2),(bubR-2)*2,(bubR-2)*2);ctx.restore();}
+      else{ctx.font=(c.big?14:10)+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle=c.big?'#fff':'#333';ctx.fillText(c.fb,x,y);}
+      ctx.font=(c.big?9:7)+'px Nunito,sans-serif';ctx.textAlign='center';ctx.textBaseline='top';
+      ctx.fillStyle=c.big?'rgba(39,174,96,.9)':'rgba(40,60,40,.5)';ctx.fillText(c.label,x,y+bubR+3);
+    });
+    requestAnimationFrame(frame);
+  }
+  preloadG(null);frame();
+}
+
+// ── INTERSECTION OBSERVER ──
+const obs=new IntersectionObserver(ee=>ee.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v');}),{threshold:.05});
+document.querySelectorAll('.fi').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard — Hidden Keys</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+:root{
+  --gold:#8B6914;--gold-light:#C9A84C;
+  --cream:#F5F0E8;--cream2:#EDE8DC;
+  --border:rgba(139,105,20,0.18);
+  --text:#1A1208;--muted:#6B5B3E;
+  --green:#2ECC71;--green-d:#1A7A3C;
+  --blue:#3498DB;--blue-d:#1A5A8A;
+  --violet:#6B2D8B;--orange:#B7590A;
+  --red:#CD5C5C;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cream);color:var(--text);font-family:"DM Mono",monospace;min-height:100vh;}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px;background:var(--cream2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;}
+.topbar-left{display:flex;align-items:center;gap:14px;}
+.hk-logo{width:34px;height:34px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:"Playfair Display",serif;font-size:11px;font-weight:700;color:var(--cream);cursor:pointer;}
+.t-sep{width:1px;height:18px;background:var(--border);}
+.topbar-title{font-family:"Playfair Display",serif;font-size:19px;font-weight:700;}
+.topbar-center{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;position:absolute;left:50%;transform:translateX(-50%);}
+.proprio-bubble{width:38px;height:38px;border-radius:50%;border:2px solid var(--gold);overflow:hidden;background:var(--cream2);}
+.proprio-name{font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
+
+/* PAGE */
+.page{max-width:1440px;margin:0 auto;padding:20px 24px 80px;}
+.section-title{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:12px;font-weight:800;}
+.section-title::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);}
+/* ====== TABS CLIENT ====== */
+.client-tabs-bar{display:flex;align-items:stretch;background:var(--cream2);border-bottom:2px solid var(--border);position:sticky;top:58px;z-index:190;padding:0 24px;}
+.client-tab-btn{padding:0 24px;height:50px;background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;font-family:"DM Mono",monospace;font-size:13px;font-weight:800;color:var(--muted);letter-spacing:2px;text-transform:uppercase;transition:color .15s,border-color .15s;white-space:nowrap;margin-bottom:-2px;}
+.client-tab-btn:hover{color:var(--text);}
+.client-tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(139,105,20,.04);}
+.client-tab-pane{display:none;}
+.client-tab-pane.active{display:block;}
+.settings-link-card{display:flex;align-items:center;gap:16px;padding:18px 22px;background:var(--cream2);border:1.5px solid var(--border);border-radius:12px;cursor:pointer;transition:all .18s;text-decoration:none;color:var(--text);margin-bottom:10px;}
+.settings-link-card:hover{border-color:var(--gold);background:rgba(139,105,20,.05);}
+.settings-link-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.settings-link-title{font-family:"Playfair Display",serif;font-size:17px;font-weight:700;}
+.settings-link-sub{font-size:13px;color:var(--muted);margin-top:2px;font-weight:600;}
+.settings-link-arrow{margin-left:auto;font-size:16px;color:var(--muted);}
+
+.block-wrap{margin-bottom:36px;}
+.fade-in{opacity:0;transform:translateY(8px);transition:opacity .4s ease,transform .4s ease;}
+.fade-in.visible{opacity:1;transform:none;}
+
+/* ═══ VUE ENSEMBLE — 3 colonnes égales, identique nav-block villa_light ═══ */
+.vue-ensemble{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;background:var(--cream);border-radius:10px;border:1px solid var(--border);overflow:hidden;margin-bottom:28px;min-height:320px;}
+.ve-col{display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ve-col-alerts{padding:16px 14px;background:var(--cream2);border-right:1px solid var(--border);justify-content:flex-start;overflow-y:auto;align-items:stretch;max-height:320px;}
+.ve-col-orbit{padding:10px 0;}
+.ve-col-map{padding:0;background:var(--cream);border-left:1px solid var(--border);}
+.ve-map-inner{width:100%;height:100%;}
+#client-map{width:100%;height:100%;min-height:300px;}
+.ve-head{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:6px;font-weight:800;}
+.ve-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.alert-item{padding:9px 12px;border-radius:7px;font-size:12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;cursor:pointer;transition:background .15s;border-left:3px solid transparent;}
+.alert-item:hover{filter:brightness(.97);}
+.a-red{background:rgba(192,57,43,.09);border-left-color:#C0392B;color:#5D1A14;}
+.a-orange{background:rgba(183,89,10,.09);border-left-color:#E67E22;color:#5D3208;}
+.a-green{background:rgba(26,122,60,.07);border-left-color:var(--green-d);color:var(--green-d);opacity:.8;}
+.a-done{background:rgba(26,122,60,.05);border-left-color:rgba(26,122,60,.3);color:var(--muted);font-size:11px;}
+.a-villa{font-size:10px;color:var(--muted);white-space:nowrap;flex-shrink:0;}
+.alert-badge{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;color:white;flex-shrink:0;}
+.badge-red{background:#C0392B;}
+.badge-orange{background:#E67E22;}
+.all-green{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:6px;color:var(--green-d);}
+.ag-icon{font-size:28px;}
+.ag-label{font-size:10px;letter-spacing:1px;color:var(--green-d);}
+#orbit-canvas{display:block;margin:0 auto;}
+.orbit-legend-mini{padding:8px 12px;border-top:1px solid var(--border);width:100%;font-size:9px;color:var(--muted);line-height:2;}
+
+/* ═══ VILLA BLOCKS ═══ */
+.villa-block{display:flex;align-items:stretch;margin-bottom:8px;border-radius:8px;overflow:hidden;cursor:pointer;transition:box-shadow .2s;}
+.villa-block:hover{box-shadow:0 3px 14px rgba(0,0,0,.1);}
+.villa-block.st-green{border:1.5px solid var(--green);}
+.villa-block.st-orange{border:1.5px solid #F39C12;}
+.villa-block.st-red{border:1.5px solid #E74C3C;}
+.vb-photo{width:90px;flex-shrink:0;background-size:cover;background-position:center;background-color:var(--cream2);}
+.vb-info{width:180px;flex-shrink:0;background:var(--cream2);border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:space-evenly;padding:10px 12px;overflow:hidden;}
+.vb-top{display:flex;align-items:flex-start;justify-content:space-between;gap:4px;}
+.vb-name{font-family:"Playfair Display",serif;font-size:16px;font-weight:800;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.vb-sub{font-size:13px;color:var(--muted);margin-top:2px;font-weight:700;}
+.vb-occ-block{text-align:right;flex-shrink:0;}
+.vb-occ-val{font-family:"Playfair Display",serif;font-size:22px;font-weight:700;color:var(--blue);line-height:1;}
+.vb-occ-lbl{font-size:8px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.vb-nums{display:flex;align-items:baseline;gap:6px;flex-wrap:nowrap;}
+.vb-net{font-family:"Playfair Display",serif;font-size:24px;font-weight:800;color:var(--green-d);line-height:1;white-space:nowrap;}
+.vb-adr{font-size:10px;color:var(--gold);font-family:"DM Mono",monospace;margin-top:2px;letter-spacing:.5px;}
+.vb-forecast{font-family:"Playfair Display",serif;font-size:17px;color:var(--blue);line-height:1;white-space:nowrap;}
+.vb-timeline{flex:1;display:flex;background:var(--cream2);padding:4px;gap:2px;min-width:0;align-items:flex-start;}
+.day-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+.day-cell{width:100%;aspect-ratio:1;border-radius:3px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+.day-dname{font-size:6px;font-weight:700;color:rgba(255,255,255,.85);text-shadow:0 1px 2px rgba(0,0,0,.4);line-height:1;text-transform:uppercase;}
+.day-num{font-size:9px;font-weight:700;color:rgba(255,255,255,.95);text-shadow:0 1px 2px rgba(0,0,0,.4);line-height:1;}
+.dc-done{background:#1A7A4A;}
+.dc-missed{background:#E88080;}
+.dc-booked{background:#2ECC71;border:1px solid rgba(26,122,74,.4);}
+.dc-available{background:#1A5276;border:1px solid rgba(26,82,118,.8);}
+.dc-lastmin{background:#7C3AED;}
+@keyframes blink-lm{0%,100%{opacity:1;}50%{opacity:.3;}}
+.blink-lm{animation:blink-lm 1.1s infinite;}
+@keyframes pulse-today{0%,100%{box-shadow:0 0 0 2px rgba(139,105,20,.9);}50%{box-shadow:0 0 0 4px rgba(139,105,20,.2);}}
+.dc-today{animation:pulse-today 1.6s infinite;z-index:5;}
+.vb-sep{color:var(--muted);font-size:14px;}
+.legend{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:10px;padding:10px 0;border-top:1px solid var(--border);}
+.leg-i{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);font-weight:700;}
+.leg-s{width:13px;height:13px;border-radius:3px;flex-shrink:0;}
+
+/* ═══ KPIs COLLAPSIBLE ═══ */
+.kpi-section{margin-bottom:28px;}
+.kpi-toggle{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;padding:10px 14px;background:var(--cream2);border:1px solid var(--border);border-radius:8px;transition:background .15s;}
+.kpi-toggle:hover{background:rgba(139,105,20,.08);}
+.kpi-toggle-icon{font-size:12px;transition:transform .2s;color:var(--muted);}
+.kpi-toggle-icon.open{transform:rotate(180deg);}
+.kpi-toggle-label{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:800;}
+.kpi-toggle-summary{flex:1;text-align:right;font-size:11px;color:var(--muted);}
+.kpi-body{overflow:hidden;transition:max-height .3s ease;max-height:0;}
+.kpi-body.open{max-height:200px;}
+.hero-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:12px;}
+.hero-kpi{background:var(--cream2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.hero-kpi-val{font-family:"Playfair Display",serif;font-size:26px;font-weight:800;line-height:1;}
+.hero-kpi-lbl{font-size:12px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px;font-weight:800;}
+.hero-kpi-sub{font-size:12px;color:var(--muted);margin-top:3px;font-weight:600;}
+
+/* ═══ LOADER ÉCRAN ═══ */
+#hk-loader{position:fixed;inset:0;background:var(--cream);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;z-index:9999;}
+.hk-loader-logo{width:64px;height:64px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:"Playfair Display",serif;font-size:22px;font-weight:700;color:var(--cream);}
+.hk-loader-title{font-family:"Playfair Display",serif;font-size:24px;color:var(--text);}
+.hk-loader-sub{font-size:11px;color:var(--muted);letter-spacing:1px;text-align:center;}
+.hk-loader-btn{background:var(--gold);color:var(--cream);border:none;padding:12px 24px;border-radius:8px;font-family:"DM Mono",monospace;font-size:12px;cursor:pointer;letter-spacing:1px;}
+.hk-loader-btn:hover{background:var(--gold-light);}
+.hk-loader-input{font-family:"DM Mono",monospace;font-size:11px;border:1px solid var(--border);background:var(--cream2);padding:8px 12px;border-radius:6px;width:320px;color:var(--text);}
+.hk-loader-or{font-size:10px;color:var(--muted);letter-spacing:2px;}
+</style>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   client.html — Dashboard owner — VERSION VIERGE
+   Les données viennent de hk-data.js (DOSSIER-CLIENT/ ou ?data=URL)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Variables vides — seront remplies par hk-data.js via HK_inject() ── */
+var HK_OWNER = null;
+var HK_VILLAS = [];
+var HK_BOOKINGS_DB = {};
+var HK_MONTHLY_COSTS = {};
+var HK_IMAGES = {};
+var HK_GMAP = {};
+var HK_SOFIA_ACTIVITIES = [];
+var JEAN_LUC = "";
+var GMAP = {};
+var SOFIA_ACTIVITIES = [];
+var GPS = {};
+
+/* Images — alias vides (hk-data.js les remplace via HK_inject) */
+function getImg(k){
+  if(!k) return "";
+  // Chemin direct (contient / ou .)
+  if(k.indexOf('/')>=0||k.indexOf('.')>=0) return k;
+  // Clé HK_IMAGES
+  if(typeof HK_IMAGES!=="undefined"&&HK_IMAGES&&HK_IMAGES[k]) return HK_IMAGES[k];
+  return window[k]||"";
+}
+function fmt(n){ return "$"+Math.round(n).toLocaleString("fr-FR").replace(/\s/g,"\u202f"); }
+function fmtK(n){ return n>=1000?"$"+Math.round(n/1000)+"k":"$"+Math.round(n); }
+
+/* ─── Chargement hk-data.js ──────────────────────────────────────── */
+function loadDataScript(src, cb){
+  window.HK_BASE = src.replace(/hk-data\.js([?#].*)?$/, '');
+  var s=document.createElement("script");
+  s.src=src;
+  s.onload=cb;
+  s.onerror=function(){ console.warn("hk-data.js introuvable :", src); };
+  document.head.appendChild(s);
+}
+
+var _DATA_URL = ""; // mémorise l'URL de hk-data.js pour la passer aux pages villa
+
+function tryAutoLoad(){
+  // 1. ?data=https://... → charger depuis URL
+  var params=new URLSearchParams(location.search);
+  var dataUrl=params.get("data");
+  if(dataUrl){
+    _DATA_URL = dataUrl;
+    loadDataScript(dataUrl, onDataLoaded);
+    return true;
+  }
+  // 2. Même dossier que la page : DOSSIER-DEMO-JEAN-LOUP/hk-data.js (chemin relatif)
+  var autoPath="DOSSIER-DEMO-JEAN-LOUP/hk-data.js";
+  window.HK_BASE = "DOSSIER-DEMO-JEAN-LOUP/"; // hk-data.js le resout lui-meme
+  var s=document.createElement("script");
+  s.src=autoPath;
+  s.onload=onDataLoaded;
+  s.onerror=function(){ showLoader(); };
+  document.head.appendChild(s);
+  return false;
+}
+
+function onDataLoaded(){
+  if(typeof HK_inject==="function") HK_inject();
+  /* Titre topbar */
+  var ownerName = (HK_OWNER && HK_OWNER.name) ? HK_OWNER.name.split(" ")[0]+" "+HK_OWNER.name.split(" ").slice(-1)[0] : "Portfolio";
+  var el=document.getElementById("topbar-name");
+  if(el) el.textContent=ownerName;
+  hideLoader();
+  initApp();
+}
+
+function showLoader(){
+  var lo=document.getElementById("hk-loader");
+  if(lo) lo.style.display="flex";
+}
+function hideLoader(){
+  var lo=document.getElementById("hk-loader");
+  if(lo) lo.style.display="none";
+}
+
+/* ─── Charger depuis un dossier local (showDirectoryPicker) ────────── */
+function loadFromFolder(){
+  if(!window.showDirectoryPicker){ alert("Votre navigateur ne supporte pas showDirectoryPicker. Utilisez Chrome/Edge."); return; }
+  window.showDirectoryPicker().then(function(dir){
+    return dir.getFileHandle("hk-data.js");
+  }).then(function(fh){
+    return fh.getFile();
+  }).then(function(file){
+    return file.text();
+  }).then(function(code){
+    try{
+      (new Function(code))();
+      onDataLoaded();
+    } catch(e){ alert("Erreur dans hk-data.js : "+e.message); }
+  }).catch(function(e){ console.warn("Dossier annulé ou hk-data.js absent", e); });
+}
+
+/* ─── Charger depuis une URL saisie ─────────────────────────────────── */
+function loadFromUrl(){
+  var u=document.getElementById("data-url-input");
+  if(!u||!u.value.trim()) return;
+  loadDataScript(u.value.trim(), onDataLoaded);
+}
+
+/* ═══ DATE ═══ */
+var _NOW=new Date();
+var TODAY_DAY=_NOW.getDate();
+var _DAY_NAMES=["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
+var firstDay=new Date(_NOW.getFullYear(),_NOW.getMonth(),1).getDay();
+var DAY_ABBR=(function(){var a=[];for(var i=0;i<31;i++)a.push(_DAY_NAMES[(firstDay+i)%7]);return a;})();
+
+/* ═══ VILLAS — tableau local, alimenté par HK_inject() ═══ */
+var VILLAS = [];
+
+/* ─── HK_inject() par défaut (surchargé par hk-data.js) ─────────────── */
+function HK_inject(){
+  /* Villas */
+  if(typeof HK_VILLAS !== "undefined" && HK_VILLAS.length){
+    VILLAS = HK_VILLAS.map(function(hv){
+      return {
+        id: hv.id,
+        name: hv.name,
+        loc: hv.location || "",
+        beds: hv.bedrooms || 1,
+        adr: hv.adr_per_night || 0,
+        adr_per_night: hv.adr_per_night || 0,
+        lm: hv.lm_price || Math.round((hv.adr_per_night||0)*0.7),
+        lm_price: hv.lm_price || Math.round((hv.adr_per_night||0)*0.7),
+        occ_prev: hv.occ_prev || 70,
+        lat: hv.lat || null,
+        lng: hv.lng || null,
+        img: hv.img || "",
+        imgVar: hv.img || "",
+        _isHotel: hv._isHotel || false,
+        net_year: 0, occ_year: 0,
+        stats: {net:0,forecast:0,occ:0,done:0,booked:0,days:[],guests:[]},
+        nets: []
+      };
+    });
+  }
+  /* Images owner */
+  if(typeof HK_IMAGES !== "undefined" && HK_IMAGES){
+    if(HK_IMAGES.owner) JEAN_LUC = HK_IMAGES.owner;
+    if(HK_IMAGES.owner_wolf) JEAN_LUC = HK_IMAGES.owner_wolf || HK_IMAGES.owner;
+  }
+  /* Agents */
+  if(typeof HK_GMAP !== "undefined" && HK_GMAP) GMAP = HK_GMAP;
+  /* GPS pour la map */
+  if(typeof HK_VILLAS !== "undefined"){
+    HK_VILLAS.forEach(function(hv){
+      if(hv.lat) GPS[hv.id] = {lat:hv.lat, lng:hv.lng};
+    });
+  }
+  /* Bookings */
+  if(typeof HK_BOOKINGS_DB !== "undefined"){
+    VILLAS.forEach(function(v){
+      if(!HK_BOOKINGS_DB[v.id]) return;
+      BOOKINGS_DB[v.id] = HK_BOOKINGS_DB[v.id];
+    });
+  }
+  /* Sofia activities */
+  if(typeof HK_SOFIA_ACTIVITIES !== "undefined" && HK_SOFIA_ACTIVITIES && HK_SOFIA_ACTIVITIES.length){
+    SOFIA_ACTIVITIES = HK_SOFIA_ACTIVITIES;
+  }
+}
+
+/* ═══ BOOKINGS_DB — rempli par HK_inject ═══ */
+var BOOKINGS_DB = {};
+
+/* ═══ buildDaysFromDB ═══ */
+function buildDaysFromDB(villa_id, year, month, n_days, isCurrent){
+  var key=year+"-"+(month<10?"0":"")+month;
+  var db=BOOKINGS_DB[villa_id]&&BOOKINGS_DB[villa_id][key];
+  if(!db) return {days:Array(n_days).fill("available"),guests:Array(n_days).fill(null)};
+  var days=[],guests=[];
+  for(var i=0;i<n_days;i++){
+    var dayN=i+1;
+    var gname=db.days[i]||null;
+    var gkey=db.keys&&db.keys[i]||null;
+    var st;
+    if(isCurrent){
+      st = dayN<=TODAY_DAY ? (gname?"done":"missed") : (gname?"booked":"available");
+    } else {
+      st = gname ? "done" : "missed";
+    }
+    days.push(st);
+    guests.push(gname?{name:gname,key:gkey}:null);
+  }
+  return{days:days,guests:guests};
+}
+
+/* ═══ calcMonthStats ═══ */
+function calcMonthStats(villa_id, adr){
+  var yr=_NOW.getFullYear(), mo=_NOW.getMonth()+1;
+  var n=new Date(yr,mo,0).getDate();
+  var data=buildDaysFromDB(villa_id,yr,mo,n,true);
+  var done=0,booked=0;
+  data.days.forEach(function(s){ if(s==="done")done++; else if(s==="booked")booked++; });
+  return{
+    net:done*adr,
+    forecast:done*adr+booked*adr+(n-done-booked)*adr,
+    occ:Math.round((done+booked)/n*100),
+    done:done, booked:booked,
+    days:data.days, guests:data.guests
+  };
+}
+
+/* ═══ INIT APP — appelé après chargement des données ═══ */
+function initApp(){
+  /* Enrichir VILLAS avec stats */
+  VILLAS.forEach(function(v){
+    if(v._isHotel){
+      var occ=0.68, done=0, booked=0, days=[];
+      for(var i=1;i<=30;i++){
+        var seed=((i*1103515245+12345)&0x7fffffff)/0x7fffffff;
+        var st;
+        if(i<=TODAY_DAY){ st=seed<occ?"done":"missed"; if(st==="done")done++; }
+        else { st=seed<occ?"booked":"available"; if(st==="booked")booked++; }
+        days.push(st);
+      }
+      v.stats={net:done*v.adr, forecast:(done+booked)*v.adr+(30-done-booked)*v.adr*occ,
+               occ:Math.round((done+booked)/30*100), done:done, booked:booked, days:days, guests:Array(30).fill(null)};
+    } else {
+      v.stats=calcMonthStats(v.id,v.adr);
+    }
+  });
+
+  /* Mettre à jour le titre section avec le mois courant */
+  var _MOIS=["Janv.","Févr.","Mars","Avr.","Mai","Juin","Juil.","Août","Sept.","Oct.","Nov.","Déc."];
+  var secTitle=document.querySelector(".section-title");
+  if(secTitle) secTitle.textContent="Vue ensemble · "+_MOIS[_NOW.getMonth()]+" "+_NOW.getFullYear();
+
+  /* Mettre à jour le compte des biens */
+  var nbVillas=VILLAS.filter(function(v){return!v._isHotel;}).length;
+  var nbHotels=VILLAS.filter(function(v){return v._isHotel;}).length;
+  var biensTitle=document.getElementById("biens-section-title");
+  if(biensTitle){
+    var parts=[];
+    if(nbVillas>0) parts.push(nbVillas+" villa"+(nbVillas>1?"s":""));
+    if(nbHotels>0) parts.push(nbHotels+" hôtel"+(nbHotels>1?"s":""));
+    biensTitle.textContent="Biens · "+(parts.length?parts.join(" + "):"aucun");
+  }
+
+  renderProprio();
+  renderAlerts();
+  renderHero();
+  renderVillaBlocks();
+  setTimeout(positionCursor, 80);
+  setTimeout(initOrbit, 350);
+  if(typeof L!=="undefined") initMap();
+  else{var s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js";s.onload=initMap;document.head.appendChild(s);}
+  setTimeout(function(){document.querySelectorAll(".fade-in").forEach(function(el){el.classList.add("visible");});},80);
+}
+
+/* ═══ RENDER VILLA BLOCKS ═══ */
+function renderVillaBlocks(){
+  var cont=document.getElementById("villa-blocks");
+  if(!cont)return;
+  if(!VILLAS.length){
+    cont.innerHTML="<div style='padding:40px;text-align:center;color:var(--muted);font-size:13px;'>Chargez hk-data.js pour afficher vos biens.</div>";
+    return;
+  }
+  var html="";
+  var n=_NOW.getDate();
+  VILLAS.forEach(function(v){
+    var s=v.stats;
+    var days=s.days;
+    var img=getImg(v.imgVar);
+    var bgStyle=img?"background-image:url("+img+");":"";
+    var tlHtml="";
+    var nDays=days.length||30;
+    for(var i=0;i<nDays;i++){
+      var st=days[i]||"available";
+      var dayN=i+1;
+      var isToday=(dayN===TODAY_DAY);
+      if((dayN===TODAY_DAY+1||dayN===TODAY_DAY+2)&&st==="available") st="lastmin";
+      var cls="day-cell dc-"+st+(isToday?" dc-today":"")+(st==="lastmin"?" blink-lm":"");
+      tlHtml+="<div class=\"day-col\"><div class=\""+cls+"\"><div class=\"day-dname\">"+DAY_ABBR[i]+"</div><div class=\"day-num\">"+dayN+"</div></div></div>";
+    }
+    var occColor=s.occ>=70?"var(--blue)":s.occ>=50?"#F39C12":"var(--red)";
+    var stCls=s.occ>=70?"st-green":s.occ>=50?"st-orange":"st-red";
+    var subLabel = v._isHotel ? v.loc+" · "+v.beds+" bungalows" : v.loc+" · "+v.beds+" ch.";
+    var destUrl = v._isHotel ? hotelUrl() : villaUrl(v.id);
+    html+="<div class=\"villa-block "+stCls+"\" onclick=\"window.location.href='"+destUrl+"'\">"
+      +"<div class=\"vb-photo\" style=\""+bgStyle+"\"></div>"
+      +"<div class=\"vb-info\">"
+        +"<div class=\"vb-top\">"
+          +"<div class=\"vb-title-block\">"
+            +"<div class=\"vb-name\">"+v.name+"</div>"
+            +"<div class=\"vb-sub\">"+subLabel+"</div>"
+          +"</div>"
+          +"<div class=\"vb-occ-block\">"
+            +"<div class=\"vb-occ-val\" style=\"color:"+occColor+";\">"+s.occ+"%</div>"
+            +"<div class=\"vb-occ-lbl\">Occ.</div>"
+          +"</div>"
+        +"</div>"
+        +"<div class=\"vb-nums\">"
+          +"<div class=\"vb-net\">"+fmtK(s.net)+"</div>"
+          +"<div class=\"vb-sep\">/</div>"
+          +"<div class=\"vb-forecast\" style=\"color:var(--blue);\">"+fmtK(s.forecast)+"</div>"
+        +"</div>"
+        +"<div class=\"vb-adr\">"+fmt(v.adr)+"/nuit · lm "+fmt(v.lm)+"</div>"
+      +"</div>"
+      +"<div class=\"vb-timeline\">"+tlHtml+"</div>"
+      +"</div>";
+  });
+  cont.innerHTML=html;
+}
+
+/* ═══ KPI TOGGLE ═══ */
+function toggleKpi(){
+  var body=document.getElementById("kpi-body");
+  var icon=document.getElementById("kpi-icon");
+  if(body.classList.contains("open")){
+    body.classList.remove("open"); body.style.maxHeight="0";
+    icon.classList.remove("open");
+  } else {
+    body.classList.add("open"); body.style.maxHeight="200px";
+    icon.classList.add("open");
+  }
+}
+
+/* ═══ ALERTES ═══ */
+function renderAlerts(){
+  var alerts = SOFIA_ACTIVITIES.slice();
+  var order={red:0,orange:1,green:2};
+  alerts.sort(function(a,b){ return order[a.level]-order[b.level]; });
+  var cont=document.getElementById("alerts-list");
+  var dot=document.getElementById("alert-dot");
+  if(!cont) return;
+  var nbRed=0, nbOrange=0;
+  alerts.forEach(function(a){ if(a.level==="red")nbRed++; else if(a.level==="orange")nbOrange++; });
+  var badgeWrap=document.getElementById("alert-badges-wrap");
+  if(badgeWrap){
+    var bHtml="";
+    if(nbRed>0) bHtml+='<span class="alert-badge badge-red" title="'+nbRed+' urgent">'+nbRed+'</span>';
+    if(nbOrange>0) bHtml+='<span class="alert-badge badge-orange" title="'+nbOrange+' attention">'+nbOrange+'</span>';
+    if(nbRed===0&&nbOrange===0) bHtml='<span style="font-size:14px;">👍</span>';
+    badgeWrap.innerHTML=bHtml;
+  }
+  if(dot) dot.style.background=nbRed>0?"#C0392B":nbOrange>0?"#E67E22":"var(--green-d)";
+  if(!alerts.length){
+    cont.innerHTML="<div class='all-green'><div class='ag-icon'>✅</div><div class='ag-label'>Tout va bien</div></div>";
+    return;
+  }
+  var html="";
+  alerts.forEach(function(a){
+    var agPic = a.agent && GMAP[a.agent] ? '<img src="'+GMAP[a.agent]+'" style="width:18px;height:18px;border-radius:50%;object-fit:cover;flex-shrink:0;">' : '';
+    var icon = a.level==="red"?"🔴":a.level==="orange"?"🟠":"✅";
+    var link = a.villaId ? villaUrl(a.villaId) : "#";
+    html+="<div class=\"alert-item a-"+a.level+"\" onclick=\"window.location.href='"+link+"'\" style='cursor:pointer;'>"
+      +"<span style='display:flex;align-items:center;gap:6px;min-width:0;flex:1;'>"
+        +agPic
+        +"<span style='flex:1;min-width:0;'>"
+          +"<span style='display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;'>"+icon+" "+a.msg+"</span>"
+          +"<span style='font-size:10px;color:var(--muted);'>"+a.villa+" · "+a.date+"</span>"
+        +"</span>"
+      +"</span>"
+      +"<span style='font-size:11px;color:var(--muted);flex-shrink:0;'>›</span>"
+      +"</div>";
+  });
+  cont.innerHTML=html;
+}
+
+/* ═══ CURSEUR DATE ═══ */
+function positionCursor(){
+  var wrap=document.getElementById("cursor-wrap");
+  var cur=document.getElementById("today-cursor");
+  if(!wrap||!cur){return;}
+  var allCols=wrap.querySelectorAll(".day-col");
+  if(allCols.length<TODAY_DAY)return;
+  var targetCol=allCols[TODAY_DAY-1];
+  if(!targetCol)return;
+  var cr=targetCol.getBoundingClientRect();
+  var wr=wrap.getBoundingClientRect();
+  var leftPx=cr.left-wr.left+cr.width/2;
+  cur.style.display="block";
+  cur.style.left=leftPx+"px";
+  cur.style.height=wrap.scrollHeight+"px";
+  var tl=document.getElementById("today-label");
+  if(tl){
+    var _d=new Date(_NOW.getFullYear(),_NOW.getMonth(),TODAY_DAY);
+    var _DN=["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"];
+    tl.textContent=_DN[_d.getDay()]+" "+TODAY_DAY;
+    tl.style.display="block";
+    tl.style.left=leftPx+"px";
+  }
+}
+
+/* ═══ HERO KPIS ═══ */
+function renderHero(){
+  if(!VILLAS.length) return;
+  var totalNet=0,totalForecast=0,totalOcc=0,totalYear=0,cntOcc=0;
+  VILLAS.forEach(function(v){
+    totalNet+=v.stats.net;
+    totalForecast+=v.stats.forecast;
+    if(!v._isHotel){ totalOcc+=v.stats.occ; cntOcc++; }
+    totalYear+=(v.net_year||0);
+  });
+  if(cntOcc>0) totalOcc=Math.round(totalOcc/cntOcc);
+  var el=function(id){return document.getElementById(id);};
+  if(el("kpi-net")) el("kpi-net").textContent=fmt(totalNet);
+  if(el("kpi-forecast")) el("kpi-forecast").textContent=fmt(totalForecast);
+  if(el("kpi-occ")) el("kpi-occ").textContent=totalOcc+"%";
+  if(el("kpi-year")) el("kpi-year").textContent=totalYear>0?fmt(totalYear):"—";
+  if(el("kpi-summary")) el("kpi-summary").textContent="Encaissé "+fmtK(totalNet)+" · Objectif "+fmtK(totalForecast);
+}
+
+/* ═══ PROPRIO BUBBLE ═══ */
+function renderProprio(){
+  var b=document.getElementById("proprio-bubble");
+  if(b&&JEAN_LUC) b.innerHTML='<img src="'+JEAN_LUC+'" style="width:100%;height:100%;object-fit:cover;">';
+  var pname=document.getElementById("proprio-name-label");
+  if(pname&&HK_OWNER&&HK_OWNER.name) pname.textContent=HK_OWNER.name;
+}
+
+/* ═══ ORBITE CANVAS ═══ */
+function initOrbit(){
+  var canvas=document.getElementById("orbit-canvas");
+  var col=document.querySelector(".ve-col-orbit");
+  var colW=col?col.clientWidth:0;
+  if(colW<60){colW=col?col.getBoundingClientRect().width:0;}
+  var size=Math.min(colW>60?colW-20:280, 320);
+  if(size<120)size=280;
+  var DPR=window.devicePixelRatio||1;
+  canvas.width=size*DPR;canvas.height=size*DPR;
+  canvas.style.width=size+"px";canvas.style.height=size+"px";
+  var ctx=canvas.getContext("2d");ctx.scale(DPR,DPR);
+  var CX=size/2,CY=size/2;
+  var R_ORB=size*0.37;
+  var R_C=size*0.145;
+  var maxBeds=VILLAS.length?Math.max.apply(null,VILLAS.map(function(v){return v.beds;})):5;
+
+  /* Liste vue */
+  var lgHtml="";
+  VILLAS.forEach(function(v){
+    var s=v.stats;
+    var img=getImg(v.imgVar);
+    var dest=v._isHotel?hotelUrl():villaUrl(v.id);
+    var borderColor=s.occ>=70?"#1A7A4A":s.occ>=50?"#F39C12":"#E74C3C";
+    var occColor=s.occ>=70?"#1A7A4A":s.occ>=50?"#F39C12":"#E74C3C";
+    var subLabel=v._isHotel?v.loc+" · "+v.beds+" bung.":v.loc+" · "+v.beds+" ch.";
+    var bookedLabel=s.booked>0?"<span style='color:#27AE60;font-weight:700;'>"+s.booked+" booké"+(s.booked>1?"s":"")+"</span>":"<span style='color:var(--muted);'>libre</span>";
+    lgHtml+="<div onclick=\"window.location.href='"+dest+"'\" style='display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);cursor:pointer;'>"
+      +"<div style='width:36px;height:36px;border-radius:6px;flex-shrink:0;border:2px solid "+borderColor+";background-size:cover;background-position:center;"+(img?"background-image:url("+img+");":"background:var(--cream2);")+";'></div>"
+      +"<div style='flex:1;min-width:0;'>"
+        +"<div style='font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'>"+v.name+"</div>"
+        +"<div style='font-size:11px;color:var(--muted);'>"+subLabel+" · <span style='color:"+occColor+";font-weight:700;'>"+s.occ+"%</span> · "+bookedLabel+"</div>"
+      +"</div>"
+      +"</div>";
+  });
+  document.getElementById("orbit-list-wrap").innerHTML=lgHtml||"<div style='padding:20px;color:var(--muted);font-size:12px;text-align:center;'>Aucun bien</div>";
+
+  function drawHand(cx,cy,angle,len,w,col){
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(angle)*len,cy+Math.sin(angle)*len);
+    ctx.strokeStyle=col;ctx.lineWidth=w;ctx.lineCap="round";ctx.stroke();
+  }
+
+  function frame(){
+    var now=new Date(),ms=now.getMilliseconds();
+    var sec=now.getSeconds()+ms/1000,min=now.getMinutes()+sec/60,hr=(now.getHours()%12)+min/60;
+    ctx.clearRect(0,0,size,size);
+    ctx.beginPath();ctx.arc(CX,CY,R_ORB,0,Math.PI*2);
+    ctx.strokeStyle="rgba(139,105,20,.12)";ctx.lineWidth=0.8;ctx.setLineDash([4,3]);ctx.stroke();ctx.setLineDash([]);
+    drawHand(CX,CY,(hr/12)*Math.PI*2-Math.PI/2,R_ORB*.50,Math.round(size*.008),"rgba(201,168,76,.85)");
+    drawHand(CX,CY,(min/60)*Math.PI*2-Math.PI/2,R_ORB*.62,Math.round(size*.005),"rgba(201,168,76,.65)");
+    drawHand(CX,CY,(sec/60)*Math.PI*2-Math.PI/2,R_ORB*.68,1,"rgba(139,105,20,.8)");
+    ctx.beginPath();ctx.arc(CX,CY,3,0,Math.PI*2);ctx.fillStyle="rgba(139,105,20,.9)";ctx.fill();
+    if(!VILLAS.length){
+      ctx.font="12px 'DM Mono',monospace";ctx.textAlign="center";ctx.textBaseline="middle";
+      ctx.fillStyle="var(--muted)";ctx.fillText("Aucun bien",CX,CY);
+      requestAnimationFrame(frame);return;
+    }
+    var angle=+(performance.now()/1000/200)*Math.PI*2;
+    VILLAS.forEach(function(v,i){
+      var a=(Math.PI/2)+i*(2*Math.PI/VILLAS.length)+angle;
+      var bx=CX+Math.cos(a)*R_ORB,by=CY-Math.sin(a)*R_ORB;
+      var beds=v._isHotel?10:v.beds;
+      var r=R_C*0.35+(beds/maxBeds)*R_C*0.35;
+      var occ=v.stats?v.stats.occ:68;
+      var ringColor=occ>=70?"#1A7A4A":occ>=50?"#F39C12":"#E74C3C";
+      if(v._isHotel) ringColor="#3498DB";
+      var imgSrc=getImg(v.imgVar);
+      ctx.beginPath();ctx.arc(bx,by,r,0,Math.PI*2);
+      ctx.fillStyle=v._isHotel?"#EBF5FB":"#EDE8DC";ctx.fill();
+      if(imgSrc){
+        var imgObj=v._imgObj||(v._imgObj=new Image());
+        if(!imgObj.src){ imgObj.src=imgSrc; imgObj.onload=function(){ v._imgLoaded=true; }; }
+        if((imgObj.complete||v._imgLoaded)&&imgObj.naturalWidth>0){
+          ctx.save();ctx.beginPath();ctx.arc(bx,by,r-1,0,Math.PI*2);ctx.clip();
+          ctx.drawImage(imgObj,bx-(r-1),by-(r-1),(r-1)*2,(r-1)*2);ctx.restore();
+        }
+      }
+      ctx.beginPath();ctx.arc(bx,by,r,0,Math.PI*2);
+      ctx.strokeStyle=ringColor;ctx.lineWidth=2;ctx.stroke();
+      if(!imgSrc){
+        var label=v._isHotel?"Sumba":v.name.replace("Villa ","").replace("Studio ","");
+        ctx.font=Math.max(7,Math.round(r*.36))+"px 'DM Mono',monospace";
+        ctx.textAlign="center";ctx.textBaseline="middle";
+        ctx.fillStyle=v._isHotel?"#1A5A8A":"#6B5B3E";
+        ctx.fillText(label,bx,by);
+      }
+      v._bx=bx;v._by=by;v._br=r;
+    });
+    /* Centre owner */
+    var R_JL=R_C*.75;
+    ctx.beginPath();ctx.arc(CX,CY,R_JL,0,Math.PI*2);
+    ctx.fillStyle="#EDE8DC";ctx.strokeStyle="rgba(139,105,20,.7)";ctx.lineWidth=1.8;ctx.fill();ctx.stroke();
+    if(JEAN_LUC){
+      var imgJL=window._jlImg||(window._jlImg=new Image());
+      if(!imgJL.src){ imgJL.src=JEAN_LUC; imgJL.onload=function(){ window._jlLoaded=true; }; }
+      if((imgJL.complete||window._jlLoaded)&&imgJL.naturalWidth>0){
+        ctx.save();ctx.beginPath();ctx.arc(CX,CY,R_JL-2,0,Math.PI*2);ctx.clip();
+        ctx.drawImage(imgJL,CX-(R_JL-2),CY-(R_JL-2),(R_JL-2)*2,(R_JL-2)*2);ctx.restore();
+      }
+    } else {
+      ctx.font=Math.round(R_JL*.4)+"px 'Playfair Display',serif";
+      ctx.textAlign="center";ctx.textBaseline="middle";
+      ctx.fillStyle="rgba(139,105,20,.7)";
+      var ownerInitial=(HK_OWNER&&HK_OWNER.name)?HK_OWNER.name[0]:"H";
+      ctx.fillText(ownerInitial,CX,CY);
+    }
+    var ownerLabel=(HK_OWNER&&HK_OWNER.name)?HK_OWNER.name.split(" ")[0]:"Owner";
+    ctx.font=Math.round(R_JL*.19)+"px 'DM Mono',monospace";
+    ctx.textAlign="center";ctx.textBaseline="middle";
+    ctx.fillStyle="rgba(139,105,20,.9)";
+    ctx.fillText(ownerLabel,CX,CY+R_JL*.7);
+    requestAnimationFrame(frame);
+  }
+  frame();
+
+  canvas.style.cursor="pointer";
+  canvas.addEventListener("click",function(e){
+    var rect=canvas.getBoundingClientRect();
+    var mx=(e.clientX-rect.left)*(size/rect.width),my=(e.clientY-rect.top)*(size/rect.height);
+    for(var i=0;i<VILLAS.length;i++){
+      var v=VILLAS[i];if(!v._bx)continue;
+      var dx=mx-v._bx,dy=my-v._by;
+      if(Math.sqrt(dx*dx+dy*dy)<=v._br){
+        window.location.href=v._isHotel?hotelUrl():villaUrl(v.id);
+        return;
+      }
+    }
+  });
+}
+
+/* ═══ MAP ═══ */
+function initMap(){
+  if(!VILLAS.length) return;
+  var map=L.map("client-map",{scrollWheelZoom:false,touchZoom:false,zoomControl:false});
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{attribution:"© CartoDB",maxZoom:18}).addTo(map);
+  var bounds=[];
+  VILLAS.forEach(function(v){
+    if(!v.lat||!v.lng) return;
+    bounds.push([v.lat,v.lng]);
+    var occ=v.stats.occ;
+    var color = occ>=70 ? "#1A7A4A" : occ>=50 ? "#E67E22" : "#C0392B";
+    var sz = v._isHotel ? 16 : 11;
+    var icon=L.divIcon({className:"",
+      html:"<div style='width:"+sz+"px;height:"+sz+"px;border-radius:50%;background:"+color+";border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,.35);'></div>",
+      iconAnchor:[sz/2,sz/2]});
+    var popup="<strong>"+v.name+"</strong><br>"+(v.loc||"")+"<br>"
+      +(v._isHotel?v.beds+" bungalows":v.beds+" ch.")+"<br>"
+      +fmtK(v.stats.net)+" encaissé · "+v.stats.occ+"% occ.";
+    L.marker([v.lat,v.lng],{icon:icon}).addTo(map).bindPopup(popup);
+  });
+  if(bounds.length) map.fitBounds(bounds,{padding:[20,20],maxZoom:8});
+}
+
+/* ══ TOGGLE ORBIT / LISTE ══ */
+function setOrbitView(mode){
+  var orbitWrap=document.getElementById("orbit-wrap");
+  var listWrap=document.getElementById("orbit-list-wrap");
+  var btnOrbit=document.getElementById("btn-orbit");
+  var btnList=document.getElementById("btn-list");
+  if(mode==="orbit"){
+    if(orbitWrap)orbitWrap.style.display="flex";
+    if(listWrap)listWrap.style.display="none";
+    if(btnOrbit){btnOrbit.style.background="var(--gold)";btnOrbit.style.color="white";}
+    if(btnList){btnList.style.background="none";btnList.style.color="var(--muted)";}
+  } else {
+    if(orbitWrap)orbitWrap.style.display="none";
+    if(listWrap)listWrap.style.display="block";
+    if(btnList){btnList.style.background="var(--gold)";btnList.style.color="white";}
+    if(btnOrbit){btnOrbit.style.background="none";btnOrbit.style.color="var(--muted)";}
+  }
+}
+
+/* ─── Helper : URL vers une villa avec passage du data param ─── */
+function villaUrl(villaId){
+  var base = "villa_vierge.html?id="+villaId;
+  if(_DATA_URL) base += "&data="+encodeURIComponent(_DATA_URL);
+  return base;
+}
+function hotelUrl(){
+  var base = "hotel.html?id=hotel";
+  if(_DATA_URL) base += "&data="+encodeURIComponent(_DATA_URL);
+  return base;
+}
+
+/* ─── Démarrage ──────────────────────────────────────────────────────── */
+window.addEventListener("DOMContentLoaded", function(){
+  tryAutoLoad();
+});
+</script>
+</head>
+<body>
+
+<!-- LOADER — affiché si pas de données -->
+<div id="hk-loader" style="display:none;">
+  <div class="hk-loader-logo">HK</div>
+  <div class="hk-loader-title" style="font-family:'Playfair Display',serif;">Hidden Keys</div>
+  <div class="hk-loader-sub">Chargez le dossier de votre client pour démarrer</div>
+  <button class="hk-loader-btn" onclick="loadFromFolder()">📁 Ouvrir mon dossier client</button>
+  <div class="hk-loader-or">— ou charger depuis une URL —</div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <input id="data-url-input" class="hk-loader-input" type="text" placeholder="https://mon-site.com/DOSSIER-CLIENT/hk-data.js">
+    <button class="hk-loader-btn" onclick="loadFromUrl()">→</button>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="hk-logo" onclick="window.location.href='choose-mode.html'">HK</div>
+    <div class="t-sep"></div>
+    <div class="topbar-title" id="topbar-name">Portfolio</div>
+  </div>
+  <div class="topbar-center" id="proprio-center">
+    <div class="proprio-bubble" id="proprio-bubble"></div>
+    <div class="proprio-name" id="proprio-name-label">Portfolio</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <div onclick="window.location.href='manager.html'" style="cursor:pointer;font-size:10px;font-family:'DM Mono',monospace;color:var(--muted);letter-spacing:1px;padding:5px 10px;border-radius:20px;border:1px solid var(--border);background:var(--cream2);transition:all .15s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">👩‍💼 Manager</div>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- TABS BAR -->
+<div class="client-tabs-bar">
+  <button class="client-tab-btn active" onclick="switchClientTab('overview')">Overview</button>
+  <button class="client-tab-btn" onclick="switchClientTab('money')">Money</button>
+  <button class="client-tab-btn" onclick="switchClientTab('sofia')">Sofia</button>
+  <button class="client-tab-btn" onclick="switchClientTab('settings')">Settings</button>
+</div>
+
+<!-- TAB OVERVIEW -->
+<div class="client-tab-pane active" id="ctab-overview">
+
+  <!-- VUE ENSEMBLE -->
+  <div class="section-title" id="section-title-ensemble">Vue ensemble</div>
+  <div class="vue-ensemble fade-in">
+
+    <!-- COLONNE GAUCHE : Alertes -->
+    <div class="ve-col ve-col-alerts">
+      <div class="ve-head" style="justify-content:space-between;width:100%;padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:10px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="ve-dot" id="alert-dot" style="background:#E74C3C;"></div>
+          <span style="font-size:11px;font-weight:700;color:var(--text);">Alertes Sofia</span>
+        </div>
+        <div id="alert-badges-wrap" style="display:flex;gap:4px;align-items:center;"></div>
+      </div>
+      <div id="alerts-list">
+        <div class="all-green"><div class="ag-icon">✅</div><div class="ag-label">Tout va bien</div></div>
+      </div>
+    </div>
+
+    <!-- COLONNE CENTRE : Horloge orbitale -->
+    <div class="ve-col ve-col-orbit">
+      <div class="ve-head" style="padding:0 12px;width:100%;justify-content:space-between;">
+        <span>Portfolio</span>
+        <div style="display:flex;gap:0;border:1px solid var(--border);border-radius:6px;overflow:hidden;">
+          <button id="btn-orbit" onclick="setOrbitView('orbit')" style="background:var(--gold);color:white;border:none;cursor:pointer;font-size:10px;padding:3px 9px;font-family:'DM Mono',monospace;font-weight:600;">⊙ Orbite</button>
+          <button id="btn-list"  onclick="setOrbitView('list')"  style="background:none;color:var(--muted);border:none;cursor:pointer;font-size:10px;padding:3px 9px;font-family:'DM Mono',monospace;font-weight:600;">≡ Liste</button>
+        </div>
+      </div>
+      <div id="orbit-wrap" style="flex:1;display:flex;align-items:center;justify-content:center;width:100%;">
+        <canvas id="orbit-canvas"></canvas>
+      </div>
+      <div id="orbit-list-wrap" style="display:none;flex:1;overflow-y:auto;padding:8px 12px;width:100%;"></div>
+    </div>
+
+    <!-- COLONNE DROITE : Carte -->
+    <div class="ve-col ve-col-map">
+      <div class="ve-map-inner">
+        <div id="client-map"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- LISTE DES BIENS -->
+  <div class="block-wrap fade-in">
+    <div class="section-title" id="biens-section-title">Biens</div>
+    <div style="position:relative;">
+      <div class="today-label" id="today-label" style="display:none;position:absolute;bottom:-22px;font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:var(--gold);white-space:nowrap;background:var(--cream);border:1.5px solid var(--gold);border-radius:6px;padding:2px 9px;box-shadow:0 2px 8px rgba(139,105,20,.15);z-index:31;transform:translateX(-50%);"></div>
+      <div class="cursor-wrap" id="cursor-wrap" style="position:relative;">
+        <div class="today-cursor" id="today-cursor" style="display:none;position:absolute;top:0;bottom:0;width:2px;background:linear-gradient(180deg,rgba(139,105,20,.9),rgba(139,105,20,.1));z-index:30;pointer-events:none;box-shadow:0 0 6px rgba(139,105,20,.3);"></div>
+        <div id="villa-blocks"></div>
+      </div>
+    </div>
+    <div class="legend">
+      <div class="leg-i"><div class="leg-s" style="background:#1A7A4A"></div>Encaissé</div>
+      <div class="leg-i"><div class="leg-s" style="background:#E88080"></div>Manqué</div>
+      <div class="leg-i"><div class="leg-s" style="background:#2ECC71"></div>Booké</div>
+      <div class="leg-i"><div class="leg-s" style="background:#1A5276"></div>Disponible</div>
+      <div class="leg-i"><div class="leg-s" style="background:#7C3AED"></div>Last-min ⚡</div>
+    </div>
+  </div>
+
+  <!-- KPIs COLLAPSIBLES -->
+  <div class="kpi-section fade-in">
+    <div class="kpi-toggle" onclick="toggleKpi()">
+      <span class="kpi-toggle-icon open" id="kpi-icon">▼</span>
+      <span class="kpi-toggle-label">Chiffres du mois</span>
+      <span class="kpi-toggle-summary" id="kpi-summary">—</span>
+    </div>
+    <div class="kpi-body open" id="kpi-body">
+      <div class="hero-strip">
+        <div class="hero-kpi">
+          <div class="hero-kpi-val" style="color:var(--green-d);" id="kpi-net">—</div>
+          <div class="hero-kpi-lbl">Encaissé ce mois</div>
+          <div class="hero-kpi-sub" id="kpi-net-sub"></div>
+        </div>
+        <div class="hero-kpi">
+          <div class="hero-kpi-val" style="color:var(--blue);" id="kpi-forecast">—</div>
+          <div class="hero-kpi-lbl">Si tout loué</div>
+          <div class="hero-kpi-sub" id="kpi-forecast-sub"></div>
+        </div>
+        <div class="hero-kpi">
+          <div class="hero-kpi-val" id="kpi-occ">—</div>
+          <div class="hero-kpi-lbl">Occupation moy.</div>
+          <div class="hero-kpi-sub" id="kpi-occ-sub"></div>
+        </div>
+        <div class="hero-kpi">
+          <div class="hero-kpi-val" id="kpi-year">—</div>
+          <div class="hero-kpi-lbl">Net ytd</div>
+          <div class="hero-kpi-sub">depuis le début de l'année</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div><!-- /ctab-overview -->
+
+<!-- TAB MONEY -->
+<div class="client-tab-pane" id="ctab-money">
+<div style="padding:28px 0;">
+  <div style="margin-bottom:28px;">
+    <button onclick="window.location.href='compta-villa.html'" style="width:100%;padding:18px 24px;background:linear-gradient(135deg,var(--green-d),#1E9E52);border:none;border-radius:14px;cursor:pointer;display:flex;align-items:center;gap:16px;box-shadow:0 4px 18px rgba(26,122,60,.25);" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='none'">
+      <div style="width:48px;height:48px;border-radius:12px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">&#128202;</div>
+      <div style="flex:1;text-align:left;"><div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:white;">Comptabilite globale</div><div style="font-size:13px;color:rgba(255,255,255,.75);margin-top:2px;font-weight:600;">Toutes les villas - revenus - charges - taxes</div></div>
+      <div style="font-size:20px;color:rgba(255,255,255,.8);">&#8594;</div>
+    </button>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px;">
+    <div style="background:var(--cream2);border:1.5px solid rgba(26,122,60,.3);border-radius:12px;padding:18px 20px;"><div style="font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--green-d);margin-bottom:6px;">Encaisse mois</div><div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:800;color:var(--green-d);" id="money-net">&#8212;</div></div>
+    <div style="background:var(--cream2);border:1.5px solid rgba(52,152,219,.3);border-radius:12px;padding:18px 20px;"><div style="font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:6px;">Si tout loue</div><div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:800;color:var(--blue);" id="money-forecast">&#8212;</div></div>
+    <div style="background:var(--cream2);border:1.5px solid rgba(139,105,20,.3);border-radius:12px;padding:18px 20px;"><div style="font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;">Occupation</div><div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:800;color:var(--gold);" id="money-occ">&#8212;</div></div>
+    <div style="background:var(--cream2);border:1.5px solid rgba(107,45,139,.3);border-radius:12px;padding:18px 20px;"><div style="font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--violet);margin-bottom:6px;">Net YTD</div><div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:800;color:var(--violet);" id="money-year">&#8212;</div></div>
+  </div>
+  <div style="font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--green-d);margin-bottom:14px;">Revenus par villa ce mois</div>
+  <div id="money-villas-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:28px;"></div>
+  <div style="font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;">Detail</div>
+  <div class="settings-link-card" onclick="window.location.href='taxes.html'"><div class="settings-link-icon" style="background:rgba(192,57,43,.1);">&#129534;</div><div><div class="settings-link-title">Taxes</div><div class="settings-link-sub">PBJT, PPh, PPN, Levy Bali</div></div><div class="settings-link-arrow">&#8594;</div></div>
+  <div class="settings-link-card" onclick="window.location.href='compta-villa.html'"><div class="settings-link-icon" style="background:rgba(26,122,60,.1);">&#128203;</div><div><div class="settings-link-title">Historique complet</div><div class="settings-link-sub">Toutes les transactions</div></div><div class="settings-link-arrow">&#8594;</div></div>
+</div>
+</div><!-- /ctab-money -->
+
+<!-- TAB SOFIA -->
+<div class="client-tab-pane" id="ctab-sofia">
+<div style="padding:28px 0;">
+  <div style="font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;">Niveau d'autonomie Sofia</div>
+  <div style="background:var(--cream2);border:1.5px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:24px;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;">
+      <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;">Superhost</div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:var(--gold);" id="sofia-trust-pct">0%</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;">Superghost</div>
+    </div>
+    <input type="range" id="sofia-trust-range" min="0" max="100" value="0" oninput="onClientTrust(this.value)" style="width:100%;accent-color:var(--gold);height:6px;cursor:pointer;">
+    <div style="display:flex;justify-content:space-between;margin-top:8px;">
+      <span style="font-size:11px;font-weight:800;color:var(--muted);">Fantome</span>
+      <span style="font-size:11px;font-weight:800;color:var(--muted);">Suggestions</span>
+      <span style="font-size:11px;font-weight:800;color:var(--muted);">Semi-auto</span>
+      <span style="font-size:11px;font-weight:800;color:var(--gold);" id="sofia-phase-lbl">Superghost</span>
+    </div>
+    <div style="margin-top:16px;padding:14px 16px;background:var(--cream);border:1px solid var(--border);border-radius:10px;">
+      <div style="font-size:14px;font-weight:800;margin-bottom:6px;" id="sofia-phase-title">Phase 0 - Fantome conseiller</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.8;font-weight:600;" id="sofia-phase-body">Sofia observe et conseille. Elle n'agit sur rien sans ta validation.</div>
+    </div>
+  </div>
+  <div style="font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;">Ce que Sofia gere</div>
+  <div style="background:var(--cream2);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+    <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:14px;font-weight:800;">Pricing Pricelabs</div><div style="font-size:12px;color:var(--muted);font-weight:600;margin-top:2px;">Ajustements ADR, last-minute</div></div><div style="font-size:13px;font-weight:800;color:var(--muted);">Suggestions</div></div>
+    <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:14px;font-weight:800;">Reponses guests</div><div style="font-size:12px;color:var(--muted);font-weight:600;margin-top:2px;">Messages Airbnb, check-in</div></div><div style="font-size:13px;font-weight:800;color:var(--muted);">Suggestions</div></div>
+    <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:14px;font-weight:800;">Depenses routine</div><div style="font-size:12px;color:var(--muted);font-weight:600;margin-top:2px;">Menage, pool, jardinage</div></div><div style="font-size:13px;font-weight:800;color:var(--muted);">Manuel</div></div>
+    <div style="padding:14px 18px;display:flex;justify-content:space-between;align-items:center;"><div><div style="font-size:14px;font-weight:800;">Alertes urgentes</div><div style="font-size:12px;color:var(--muted);font-weight:600;margin-top:2px;">Pannes, incidents</div></div><div style="font-size:13px;font-weight:800;color:var(--red);">Toujours</div></div>
+  </div>
+</div>
+</div><!-- /ctab-sofia -->
+
+<!-- TAB SETTINGS -->
+<div class="client-tab-pane" id="ctab-settings">
+<div style="padding:28px 0;">
+  <div style="font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;">Profil client</div>
+  <div class="settings-link-card" onclick="window.location.href='settings-client.html'"><div class="settings-link-icon" style="background:rgba(139,105,20,.1);">&#128100;</div><div><div class="settings-link-title">Parametres client</div><div class="settings-link-sub">Profil fiscal, residence, conventions</div></div><div class="settings-link-arrow">&#8594;</div></div>
+  <div style="font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:24px 0 14px;">Mes villas</div>
+  <div id="settings-villas-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+</div>
+</div><!-- /ctab-settings -->
+
+<script>
+var TRUST_PHASES=[
+  {min:0,  max:24,  title:"Phase 0 - Fantome",     body:"Sofia observe et conseille. Elle n agit sur rien sans ta validation.", lbl:"Fantome"},
+  {min:25, max:49,  title:"Phase 1 - Suggestions",  body:"Sofia envoie des recommandations avec boutons Appliquer / Ignorer.", lbl:"Suggestions"},
+  {min:50, max:74,  title:"Phase 2 - Semi-auto",    body:"Sofia agit et t informe apres. Tu peux annuler a tout moment.", lbl:"Semi-auto"},
+  {min:75, max:100, title:"Phase 3 - Superghost",   body:"Sofia gere tout. Seules les alertes rouges te remontent.", lbl:"Superghost"}
+];
+function switchClientTab(name){
+  document.querySelectorAll(".client-tab-pane").forEach(function(p){p.classList.remove("active");});
+  document.querySelectorAll(".client-tab-btn").forEach(function(b){b.classList.remove("active");});
+  var pane=document.getElementById("ctab-"+name);
+  if(pane) pane.classList.add("active");
+  document.querySelectorAll(".client-tab-btn").forEach(function(b){
+    if(b.getAttribute("onclick")==="switchClientTab('"+name+"')" ) b.classList.add("active");
+  });
+  if(name==="money") renderMoneyTab();
+  if(name==="settings") renderSettingsClientTab();
+}
+function onClientTrust(v){
+  v=parseInt(v);
+  document.getElementById("sofia-trust-pct").textContent=v+"%";
+  var phase=TRUST_PHASES.find(function(p){return v>=p.min&&v<=p.max;})||TRUST_PHASES[0];
+  document.getElementById("sofia-phase-title").textContent=phase.title;
+  document.getElementById("sofia-phase-body").textContent=phase.body;
+  document.getElementById("sofia-phase-lbl").textContent=phase.lbl;
+}
+function renderMoneyTab(){
+  var ids=[["money-net","kpi-net"],["money-forecast","kpi-forecast"],["money-occ","kpi-occ"],["money-year","kpi-year"]];
+  ids.forEach(function(pair){
+    var src=document.getElementById(pair[1]);
+    var dst=document.getElementById(pair[0]);
+    if(src&&dst) dst.textContent=src.textContent;
+  });
+  var wrap=document.getElementById("money-villas-list");
+  if(!wrap||wrap.children.length) return;
+  if(typeof VILLAS==="undefined"||!VILLAS.length){
+    wrap.innerHTML="<div style=\"padding:8px;font-size:13px;color:var(--muted);font-weight:600;\">Aucune donnee</div>";
+    return;
+  }
+  var html="";
+  VILLAS.forEach(function(v){
+    var s=v._stats||{};
+    var net=typeof fmt==="function"?fmt(s.net||0):"$"+(s.net||0);
+    var occ=s.occ||0;
+    var occColor=occ>=70?"var(--green-d)":occ>=50?"#F39C12":"var(--red)";
+    html+=[
+      "<div style=\"background:var(--cream2);border:1px solid var(--border);border-radius:10px;",
+      "display:flex;align-items:center;gap:14px;padding:12px 16px;cursor:pointer;margin-bottom:4px;\"",
+      " onclick=\"window.location.href=villaUrl('"+v.id+"')\">",
+      "<div style=\"flex:1;\"><div style=\"font-size:15px;font-weight:800;\">"+v.name+"</div>",
+      "<div style=\"font-size:12px;color:var(--muted);font-weight:600;margin-top:1px;\">"+v.loc+"</div></div>",
+      "<div style=\"text-align:right;\"><div style=\"font-size:20px;font-weight:800;color:var(--green-d);\">"+(net)+"</div>",
+      "<div style=\"font-size:12px;font-weight:800;color:"+occColor+"\">"+occ+"% occ.</div></div>",
+      "</div>"
+    ].join("");
+  });
+  wrap.innerHTML=html;
+}
+function renderSettingsClientTab(){
+  var wrap=document.getElementById("settings-villas-list");
+  if(!wrap||wrap.children.length) return;
+  if(typeof VILLAS==="undefined"||!VILLAS.length){
+    wrap.innerHTML="<div style=\"padding:8px;font-size:13px;color:var(--muted);font-weight:600;\">Aucune donnee</div>";
+    return;
+  }
+  var html="";
+  VILLAS.forEach(function(v){
+    var dq=window._DATA_URL?"&data="+encodeURIComponent(window._DATA_URL):"";
+    html+=[
+      "<div class=\"settings-link-card\" onclick=\"window.location.href='settings-villa.html?id="+v.id+dq+"'\">",
+      "<div class=\"settings-link-icon\" style=\"background:rgba(139,105,20,.08)\">&#127968;</div>",
+      "<div><div class=\"settings-link-title\">"+v.name+"</div>",
+      "<div class=\"settings-link-sub\">"+v.loc+" - "+(v.beds||"-")+" ch.</div></div>",
+      "<div class=\"settings-link-arrow\">&#8594;</div></div>"
+    ].join("");
+  });
+  wrap.innerHTML=html;
+}
+</script>
+
+</div><!-- /page -->
+</body>
+</html>

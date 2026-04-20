@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Manager · BALIAGENCIA</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EBF0F5;--bg2:#E0E8F0;--bg3:#D4DDE8;
+  --dark:#16203A;--dark2:#1C2844;--dark3:#0A0F1E;
+  --text:#16203A;--muted:#6A7A9A;--muted2:#9AAABB;
+  --green:#27AE60;--green-soft:#E8F5EE;--green-dark:#1E8449;
+  --gold:#C9A84C;--gold-light:#E8C97A;
+  --orange:#E67E22;--orange-soft:#FEF0E3;
+  --red:#C0392B;--red-soft:#FDECEA;
+  --blue:#2980B9;--blue-soft:#EBF5FB;--blue-mid:#5DADE2;--blue-dark:#1A5F8A;
+  --tropical:#00A693;
+  --hero1:#0A1628;--hero2:#142038;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.05);
+  --shadow:0 2px 14px rgba(0,0,0,0.10);--r:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;max-width:430px;margin:0 auto;}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(235,240,245,0.96);border-bottom:1px solid var(--border);padding:0 18px;height:54px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);}
+.tb-logo{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;}
+.tb-right{display:flex;align-items:center;gap:10px;}
+.tb-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--hero1),var(--blue-dark));border:2px solid rgba(41,128,185,.4);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.tb-name strong{font-size:11px;font-weight:800;color:var(--dark);display:block;text-align:right;}
+.tb-name span{font-size:10px;color:var(--muted);display:block;text-align:right;}
+
+/* HERO */
+.hero{background:linear-gradient(160deg,var(--hero1) 0%,var(--hero2) 55%,#1A2E4A 100%);padding:26px 22px 0;position:relative;overflow:hidden;}
+.sofia-hero{display:flex;flex-direction:column;align-items:center;margin-bottom:14px;}
+.sofia-photo{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,rgba(201,168,76,.25),rgba(201,168,76,.08));border:2px solid rgba(201,168,76,.45);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:6px;}
+.sofia-name{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-light);font-family:'DM Mono',monospace;opacity:.8;}
+.hero-greeting{font-size:26px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:5px;text-align:center;}
+.hero-greeting em{color:var(--gold);font-style:italic;font-family:'Playfair Display',serif;font-size:28px;font-weight:400;}
+.hero-tagline{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:20px;line-height:1.6;text-align:center;}
+
+/* STATUS BAR */
+.status-bar{display:flex;gap:8px;padding:0 22px 20px;background:linear-gradient(180deg,#142038 0%,var(--dark3) 100%);}
+.stat-pill{flex:1;padding:10px 8px;border-radius:11px;text-align:center;border:1px solid rgba(255,255,255,.08);}
+.stat-pill.red{background:rgba(192,57,43,.18);border-color:rgba(192,57,43,.3);}
+.stat-pill.orange{background:rgba(230,126,34,.15);border-color:rgba(230,126,34,.3);}
+.stat-pill.green{background:rgba(39,174,96,.12);border-color:rgba(39,174,96,.25);}
+.stat-num{font-size:22px;font-weight:800;color:#fff;font-family:'DM Mono',monospace;}
+.stat-num.red{color:#E74C3C;}
+.stat-num.orange{color:#E67E22;}
+.stat-num.green{color:#27AE60;}
+.stat-lbl{font-size:9px;color:rgba(255,255,255,.4);margin-top:2px;letter-spacing:.5px;}
+
+/* SECTIONS */
+.section{padding:14px 18px 0;}
+.section-title{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-title .dot{width:6px;height:6px;border-radius:50%;}
+
+/* ALERT CARDS */
+.alert-card{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:14px 16px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;border-left:3px solid var(--border);}
+.alert-card.red{border-left-color:var(--red);}
+.alert-card.orange{border-left-color:var(--orange);}
+.alert-card.green{border-left-color:var(--green);}
+.alert-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.alert-body{flex:1;}
+.alert-villa{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;}
+.alert-msg{font-size:13px;font-weight:700;color:var(--dark);line-height:1.4;}
+.alert-meta{font-size:10px;color:var(--muted);margin-top:4px;}
+.alert-actions{display:flex;gap:6px;margin-top:8px;}
+.a-btn{font-size:10px;font-weight:800;font-family:'Nunito',sans-serif;padding:5px 11px;border-radius:20px;border:none;cursor:pointer;}
+.a-btn.resolve{background:var(--green-soft);color:var(--green-dark);border:1px solid rgba(39,174,96,.3);}
+.a-btn.relay{background:rgba(201,168,76,.12);color:var(--gold);border:1px solid rgba(201,168,76,.3);}
+.a-btn.chat{background:var(--blue-soft);color:var(--blue-dark);border:1px solid rgba(41,128,185,.25);}
+.a-btn.escalate{background:var(--red-soft);color:var(--red);border:1px solid rgba(192,57,43,.3);}
+
+/* ORBIT SECTION */
+.clock-section{background:linear-gradient(180deg,#1C2844 0%,#0E1828 100%);padding:22px 20px 24px;display:flex;flex-direction:column;align-items:center;margin:0;}
+.clock-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.2);margin-bottom:16px;font-family:'DM Mono',monospace;}
+.clock-wrap{position:relative;width:280px;height:280px;}
+#orbitCanvas{position:absolute;top:0;left:0;width:280px;height:280px;}
+.clock-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:68px;height:68px;border-radius:50%;overflow:hidden;border:2px solid rgba(201,168,76,.45);z-index:2;background:linear-gradient(135deg,var(--hero1),var(--blue-dark));display:flex;align-items:center;justify-content:center;font-size:28px;}
+.clock-tagline{font-size:11px;color:rgba(255,255,255,.22);margin-top:14px;text-align:center;max-width:260px;line-height:1.75;font-style:italic;}
+.clock-tagline em{color:var(--gold-light);font-style:normal;font-weight:800;}
+
+/* STAFF GRID */
+.staff-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.staff-card{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .2s;}
+.staff-card:active{transform:scale(.97);}
+.staff-av{width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--border);}
+.staff-av img{width:100%;height:100%;object-fit:cover;}
+.staff-av.emoji{display:flex;align-items:center;justify-content:center;font-size:20px;background:var(--bg2);}
+.staff-info-name{font-size:12px;font-weight:800;color:var(--dark);}
+.staff-info-role{font-size:10px;color:var(--muted);margin-top:1px;}
+.staff-status{margin-left:auto;width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.staff-status.on{background:var(--green);}
+.staff-status.idle{background:var(--gold);}
+.staff-status.off{background:rgba(0,0,0,.2);}
+
+/* PIPELINE */
+.pipeline{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:18px;margin-bottom:0;}
+.pipeline-title{font-size:13px;font-weight:800;color:var(--dark);margin-bottom:14px;}
+.pipe-row{display:flex;align-items:center;gap:0;margin-bottom:8px;}
+.pipe-node{flex:1;text-align:center;}
+.pipe-icon{font-size:22px;margin-bottom:3px;}
+.pipe-label{font-size:9px;font-weight:800;color:var(--dark);letter-spacing:.5px;}
+.pipe-sub{font-size:8px;color:var(--muted);margin-top:1px;line-height:1.4;}
+.pipe-arrow{font-size:14px;color:var(--muted);flex-shrink:0;padding:0 2px;}
+.pipe-sofia{display:flex;flex-direction:column;align-items:center;}
+.pipe-sofia-ring{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,rgba(201,168,76,.2),rgba(201,168,76,.05));border:2px solid rgba(201,168,76,.5);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:3px;}
+.pipe-sofia .pipe-label{color:var(--gold);}
+.highlight-note{background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.03));border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:10px 12px;margin-top:12px;font-size:11px;color:rgba(22,32,58,.7);line-height:1.6;}
+.highlight-note strong{color:var(--gold);}
+
+/* CHAT PILLS */
+.chat-channels{display:flex;gap:8px;flex-wrap:wrap;padding:14px 18px 0;}
+.chat-pill{flex:1;min-width:120px;background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer;border:1.5px solid var(--border);}
+.chat-pill-icon{font-size:20px;flex-shrink:0;}
+.chat-pill-info{flex:1;}
+.chat-pill-name{font-size:12px;font-weight:800;color:var(--dark);}
+.chat-pill-sub{font-size:10px;color:var(--muted);margin-top:1px;}
+.chat-pill-badge{font-size:10px;font-weight:800;background:var(--orange);color:#fff;border-radius:10px;padding:2px 7px;}
+
+/* VILLA MINI CARDS */
+.villa-strip{display:flex;gap:8px;overflow-x:auto;padding:0 18px 14px;-webkit-overflow-scrolling:touch;}
+.villa-strip::-webkit-scrollbar{display:none;}
+.villa-mini{flex-shrink:0;width:120px;background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:12px;cursor:pointer;transition:all .2s;border:1.5px solid var(--border);}
+.villa-mini:active{transform:scale(.97);}
+.villa-mini-name{font-size:12px;font-weight:800;color:var(--dark);}
+.villa-mini-occ{font-size:10px;color:var(--muted);margin-top:2px;}
+.villa-mini-dot{width:8px;height:8px;border-radius:50%;margin-top:6px;}
+.villa-mini-dot.occ{background:var(--green);}
+.villa-mini-dot.free{background:var(--blue-mid);}
+.villa-mini-dot.alert{background:var(--orange);}
+
+/* SPACER */
+.spacer{height:16px;}
+
+/* FADE-IN */
+.fi{opacity:0;transform:translateY(12px);transition:all .35s ease;}
+.fi.v{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="tb-logo" onclick="window.location.href='client_jean_loup.html'" style="cursor:pointer;">HIDDEN<span style="color:var(--gold)">.</span>KEYS</div>
+  <div class="tb-right">
+    <div class="tb-name"><strong>Julie Martin</strong><span>Manager · Seminyak</span></div>
+    <div class="tb-av">👩‍💼</div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero fi">
+  <div class="sofia-hero">
+    <div class="sofia-photo">✨</div>
+    <div class="sofia-name">Sofia · BALIAGENCIA</div>
+  </div>
+  <div class="hero-greeting">Good morning,<br><em>Julie.</em> 👋</div>
+  <div class="hero-tagline">You have 2 urgent alerts and 5 active villas today.</div>
+</div>
+
+<!-- STATUS BAR -->
+<div class="status-bar fi">
+  <div class="stat-pill red"><div class="stat-num red">2</div><div class="stat-lbl">🔴 Urgent</div></div>
+  <div class="stat-pill orange"><div class="stat-num orange">3</div><div class="stat-lbl">🟠 Action</div></div>
+  <div class="stat-pill green"><div class="stat-num green">5</div><div class="stat-lbl">✅ Villas OK</div></div>
+</div>
+
+<!-- MY VILLAS STRIP -->
+<div class="section fi">
+  <div class="section-title"><span class="dot" style="background:var(--blue-mid)"></span>My Villas</div>
+</div>
+<div class="villa-strip fi">
+  <div class="villa-mini" onclick="window.location='villa_light.html'">
+    <div class="villa-mini-name">Villa Surya</div>
+    <div class="villa-mini-occ">Sophie & Tom · 3 nights</div>
+    <div class="villa-mini-dot alert"></div>
+  </div>
+  <div class="villa-mini" onclick="window.location='villa_light.html'">
+    <div class="villa-mini-name">Villa Karma</div>
+    <div class="villa-mini-occ">Muñoz family · 5 nights</div>
+    <div class="villa-mini-dot occ"></div>
+  </div>
+  <div class="villa-mini" onclick="window.location='villa_light.html'">
+    <div class="villa-mini-name">Villa Serenity</div>
+    <div class="villa-mini-occ">Available · check-in tomorrow</div>
+    <div class="villa-mini-dot free"></div>
+  </div>
+  <div class="villa-mini" onclick="window.location='villa_light.html'">
+    <div class="villa-mini-name">Villa Indah</div>
+    <div class="villa-mini-occ">Chen group · 7 nights</div>
+    <div class="villa-mini-dot occ"></div>
+  </div>
+  <div class="villa-mini" onclick="window.location='villa_light.html'">
+    <div class="villa-mini-name">Villa Bulan</div>
+    <div class="villa-mini-occ">Available · free this week</div>
+    <div class="villa-mini-dot free"></div>
+  </div>
+</div>
+
+<!-- SOFIA ALERTS -->
+<div class="section fi">
+  <div class="section-title"><span class="dot" style="background:var(--red)"></span>Sofia Alerts — Priority Queue</div>
+
+  <!-- RED ALERT -->
+  <div class="alert-card red">
+    <div class="alert-icon">🔴</div>
+    <div class="alert-body">
+      <div class="alert-villa">Villa Surya · Urgent</div>
+      <div class="alert-msg">AC in master bedroom stopped working. Guest Sophie is uncomfortable — check-in was 2h ago.</div>
+      <div class="alert-meta">⏰ Today 14:23 · via Sofia · reported by guest</div>
+      <div class="alert-actions">
+        <button class="a-btn relay" onclick="markResolved(this,'relay')">📞 Call Tukang</button>
+        <button class="a-btn resolve" onclick="markResolved(this,'resolve')">✓ Resolved</button>
+        <button class="a-btn escalate" onclick="markResolved(this,'escalate')">↑ Escalate</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RED ALERT 2 -->
+  <div class="alert-card red">
+    <div class="alert-icon">🔴</div>
+    <div class="alert-body">
+      <div class="alert-villa">Villa Karma · Urgent</div>
+      <div class="alert-msg">Pool water turned cloudy overnight. Guest complaint. Pool man didn't treat yesterday.</div>
+      <div class="alert-meta">⏰ Today 08:15 · via Sofia · reported by guest</div>
+      <div class="alert-actions">
+        <button class="a-btn relay" onclick="markResolved(this,'relay')">🌊 Call Pool Man</button>
+        <button class="a-btn resolve" onclick="markResolved(this,'resolve')">✓ Resolved</button>
+        <button class="a-btn chat" onclick="markResolved(this,'chat')">💬 Sofia replies</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORANGE ALERTS -->
+  <div class="alert-card orange">
+    <div class="alert-icon">🟠</div>
+    <div class="alert-body">
+      <div class="alert-villa">Villa Serenity · Attention</div>
+      <div class="alert-msg">Cleaner reports low supplies: water gallons (1 left), LPG almost empty. Incoming guests tomorrow.</div>
+      <div class="alert-meta">⏰ Today 11:40 · via Putu Sari (Cleaner) → Sofia</div>
+      <div class="alert-actions">
+        <button class="a-btn relay" onclick="markResolved(this,'relay')">🛒 Order supplies</button>
+        <button class="a-btn resolve" onclick="markResolved(this,'resolve')">✓ Done</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert-card orange">
+    <div class="alert-icon">🟠</div>
+    <div class="alert-body">
+      <div class="alert-villa">Villa Indah · Attention</div>
+      <div class="alert-msg">Guest check-out delayed — 4pm instead of 12pm. Cleaner briefed, next guests arrive 6pm.</div>
+      <div class="alert-meta">⏰ Today 09:55 · via Agency · confirmed by Sofia</div>
+      <div class="alert-actions">
+        <button class="a-btn chat" onclick="markResolved(this,'chat')">💬 Message guest</button>
+        <button class="a-btn resolve" onclick="markResolved(this,'resolve')">✓ OK</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert-card orange">
+    <div class="alert-icon">🟠</div>
+    <div class="alert-body">
+      <div class="alert-villa">Villa Bulan · Attention</div>
+      <div class="alert-msg">Last-minute booking request for tomorrow. Awaiting owner confirmation. 2 nights, 2 guests.</div>
+      <div class="alert-meta">⏰ Today 13:08 · via Airbnb → Sofia → Julie</div>
+      <div class="alert-actions">
+        <button class="a-btn relay" onclick="markResolved(this,'relay')">📲 Notify Owner</button>
+        <button class="a-btn resolve" onclick="markResolved(this,'resolve')">✓ Confirmed</button>
+        <button class="a-btn escalate" onclick="markResolved(this,'escalate')">✗ Decline</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ORBIT — MANAGER AT CENTER, VILLAS ORBITING -->
+<div class="spacer"></div>
+<div class="clock-section fi">
+  <div class="clock-lbl">Villa Orbit · My Properties</div>
+  <div class="clock-wrap">
+    <canvas id="orbitCanvas" width="280" height="280"></canvas>
+    <div class="clock-center">👩‍💼</div>
+  </div>
+  <div class="clock-tagline">You are the <em>centre</em> —<br>your villas orbit around you. 🏡</div>
+</div>
+
+<!-- STAFF STATUS -->
+<div class="section fi">
+  <div class="section-title"><span class="dot" style="background:var(--tropical)"></span>Staff On Duty Today</div>
+  <div class="staff-grid">
+    <div class="staff-card" onclick="window.location='driver.html'">
+      <div class="staff-av emoji">🚗</div>
+      <div>
+        <div class="staff-info-name">Ketut Putra</div>
+        <div class="staff-info-role">Driver</div>
+      </div>
+      <div class="staff-status on"></div>
+    </div>
+    <div class="staff-card" onclick="window.location='cleaner.html'">
+      <div class="staff-av emoji">🧹</div>
+      <div>
+        <div class="staff-info-name">Putu Sari</div>
+        <div class="staff-info-role">Cleaner</div>
+      </div>
+      <div class="staff-status on"></div>
+    </div>
+    <div class="staff-card" onclick="window.location='poolman.html'">
+      <div class="staff-av emoji">🌊</div>
+      <div>
+        <div class="staff-info-name">Made Yasa</div>
+        <div class="staff-info-role">Pool Man</div>
+      </div>
+      <div class="staff-status idle"></div>
+    </div>
+    <div class="staff-card" onclick="window.location='gardener.html'">
+      <div class="staff-av emoji">🌿</div>
+      <div>
+        <div class="staff-info-name">Wayan Arta</div>
+        <div class="staff-info-role">Gardener</div>
+      </div>
+      <div class="staff-status on"></div>
+    </div>
+    <div class="staff-card" onclick="window.location='tukang.html'">
+      <div class="staff-av emoji">🔧</div>
+      <div>
+        <div class="staff-info-name">Nyoman Budi</div>
+        <div class="staff-info-role">Tukang</div>
+      </div>
+      <div class="staff-status off"></div>
+    </div>
+    <div class="staff-card" onclick="window.location='massage.html'">
+      <div class="staff-av emoji">👨‍🍳</div>
+      <div>
+        <div class="staff-info-name">Kadek Raka</div>
+        <div class="staff-info-role">Cooker</div>
+      </div>
+      <div class="staff-status idle"></div>
+    </div>
+  </div>
+</div>
+
+<!-- COMMUNICATION PIPELINE -->
+<div class="section fi">
+  <div class="section-title"><span class="dot" style="background:var(--gold)"></span>Communication Pipeline</div>
+  <div class="pipeline">
+    <div class="pipeline-title">How alerts flow through the system</div>
+    <div class="pipe-row">
+      <div class="pipe-node">
+        <div class="pipe-icon">🏡</div>
+        <div class="pipe-label">Staff</div>
+        <div class="pipe-sub">Report<br>missions</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-node pipe-sofia">
+        <div class="pipe-sofia-ring">✨</div>
+        <div class="pipe-label" style="color:var(--gold)">Sofia</div>
+        <div class="pipe-sub">Triage<br>& translate</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-node">
+        <div class="pipe-icon">👩‍💼</div>
+        <div class="pipe-label">Manager</div>
+        <div class="pipe-sub">You —<br>1st response</div>
+      </div>
+    </div>
+    <div class="pipe-row" style="margin-top:8px;">
+      <div class="pipe-node">
+        <div class="pipe-icon">🧳</div>
+        <div class="pipe-label">Guest</div>
+        <div class="pipe-sub">Sofia speaks<br>their language</div>
+      </div>
+      <div class="pipe-arrow">⇄</div>
+      <div class="pipe-node pipe-sofia">
+        <div class="pipe-sofia-ring">✨</div>
+        <div class="pipe-label" style="color:var(--gold)">Sofia</div>
+        <div class="pipe-sub">Auto-handle<br>or escalate</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-node">
+        <div class="pipe-icon">🏢</div>
+        <div class="pipe-label">Agency</div>
+        <div class="pipe-sub">Bookings<br>& updates</div>
+      </div>
+    </div>
+    <div class="highlight-note">
+      <strong>Sofia handles guest chat automatically</strong> in their language.<br>
+      You are notified for <strong>🟠 orange</strong> and <strong>🔴 red</strong> alerts only.<br>
+      If you can't act — Sofia escalates to the <strong>owner</strong>.
+    </div>
+  </div>
+</div>
+
+<!-- QUICK CHANNELS -->
+<div class="section fi">
+  <div class="section-title"><span class="dot" style="background:var(--blue-mid)"></span>Quick Channels</div>
+</div>
+<div class="chat-channels fi">
+  <div class="chat-pill">
+    <div class="chat-pill-icon">💬</div>
+    <div class="chat-pill-info">
+      <div class="chat-pill-name">WA Business</div>
+      <div class="chat-pill-sub">Guest threads</div>
+    </div>
+    <div class="chat-pill-badge">3</div>
+  </div>
+  <div class="chat-pill">
+    <div class="chat-pill-icon">📋</div>
+    <div class="chat-pill-info">
+      <div class="chat-pill-name">Reports</div>
+      <div class="chat-pill-sub">Daily staff</div>
+    </div>
+  </div>
+</div>
+
+<div class="spacer"></div>
+<div class="spacer"></div>
+
+<script>
+// ── GREET ──
+(function(){
+  var h=new Date().getHours();
+  var g=h<12?'Good morning':h<17?'Good afternoon':'Good evening';
+  document.querySelector('.hero-greeting').innerHTML=g+',<br><em>Julie.</em> 👋';
+})();
+
+// ── MARK RESOLVED ──
+function markResolved(btn,type){
+  var card=btn.closest('.alert-card');
+  var msg={
+    resolve:'✓ Marked as resolved — Sofia notified',
+    relay:'📞 Staff called — tracking response',
+    chat:'💬 Sofia will reply to guest',
+    escalate:'⬆ Escalated to owner'
+  }[type]||'Done';
+  card.style.opacity='0.45';
+  card.style.transition='opacity .4s';
+  btn.closest('.alert-actions').innerHTML='<span style="font-size:11px;color:var(--muted);font-weight:700;">'+msg+'</span>';
+}
+
+// ── ORBIT CLOCK — VILLAS ──
+var VILLAS=[
+  {key:'surya',   label:'Surya',   color:'rgba(230,126,34,.9)',  alert:true},
+  {key:'karma',   label:'Karma',   color:'rgba(192,57,43,.9)',   alert:true},
+  {key:'serenity',label:'Serenity',color:'rgba(41,128,185,.85)', alert:false},
+  {key:'indah',   label:'Indah',   color:'rgba(39,174,96,.85)',  alert:false},
+  {key:'bulan',   label:'Bulan',   color:'rgba(93,173,226,.85)', alert:false}
+];
+
+function drawH(ctx,cx,cy,angle,len,w,col){
+  ctx.beginPath();ctx.moveTo(cx,cy);
+  ctx.lineTo(cx+Math.cos(angle)*len,cy+Math.sin(angle)*len);
+  ctx.strokeStyle=col;ctx.lineWidth=w;ctx.lineCap='round';ctx.stroke();
+}
+
+function drawOrbit(){
+  var canvas=document.getElementById('orbitCanvas');
+  if(!canvas)return;
+  var ctx=canvas.getContext('2d');
+  var DPR=window.devicePixelRatio||1;
+  canvas.width=280*DPR;canvas.height=280*DPR;
+  canvas.style.width='280px';canvas.style.height='280px';
+  ctx.scale(DPR,DPR);
+  var CX=140,CY=140,R_ORB=100,R_SEC=118,R_MIN=Math.round(R_SEC*.9),R_HR=Math.round(R_SEC*.5),R_OUT=130;
+
+  function frame(){
+    var now=new Date();
+    var ms=now.getMilliseconds();
+    var sec=now.getSeconds()+ms/1000;
+    var min=now.getMinutes()+sec/60;
+    var hr=(now.getHours()%12)+min/60;
+    ctx.clearRect(0,0,280,280);
+
+    // Orbit ring
+    ctx.beginPath();ctx.arc(CX,CY,R_ORB,0,Math.PI*2);
+    ctx.strokeStyle='rgba(93,173,226,.10)';ctx.lineWidth=1;ctx.setLineDash([3,8]);ctx.stroke();ctx.setLineDash([]);
+    // Outer ring
+    ctx.beginPath();ctx.arc(CX,CY,R_OUT,0,Math.PI*2);
+    ctx.strokeStyle='rgba(201,168,76,.10)';ctx.lineWidth=1;ctx.stroke();
+    // Ticks
+    for(var i=0;i<12;i++){
+      var a=(i/12)*Math.PI*2-Math.PI/2;
+      var tl=i%3===0?8:4;
+      ctx.beginPath();
+      ctx.moveTo(CX+Math.cos(a)*(R_OUT-1),CY+Math.sin(a)*(R_OUT-1));
+      ctx.lineTo(CX+Math.cos(a)*(R_OUT-1-tl),CY+Math.sin(a)*(R_OUT-1-tl));
+      ctx.strokeStyle=i%3===0?'rgba(201,168,76,.4)':'rgba(201,168,76,.12)';
+      ctx.lineWidth=i%3===0?1.5:1;ctx.stroke();
+    }
+    // Clock hands
+    drawH(ctx,CX,CY,(hr/12)*Math.PI*2-Math.PI/2,R_HR,3,'rgba(232,220,200,.95)');
+    drawH(ctx,CX,CY,(min/60)*Math.PI*2-Math.PI/2,R_MIN,1.8,'rgba(232,220,200,.75)');
+    drawH(ctx,CX,CY,(sec/60)*Math.PI*2-Math.PI/2,R_SEC,1,'rgba(93,173,226,.95)');
+    drawH(ctx,CX,CY,(sec/60)*Math.PI*2-Math.PI/2+Math.PI,R_OUT*.15,1,'rgba(93,173,226,.35)');
+    ctx.beginPath();ctx.arc(CX,CY,3.5,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,.9)';ctx.fill();
+
+    // Villa bubbles — anti-clockwise drift
+    var step=Math.PI*2/VILLAS.length;
+    var drift=-(sec/60)*Math.PI*2*.5;
+    VILLAS.forEach(function(v,i){
+      var angle=i*step+drift;
+      var x=CX+Math.cos(angle)*R_ORB;
+      var y=CY+Math.sin(angle)*R_ORB;
+      var r=16;
+
+      // Glow for alert villas
+      if(v.alert){
+        var g=ctx.createRadialGradient(x,y,0,x,y,r+10);
+        g.addColorStop(0,'rgba(230,126,34,.2)');g.addColorStop(1,'transparent');
+        ctx.beginPath();ctx.arc(x,y,r+10,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+      }
+
+      // Bubble
+      ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
+      ctx.fillStyle='rgba(20,32,56,.92)';ctx.fill();
+      ctx.strokeStyle=v.color;ctx.lineWidth=v.alert?2.5:1.5;ctx.stroke();
+
+      // Villa emoji
+      ctx.font='11px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillStyle=v.alert?'#E67E22':'rgba(255,255,255,.8)';
+      ctx.fillText('🏡',x,y);
+
+      // Label
+      ctx.font='7px Nunito,sans-serif';ctx.textAlign='center';ctx.textBaseline='top';
+      ctx.fillStyle=v.color;
+      ctx.fillText(v.label,x,y+r+3);
+
+      // Alert dot
+      if(v.alert){
+        ctx.beginPath();ctx.arc(x+r-3,y-r+3,4,0,Math.PI*2);
+        ctx.fillStyle='#E74C3C';ctx.fill();
+      }
+    });
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+window.addEventListener('DOMContentLoaded',function(){
+  drawOrbit();
+  // Fade-in observer
+  var obs=new IntersectionObserver(function(ee){ee.forEach(function(e){if(e.isIntersecting)e.target.classList.add('v');});},{threshold:.05});
+  document.querySelectorAll('.fi').forEach(function(el){obs.observe(el);});
+});
+</script>
+</body>
+</html>

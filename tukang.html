@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Tukang · BALIAGENCIA</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F1EC;--bg2:#EAE5DC;--bg3:#DDD8CE;
+  --dark:#1A1A16;--dark2:#28281E;--dark3:#0E0E08;
+  --text:#2A2A22;--muted:#7A7A6A;--muted2:#A8A898;
+  --green:#27AE60;--green-soft:#E8F5EE;--green-mid:#A8D5B8;--green-dark:#1E8449;
+  --gold:#C9A84C;--gold-light:#E8C97A;
+  --orange:#E67E22;--orange-soft:#FEF0E3;--orange-mid:#F0A060;
+  --red:#C0392B;--red-soft:#FDECEA;--red-mid:#E74C3C;
+  --blue:#2980B9;--blue-soft:#EBF5FB;
+  --tropical:#00A693;--tropical-soft:#E0F4F2;
+  --rose:#FDF0F6;--rose-btn:#D4749A;--rose-dark:#A84870;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.05);
+  --shadow:0 2px 14px rgba(0,0,0,0.09);
+  --radius:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;max-width:430px;margin:0 auto;}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(244,241,236,0.97);border-bottom:1px solid var(--border);padding:0 16px;height:54px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);}
+.tb-logo{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;}
+.tb-right{display:flex;align-items:center;gap:8px;}
+.tb-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#C8C0A8,#A89880);border:2px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;font-size:16px;}
+.tb-name strong{font-size:11px;font-weight:800;color:var(--dark);display:block;text-align:right;}
+.tb-name span{font-size:10px;color:var(--muted);display:block;text-align:right;}
+/* lang toggle */
+.lang-toggle{display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:20px;background:var(--bg3);border:1px solid var(--border);cursor:pointer;font-size:10px;font-weight:700;color:var(--muted);transition:all .2s;}
+.lang-toggle:hover{border-color:var(--gold);color:var(--gold);}
+.lang-toggle .lang-active{color:var(--dark);font-weight:800;}
+
+/* ── HERO — Sofia centered ── */
+.hero{background:linear-gradient(160deg,#1C1C14 0%,#28281A 100%);padding:28px 22px 0;position:relative;overflow:hidden;text-align:center;}
+.hero-leaf{position:absolute;right:-20px;top:-20px;font-size:100px;opacity:0.05;transform:rotate(-20deg);pointer-events:none;}
+.hero-leaf2{position:absolute;left:-10px;bottom:20px;font-size:80px;opacity:0.04;transform:rotate(30deg);pointer-events:none;}
+
+/* Sofia avatar — center top */
+.sofia-hero{display:flex;flex-direction:column;align-items:center;margin-bottom:16px;}
+.sofia-photo{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,rgba(201,168,76,0.25),rgba(201,168,76,0.08));border:2px solid rgba(201,168,76,0.45);display:flex;align-items:center;justify-content:center;font-size:30px;margin-bottom:8px;box-shadow:0 0 24px rgba(201,168,76,0.12);}
+.sofia-name{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-light);font-family:'DM Mono',monospace;opacity:0.8;}
+
+/* greeting */
+.hero-greeting{font-size:28px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:6px;}
+.hero-greeting em{color:var(--gold);font-style:italic;font-family:'Playfair Display',serif;font-size:30px;font-weight:400;}
+.hero-tagline{font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:20px;line-height:1.6;}
+
+/* mission card */
+.mission-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px;text-align:left;margin-bottom:0;}
+.mc-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.mc-dot{width:10px;height:10px;border-radius:50%;background:var(--orange);box-shadow:0 0 8px rgba(230,126,34,0.6);flex-shrink:0;animation:pulse-o 2s infinite;}
+@keyframes pulse-o{0%,100%{box-shadow:0 0 8px rgba(230,126,34,0.6);}50%{box-shadow:0 0 16px rgba(230,126,34,1);}}
+.mc-villa{font-size:16px;font-weight:800;color:#fff;flex:1;}
+.mc-pill{font-size:10px;padding:3px 10px;border-radius:20px;background:rgba(230,126,34,0.2);color:var(--orange-mid);border:1px solid rgba(230,126,34,0.3);font-weight:700;}
+.mc-problem{font-size:13px;color:rgba(255,255,255,0.75);line-height:1.6;padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;border-left:2px solid rgba(230,126,34,0.5);margin-bottom:10px;}
+.mc-photo{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:18px;text-align:center;font-size:26px;margin-bottom:10px;}
+.mc-photo span{display:block;font-size:10px;color:rgba(255,255,255,0.3);margin-top:4px;}
+.mc-tags{display:flex;gap:7px;flex-wrap:wrap;}
+.mc-tag{font-size:10px;padding:4px 10px;border-radius:20px;font-weight:700;}
+.t-loc{background:rgba(41,128,185,0.2);color:#7EC8F0;border:1px solid rgba(41,128,185,0.3);}
+.t-eta{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.45);border:1px solid rgba(255,255,255,0.1);}
+.t-rep{background:rgba(201,168,76,0.1);color:var(--gold-light);border:1px solid rgba(201,168,76,0.2);}
+
+/* accept */
+.mission-actions{display:grid;grid-template-columns:1fr auto;gap:8px;padding:16px 22px 22px;}
+.accept-btn{padding:14px;border-radius:12px;background:linear-gradient(135deg,var(--green-dark),var(--green));color:#fff;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 16px rgba(39,174,96,0.3);transition:all .25s;}
+.accept-btn.on{background:rgba(39,174,96,0.12);border:1.5px solid var(--green);box-shadow:none;color:var(--green);cursor:default;}
+.accept-sub{font-size:9px;color:rgba(255,255,255,0.3);text-align:center;padding-bottom:16px;font-style:italic;}
+.decline-btn{padding:14px 16px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;}
+
+/* MISSION BODY */
+.mbody{display:none;}
+.mbody.show{display:block;}
+
+/* CLOCK */
+.clock-section{background:linear-gradient(180deg,#28281A 0%,var(--dark3) 100%);padding:22px 20px 24px;display:flex;flex-direction:column;align-items:center;}
+.clock-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.18);margin-bottom:16px;font-family:'DM Mono',monospace;}
+.clock-wrap{position:relative;width:280px;height:280px;}
+#orbitCanvas{position:absolute;top:0;left:0;width:280px;height:280px;}
+.clock-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:74px;height:74px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.12),rgba(201,168,76,0.02));border:1.5px solid rgba(201,168,76,0.4);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;}
+.cc-emoji{font-size:26px;line-height:1;}
+.cc-lbl{font-size:7px;color:var(--gold-light);font-family:'DM Mono',monospace;letter-spacing:0.8px;margin-top:3px;text-transform:uppercase;opacity:0.8;text-align:center;max-width:64px;}
+.clock-tagline{font-size:11px;color:rgba(255,255,255,0.25);margin-top:14px;text-align:center;max-width:260px;line-height:1.75;font-style:italic;}
+.clock-tagline em{color:var(--gold-light);font-style:normal;font-weight:800;}
+
+/* GENERIC BLOCK */
+.block{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin:12px 20px 0;}
+.block-title{font-size:13px;font-weight:800;color:var(--dark);margin-bottom:3px;display:flex;align-items:center;gap:8px;}
+.block-sub{font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.5;}
+
+/* TOOLS */
+.tools-rect{border-radius:12px;padding:16px 18px;margin:12px 20px 0;border:2px solid var(--green-mid);background:var(--green-soft);cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:14px;}
+.tools-rect.on{background:var(--green);border-color:var(--green);box-shadow:0 4px 16px rgba(39,174,96,0.28);}
+.tr-icon{font-size:26px;flex-shrink:0;}
+.tr-info{flex:1;}
+.tr-title{font-size:14px;font-weight:800;color:var(--green-dark);}
+.tools-rect.on .tr-title{color:#fff;}
+.tr-list{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5;}
+.tools-rect.on .tr-list{color:rgba(255,255,255,0.7);}
+.tr-check{font-size:22px;flex-shrink:0;transition:all .2s;}
+
+/* mission tools */
+.mission-tools{border-radius:12px;margin:8px 20px 0;overflow:hidden;border:1.5px solid rgba(230,126,34,0.25);background:#fff;transition:border-color .25s;}
+.mission-tools.has-missing{border-color:var(--orange);}
+.mt-header{padding:14px 18px;display:flex;align-items:center;gap:12px;}
+.mt-icon{font-size:20px;flex-shrink:0;}
+.mt-info{flex:1;}
+.mt-title{font-size:13px;font-weight:800;color:var(--dark);}
+.mt-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.mt-items{border-top:1px solid rgba(230,126,34,0.1);padding:0 18px 14px;}
+.mt-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border2);}
+.mt-item:last-child{border-bottom:none;}
+.mt-item-icon{font-size:18px;width:24px;text-align:center;}
+.mt-item-info{flex:1;}
+.mt-item-name{font-size:12px;font-weight:700;color:var(--dark);}
+.mt-item-note{font-size:10px;color:var(--muted);margin-top:1px;}
+.mt-yn{display:flex;gap:6px;}
+.yn{padding:6px 12px;border-radius:20px;font-size:11px;font-weight:800;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:'Nunito',sans-serif;transition:all .2s;}
+.yn.yes{border-color:var(--green);color:var(--green);background:var(--green-soft);}
+.yn.no{border-color:var(--red-mid);color:var(--red-mid);background:var(--red-soft);}
+
+/* buy box */
+.buy-box{background:var(--dark2);border-radius:12px;margin:0 20px;padding:18px;display:none;border:1px solid rgba(230,126,34,0.2);}
+.buy-box.show{display:block;}
+.bb-title{font-size:12px;font-weight:800;color:var(--orange-mid);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.bb-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.06);}
+.bb-item:last-of-type{border-bottom:none;}
+.bb-chk{width:20px;height:20px;border-radius:5px;border:1.5px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--green);cursor:pointer;flex-shrink:0;transition:all .2s;}
+.bb-chk.on{background:var(--green);border-color:var(--green);color:#fff;}
+.bb-item-name{flex:1;font-size:12px;color:rgba(255,255,255,0.75);}
+.bb-item-price{font-family:'DM Mono',monospace;font-size:11px;color:var(--orange-mid);}
+.bb-extra{margin-top:10px;}
+.bb-extra-lbl{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:6px;}
+.bb-extra-input{width:100%;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);color:#fff;font-family:'Nunito',sans-serif;font-size:12px;outline:none;transition:border-color .2s;}
+.bb-extra-input:focus{border-color:rgba(230,126,34,0.4);}
+.bb-extra-input::placeholder{color:rgba(255,255,255,0.2);}
+.bb-total{display:flex;justify-content:space-between;padding-top:10px;border-top:1px solid rgba(255,255,255,0.08);margin-top:8px;}
+.bb-total-lbl{font-size:12px;font-weight:800;color:rgba(255,255,255,0.6);}
+.bb-total-val{font-family:'DM Mono',monospace;font-size:14px;color:var(--orange-mid);}
+.rex-box{margin-top:10px;padding:14px;background:rgba(201,168,76,0.07);border:1px solid rgba(201,168,76,0.22);border-radius:10px;display:none;}
+.rex-box.show{display:block;}
+.rex-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.rex-ava{width:28px;height:28px;border-radius:50%;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.35);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.rex-name{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-family:'DM Mono',monospace;}
+.rex-live{display:flex;align-items:center;gap:4px;margin-left:auto;}
+.rex-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pg 1.5s infinite;}
+@keyframes pg{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.rex-live-txt{font-size:9px;color:var(--green);font-weight:700;font-family:'DM Mono',monospace;}
+.rex-msg{font-size:12px;color:rgba(255,255,255,0.6);line-height:1.65;margin-bottom:8px;}
+.rex-status{padding:9px 12px;border-radius:8px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:7px;transition:all .5s;}
+.rex-status.proc{background:var(--orange-soft);color:var(--orange);}
+.rex-status.conf{background:var(--green-soft);color:var(--green-dark);}
+.receipt-wrap{margin-top:10px;}
+.receipt-upload{padding:12px;border:1.5px dashed rgba(255,255,255,0.15);border-radius:10px;text-align:center;cursor:pointer;background:rgba(255,255,255,0.03);transition:all .2s;}
+.receipt-upload:hover{border-color:rgba(230,126,34,0.4);}
+.ru-ico{font-size:18px;margin-bottom:3px;}
+.ru-txt strong{display:block;font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:1px;}
+.ru-txt span{font-size:10px;color:rgba(255,255,255,0.25);}
+input[type=file]{display:none;}
+.photos-mini{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+.pm{width:54px;height:54px;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);position:relative;}
+.pm img{width:100%;height:100%;object-fit:cover;}
+.pm-rm{position:absolute;top:2px;right:2px;width:15px;height:15px;border-radius:50%;background:rgba(231,76,60,0.85);color:#fff;font-size:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+
+/* ROADMAP */
+.rmap{display:flex;flex-direction:column;}
+.rmap-step{display:flex;gap:14px;padding:10px 0;position:relative;}
+.rmap-step:not(:last-child)::after{content:'';position:absolute;left:15px;top:36px;bottom:-2px;width:2px;background:var(--border2);}
+.rmap-dot{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid var(--border);background:var(--bg2);transition:all .3s;}
+.rmap-dot.done{background:var(--green);border-color:var(--green);}
+.rmap-dot.active{background:var(--orange-soft);border-color:var(--orange);}
+.rmap-info{flex:1;padding-top:5px;}
+.rmap-lbl{font-size:12px;font-weight:800;color:var(--dark);}
+.rmap-sub{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.5;}
+.rmap-eta{font-size:10px;color:var(--orange);font-family:'DM Mono',monospace;margin-top:2px;}
+.sofia-tracking{margin-top:12px;padding:10px 12px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:8px;font-size:11px;color:rgba(201,168,76,0.7);display:flex;align-items:center;gap:8px;}
+
+/* DOORBELL */
+.doorbell-btn{width:100%;padding:13px 18px;border-radius:12px;background:transparent;border:1.5px solid rgba(41,128,185,0.3);color:var(--blue);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:9px;margin-top:8px;}
+.doorbell-btn:hover{background:var(--blue-soft);}
+.doorbell-msg{margin-top:8px;padding:10px 14px;background:var(--blue-soft);border:1px solid rgba(41,128,185,0.2);border-radius:8px;font-size:11px;color:var(--blue);line-height:1.6;display:none;}
+.doorbell-msg.show{display:block;}
+
+/* 3 STEPS */
+.intervention-wrap{margin:12px 20px 0;}
+.intervention-title{font-size:13px;font-weight:800;color:var(--dark);margin-bottom:10px;}
+.step-big{border-radius:14px;margin-bottom:8px;overflow:hidden;border:1.5px solid transparent;transition:all .3s;}
+.step-big.s-blue{background:linear-gradient(135deg,#163A5F,#1A4A7A);border-color:rgba(41,128,185,0.3);}
+.step-big.s-orange{background:linear-gradient(135deg,#6A2E08,#8A4010);border-color:rgba(230,126,34,0.3);}
+.step-big.s-green{background:linear-gradient(135deg,#1A5A28,#1E7030);border-color:rgba(39,174,96,0.3);}
+.step-big.done{background:linear-gradient(135deg,#1E6A38,#27AE60)!important;border-color:rgba(39,174,96,0.4)!important;box-shadow:0 3px 14px rgba(39,174,96,0.18);}
+.sbh{display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;}
+.sbh-num{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.sbh-info{flex:1;}
+.sbh-name{font-size:16px;font-weight:800;color:#fff;}
+.sbh-sub{font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px;}
+.sbh-badge{font-size:10px;padding:5px 10px;border-radius:20px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.55);font-weight:700;white-space:nowrap;}
+.step-big.done .sbh-badge{background:rgba(255,255,255,0.2);color:#fff;}
+.sbb{display:none;padding:0 20px 20px;border-top:1px solid rgba(255,255,255,0.1);}
+.sbb.open{display:block;}
+.sbb-hint{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.65;margin:12px 0 14px;}
+.photo-slot{padding:16px;border:1.5px dashed rgba(255,255,255,0.2);border-radius:10px;text-align:center;cursor:pointer;background:rgba(255,255,255,0.04);transition:all .2s;margin-bottom:12px;}
+.photo-slot:hover{border-color:rgba(255,255,255,0.4);}
+.photo-slot.has-photo{border-style:solid;border-color:rgba(255,255,255,0.3);padding:0;overflow:hidden;}
+.photo-slot.has-photo img{width:100%;max-height:180px;object-fit:cover;display:block;}
+.ps-icon{font-size:26px;margin-bottom:5px;}
+.ps-label{font-size:11px;font-weight:700;color:rgba(255,255,255,0.6);}
+.ps-sub{font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px;}
+.step-btn{width:100%;padding:13px;border-radius:10px;background:rgba(255,255,255,0.14);border:1.5px solid rgba(255,255,255,0.22);color:#fff;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.step-btn:hover{background:rgba(255,255,255,0.22);}
+.goodbye{margin-top:12px;padding:12px 14px;background:rgba(255,255,255,0.08);border-radius:10px;font-size:12px;color:rgba(255,255,255,0.75);line-height:1.65;border-left:2px solid rgba(255,255,255,0.2);}
+
+/* ── MID-SHOP — ORANGE prominent ── */
+.midshop-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:calc(100% - 40px);margin:10px 20px 0;padding:16px 18px;border-radius:14px;background:var(--orange-soft);border:2px solid var(--orange);color:var(--orange);font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:all .25s;box-shadow:0 3px 12px rgba(230,126,34,0.18);}
+.midshop-btn:hover{background:var(--orange);color:#fff;box-shadow:0 5px 18px rgba(230,126,34,0.35);}
+.midshop-btn-icon{font-size:24px;}
+.midshop-section{display:none;margin:8px 20px 0;background:var(--dark2);border-radius:var(--radius);padding:20px;border:1px solid rgba(230,126,34,0.3);}
+.midshop-section.show{display:block;}
+.ms-title{font-size:13px;font-weight:800;color:var(--orange-mid);margin-bottom:8px;}
+.ms-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:12px;line-height:1.5;}
+.ms-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.ms-chip{padding:7px 12px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);font-size:11px;font-weight:700;color:rgba(255,255,255,0.5);cursor:pointer;transition:all .2s;}
+.ms-chip.on{border-color:var(--orange);background:rgba(230,126,34,0.15);color:var(--orange-mid);}
+.ms-extra{width:100%;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);color:#fff;font-family:'Nunito',sans-serif;font-size:12px;outline:none;margin-bottom:10px;}
+.ms-extra::placeholder{color:rgba(255,255,255,0.2);}
+.ms-confirm{width:100%;padding:12px;border-radius:10px;background:var(--orange);border:none;color:#fff;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:all .2s;}
+.ms-confirm:hover{background:#d4711e;}
+
+/* ── LEVEL 4 — RED prominent ── */
+.l4-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:calc(100% - 40px);margin:8px 20px 0;padding:14px 18px;border-radius:14px;background:var(--red-soft);border:2px solid var(--red-mid);color:var(--red-mid);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:all .25s;box-shadow:0 3px 10px rgba(231,76,60,0.15);}
+.l4-btn:hover{background:var(--red-mid);color:#fff;box-shadow:0 5px 18px rgba(231,76,60,0.35);}
+.l4-btn-icon{font-size:22px;}
+.l4-section{display:none;margin:8px 20px 0;background:var(--dark2);border-radius:var(--radius);padding:20px;border:1px solid rgba(192,57,43,0.4);}
+.l4-section.show{display:block;}
+.l4-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.l4-sofia{width:36px;height:36px;border-radius:50%;background:rgba(231,76,60,0.15);border:1px solid rgba(231,76,60,0.3);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.l4-title{font-size:13px;font-weight:800;color:#fff;}
+.l4-sub{font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px;}
+.l4-msg{font-size:12px;color:rgba(255,255,255,0.55);line-height:1.7;padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:8px;border-left:2px solid rgba(231,76,60,0.5);margin-bottom:12px;}
+.l4-opts{display:flex;flex-direction:column;gap:7px;}
+.l4-opt{padding:11px 14px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .2s;}
+.l4-opt:hover,.l4-opt.on{border-color:rgba(230,126,34,0.4);background:rgba(230,126,34,0.06);}
+.l4-opt-icon{font-size:18px;}
+.l4-opt-name{font-size:12px;font-weight:800;color:rgba(255,255,255,0.75);}
+.l4-opt-sub{font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px;}
+.l4-note{margin-top:12px;font-size:11px;color:rgba(255,255,255,0.25);font-style:italic;line-height:1.6;text-align:center;}
+
+/* WELLBEING */
+.wb-wrap{margin:12px 20px 0;background:var(--rose);border-radius:var(--radius);padding:20px;border:1.5px solid rgba(212,116,154,0.2);}
+.wb-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(168,72,112,0.5);margin-bottom:10px;font-family:'DM Mono',monospace;}
+.wb-title{font-size:15px;font-weight:800;color:var(--rose-dark);margin-bottom:4px;}
+.wb-sub{font-size:12px;color:rgba(168,72,112,0.6);line-height:1.6;margin-bottom:14px;}
+.wb-good{padding:16px 18px;border-radius:12px;border:2px solid rgba(212,116,154,0.3);background:linear-gradient(135deg,#F2C4D8,#EAA8C4);cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+.wb-good.on{background:linear-gradient(135deg,var(--rose-btn),var(--rose-dark));border-color:var(--rose-dark);box-shadow:0 4px 14px rgba(168,72,112,0.22);}
+.wb-good-icon{font-size:24px;}
+.wb-good-text{font-size:14px;font-weight:800;color:#fff;}
+.wb-good-sub{font-size:11px;color:rgba(255,255,255,0.7);margin-top:2px;}
+.wb-rep{padding:14px 18px;border-radius:12px;border:1.5px solid rgba(0,0,0,0.1);background:#1A1A16;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .2s;}
+.wb-rep.on{border-color:rgba(255,255,255,0.18);}
+.wb-rep-text{font-size:13px;font-weight:800;color:rgba(255,255,255,0.8);}
+.wb-rep-sub{font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px;}
+.wb-qcm{display:none;margin-top:12px;padding:16px;background:#1A1A16;border-radius:12px;border:1px solid rgba(255,255,255,0.08);}
+.wb-qcm.show{display:block;}
+.wb-step{display:none;}
+.wb-step.active{display:block;}
+.wb-q{font-size:13px;font-weight:800;color:rgba(255,255,255,0.85);margin-bottom:12px;line-height:1.5;}
+.wb-opts{display:flex;flex-direction:column;gap:7px;}
+.wb-opt{padding:11px 14px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);cursor:pointer;font-size:12px;font-weight:700;color:rgba(255,255,255,0.6);transition:all .2s;display:flex;align-items:center;gap:10px;}
+.wb-opt:hover,.wb-opt.sel{border-color:rgba(212,116,154,0.5);background:rgba(212,116,154,0.08);color:rgba(255,255,255,0.9);}
+.wb-opt-icon{font-size:15px;}
+.wb-stars{display:flex;gap:8px;justify-content:center;margin:12px 0;}
+.star{font-size:28px;cursor:pointer;filter:grayscale(1);opacity:0.3;transition:all .2s;}
+.star.on{filter:none;opacity:1;transform:scale(1.1);}
+.wb-stars-lbl{font-size:11px;color:rgba(255,255,255,0.35);text-align:center;margin-bottom:10px;}
+.wb-note-txt{font-size:11px;color:rgba(255,255,255,0.3);margin:10px 0 6px;font-style:italic;line-height:1.6;}
+.wb-textarea{width:100%;padding:12px;border-radius:10px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);color:#fff;font-family:'Nunito',sans-serif;font-size:12px;outline:none;resize:none;min-height:72px;margin-top:8px;transition:border-color .2s;}
+.wb-textarea:focus{border-color:rgba(212,116,154,0.4);}
+.wb-textarea::placeholder{color:rgba(255,255,255,0.18);}
+.wb-alert{margin-top:12px;padding:10px 14px;background:rgba(212,116,154,0.1);border:1px solid rgba(212,116,154,0.25);border-radius:8px;font-size:11px;color:rgba(212,116,154,0.9);line-height:1.6;}
+.wb-back{background:transparent;border:none;color:rgba(255,255,255,0.3);font-family:'Nunito',sans-serif;font-size:11px;cursor:pointer;margin-top:8px;padding:4px 0;text-decoration:underline;}
+
+/* SUBMIT */
+.submit-wrap{padding:14px 20px 48px;}
+.submit-btn{width:100%;padding:18px;border-radius:14px;background:linear-gradient(135deg,var(--green-dark),var(--green));color:#fff;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 6px 20px rgba(39,174,96,0.28);transition:all .3s;}
+.submit-btn:hover{transform:translateY(-2px);}
+
+/* SUCCESS */
+.success{display:none;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;background:linear-gradient(160deg,var(--dark2) 0%,var(--dark3) 100%);}
+.success.show{display:flex;}
+.success-burst{font-size:80px;margin-bottom:20px;animation:burst .5s cubic-bezier(.175,.885,.32,1.275);}
+@keyframes burst{0%{transform:scale(0) rotate(-20deg);opacity:0;}100%{transform:scale(1) rotate(0);opacity:1;}}
+.success-h{font-size:28px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:10px;}
+.success-h em{color:var(--gold);font-style:italic;font-family:'Playfair Display',serif;}
+.success-p{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.8;max-width:300px;margin:0 auto 24px;}
+.success-stats{display:flex;gap:12px;margin-bottom:24px;}
+.ss{padding:14px 18px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);min-width:78px;}
+.ss-num{font-family:'DM Mono',monospace;font-size:24px;color:var(--green);}
+.ss-label{font-size:10px;color:rgba(255,255,255,0.35);margin-top:4px;}
+.success-notify{padding:12px 20px;border-radius:10px;background:rgba(0,166,147,0.1);border:1px solid rgba(0,166,147,0.25);font-size:12px;color:var(--tropical);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.success-quote{font-size:13px;font-style:italic;color:rgba(255,255,255,0.28);max-width:280px;margin:0 auto 28px;font-family:'Playfair Display',serif;line-height:1.7;}
+.success-next{padding:13px 28px;border-radius:10px;background:transparent;border:1.5px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;}
+.success-next:hover{border-color:var(--gold);color:var(--gold);}
+
+.spacer{height:12px;}
+.pass-opt{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);cursor:pointer;font-size:13px;font-weight:700;color:rgba(255,255,255,0.65);transition:all .2s;}
+.pass-opt:hover,.pass-opt.sel{border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.08);color:#fff;}
+.pass-time-opt{padding:10px 8px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);cursor:pointer;font-size:12px;font-weight:700;color:rgba(255,255,255,0.5);text-align:center;transition:all .2s;}
+.pass-time-opt:hover,.pass-time-opt.sel{border-color:var(--tropical);background:rgba(0,166,147,0.15);color:var(--tropical);}
+.fi{opacity:0;transform:translateY(14px);transition:all .35s ease;}
+.fi.v{opacity:1;transform:translateY(0);}
+/* ← BACK BUTTON */
+.tb-back{font-size:11px;font-weight:800;color:var(--muted);padding:5px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border);cursor:pointer;text-decoration:none;transition:all .2s;}
+.tb-back:hover{border-color:var(--orange);color:var(--orange);}
+/* ── XENDIT PAYMENT ── */
+.pay-block{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin:12px 20px 0;overflow:hidden;border-left:3px solid var(--orange);}
+.pay-header{padding:14px 16px 10px;display:flex;align-items:center;gap:10px;}
+.pay-icon{font-size:22px;}
+.pay-title{font-size:13px;font-weight:800;color:var(--dark);}
+.pay-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.pay-price-row{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 14px;border-top:1px solid var(--border2);}
+.pay-price-lbl{font-size:12px;color:var(--muted);}
+.pay-price-amt{font-family:'DM Mono',monospace;font-size:20px;font-weight:700;color:var(--orange);}
+.pay-price-note{font-size:10px;color:var(--muted);margin-top:2px;}
+.pay-btns{padding:0 16px 16px;display:flex;flex-direction:column;gap:8px;}
+.pay-btn-advance{width:100%;padding:12px 16px;border-radius:10px;background:linear-gradient(135deg,rgba(41,128,185,0.12),rgba(41,128,185,0.06));border:1.5px solid rgba(41,128,185,0.3);color:var(--blue);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .25s;}
+.pay-btn-advance.sent{background:rgba(39,174,96,0.1);border-color:var(--green-mid);color:var(--green-dark);cursor:default;}
+.pay-btn-reimb{width:100%;padding:12px 16px;border-radius:10px;background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.06));border:1.5px solid rgba(201,168,76,0.3);color:var(--gold);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .25s;}
+.pay-btn-reimb.sent{background:rgba(39,174,96,0.1);border-color:var(--green-mid);color:var(--green-dark);cursor:default;}
+.pay-receipt-area{padding:0 16px 16px;display:none;}
+.pay-receipt-area.show{display:block;}
+.pay-receipt-label{font-size:11px;color:var(--muted);margin-bottom:8px;}
+.pay-receipt-upload{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;border:1.5px dashed rgba(201,168,76,0.4);background:rgba(201,168,76,0.04);cursor:pointer;}
+.pay-receipt-upload input{display:none;}
+.pay-receipt-thumb{width:48px;height:48px;border-radius:8px;object-fit:cover;display:none;}
+.pay-confirm-btn{margin-top:10px;width:100%;padding:12px;border-radius:10px;background:var(--green);border:none;color:#fff;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;display:none;}
+.pay-confirm-btn.show{display:block;}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="tb-logo">BALI<span style="color:var(--gold)">.</span>AGENCIA</div>
+  <div class="tb-right">
+    <a class="tb-back" href="manager.html">← Manager</a>
+    <div class="lang-toggle" onclick="toggleLang()" id="lang-btn">
+      <span class="lang-active" id="lang-active">ID</span>
+      <span>▸</span>
+      <span id="lang-other">BALI</span>
+    </div>
+    <div class="tb-name"><strong>Wayan Darma</strong><span>Tukang · Seminyak</span></div>
+    <div class="tb-avatar">🔧</div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero fi">
+  <div class="hero-leaf">🌿</div>
+  <div class="hero-leaf2">🌺</div>
+
+  <!-- Sofia centered -->
+  <div class="sofia-hero">
+    <div class="sofia-photo">✨</div>
+    <div class="sofia-name">Sofia · BALIAGENCIA</div>
+  </div>
+
+  <!-- Smart greeting -->
+  <div class="hero-greeting" id="hero-greeting">Selamat pagi,<br><em>Wayan.</em> 👋</div>
+  <div class="hero-tagline" id="hero-tagline">Siap kerja hari ini untuk pengalaman Bali yang sempurna? 🌴</div>
+
+  <!-- Mission -->
+  <div class="mission-card">
+    <div class="mc-top">
+      <div class="mc-dot"></div>
+      <div class="mc-villa">Villa Surya</div>
+      <div class="mc-pill">🟠 Medium</div>
+    </div>
+    <div class="mc-problem">💧 <strong>Kitchen sink leak</strong> — dripping under the cabinet since last night. Water pooling on the floor.</div>
+    <div class="mc-photo">📸<span>Photo from Putu (cleaner) · 07:42</span></div>
+    <div class="mc-tags">
+      <span class="mc-tag t-loc">📍 Seminyak · Jl. Sunset Road 42</span>
+      <span class="mc-tag t-eta">⏱ ~8 min</span>
+      <span class="mc-tag t-rep">Reported by: Putu</span>
+    </div>
+    <!-- PRIX PROPOSÉ — visible avant acceptation -->
+    <div style="margin-top:12px;padding:12px 14px;background:rgba(201,168,76,0.08);border:1.5px solid rgba(201,168,76,0.25);border-radius:10px;display:flex;align-items:center;justify-content:space-between;">
+      <div><div style="font-size:10px;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:1px;font-family:'DM Mono',monospace;">Prix proposé</div><div style="font-size:22px;font-weight:800;color:var(--gold-light);font-family:'DM Mono',monospace;" id="mission-price">Rp 175.000</div></div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.3);text-align:right;line-height:1.5;">Plomberie · urgence<br>Rex paie après confirmation</div>
+    </div>
+  </div>
+
+  <div class="mission-actions">
+    <button class="accept-btn" id="accept-btn" onclick="acceptMission()">✅ Accept mission</button>
+    <button class="decline-btn" onclick="showPassModal()">✗ Pass</button>
+  </div>
+  <div class="accept-sub" id="accept-sub">By accepting, you agree to share your location for the duration of this mission.</div>
+</div>
+
+<!-- PASS MODAL -->
+<div id="pass-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;align-items:flex-end;justify-content:center;">
+  <div style="background:#1C1C14;border-radius:20px 20px 0 0;padding:28px 24px 40px;width:100%;max-width:430px;border-top:1px solid rgba(255,255,255,0.1);">
+    <div style="width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;margin:0 auto 20px;"></div>
+    <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:4px;">No problem, Wayan 🙏</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:18px;">Can you tell us why? Sofia will find someone else right away.</div>
+
+    <div id="pass-step-1">
+      <div style="display:flex;flex-direction:column;gap:8px;" id="pass-reasons">
+        <div class="pass-opt" onclick="selectPassReason(this,'far')">📍 <span>Too far from the villa right now</span></div>
+        <div class="pass-opt" onclick="selectPassReason(this,'sick')">🤒 <span>Not feeling well today</span></div>
+        <div class="pass-opt" onclick="selectPassReason(this,'ceremony')">🙏 <span>Ceremony / personal reason</span></div>
+        <div class="pass-opt" onclick="selectPassReason(this,'mission')">🔧 <span>Already on another mission</span></div>
+        <div class="pass-opt" onclick="selectPassReason(this,'other')">❓ <span>Other</span></div>
+      </div>
+      <textarea id="pass-other-text" style="display:none;width:100%;margin-top:10px;padding:12px;border-radius:10px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);color:#fff;font-family:'Nunito',sans-serif;font-size:12px;outline:none;resize:none;min-height:72px;" placeholder="Tell us briefly..."></textarea>
+    </div>
+
+    <div id="pass-step-2" style="display:none;">
+      <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.7);margin-bottom:12px;">When will you be available?</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;" id="pass-times">
+        <div class="pass-time-opt" onclick="selectPassTime(this,'1h')">In 1h</div>
+        <div class="pass-time-opt" onclick="selectPassTime(this,'2h')">In 2h</div>
+        <div class="pass-time-opt" onclick="selectPassTime(this,'3h')">In 3h</div>
+        <div class="pass-time-opt" onclick="selectPassTime(this,'5h')">In 5h</div>
+        <div class="pass-time-opt" onclick="selectPassTime(this,'tomorrow')">Tomorrow AM</div>
+        <div class="pass-time-opt" onclick="selectPassTime(this,'unknown')">I'll let you know</div>
+      </div>
+    </div>
+
+    <button id="pass-confirm-btn" style="display:none;width:100%;margin-top:16px;padding:14px;border-radius:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;" onclick="confirmPass()">Send — Sofia will handle it</button>
+    <button style="width:100%;margin-top:8px;padding:10px;border-radius:10px;background:transparent;border:none;color:rgba(255,255,255,0.25);font-family:'Nunito',sans-serif;font-size:12px;cursor:pointer;" onclick="closePassModal()">← Actually, I'll take it</button>
+  </div>
+</div>
+
+<!-- MISSION BODY -->
+<div class="mbody" id="mbody">
+
+  <!-- CLOCK -->
+  <div class="clock-section fi" style="transition-delay:.03s">
+    <div class="clock-lbl">Your constellation · Villa Surya</div>
+    <div class="clock-wrap">
+      <canvas id="orbitCanvas" width="280" height="280"></canvas>
+      <div class="clock-center"><div class="cc-emoji">🧳</div><div class="cc-lbl">Sophie & Tom</div></div>
+    </div>
+    <div class="clock-tagline">When something breaks, <em>you fix it.</em><br>The guest never sees the stress — only the relief. 🙏</div>
+  </div>
+
+  <!-- ── XENDIT — MODE GIG ── -->
+  <div class="pay-block fi" style="transition-delay:.05s" id="pay-block">
+    <div class="pay-header">
+      <div class="pay-icon">💸</div>
+      <div>
+        <div class="pay-title">Pembayaran · Rex</div>
+        <div class="pay-sub">Dibayar setelah misi selesai</div>
+      </div>
+    </div>
+    <div class="pay-price-row">
+      <div><div class="pay-price-lbl">Nilai misi ini</div><div class="pay-price-amt" id="pay-amount">Rp 175.000</div><div class="pay-price-note">Rex transfer ke rekening kamu setelah Sofia konfirmasi</div></div>
+    </div>
+    <div class="pay-btns">
+      <button class="pay-btn-advance" id="btn-advance" onclick="requestAdvance()">
+        💳 Tidak ada uang tunai untuk beli bahan? Rex kirim dulu
+      </button>
+      <button class="pay-btn-reimb" id="btn-reimb" onclick="openReimb()">
+        🧾 Upload struk → Rex ganti biaya
+      </button>
+    </div>
+    <div class="pay-receipt-area" id="reimb-area">
+      <div class="pay-receipt-label">Foto struk pembelian bahan</div>
+      <label class="pay-receipt-upload">
+        <span>📸 Ambil foto struk</span>
+        <input type="file" accept="image/*" capture="environment" onchange="reimbPhoto(this)">
+        <img class="pay-receipt-thumb" id="reimb-thumb">
+      </label>
+      <button class="pay-confirm-btn" id="reimb-confirm-btn" onclick="confirmReimb()">✅ Kirim ke Rex untuk diproses</button>
+    </div>
+  </div>
+
+  <!-- TOOLS RECT 1 — GREEN base -->
+  <div class="tools-rect fi" style="transition-delay:.06s" id="base-tools" onclick="toggleBase()">
+    <div class="tr-icon">🧰</div>
+    <div class="tr-info">
+      <div class="tr-title" id="base-title">I have all my standard tools</div>
+      <div class="tr-list">Wrench · Screwdrivers · Pliers · Knife · Tape measure</div>
+    </div>
+    <div class="tr-check" id="base-check">○</div>
+  </div>
+
+  <!-- TOOLS RECT 2 — ORANGE mission specific -->
+  <div class="mission-tools fi" style="transition-delay:.08s" id="mission-tools">
+    <div class="mt-header">
+      <div class="mt-icon">🪛</div>
+      <div class="mt-info">
+        <div class="mt-title">Special items for this mission</div>
+        <div class="mt-sub">Do you have these specific materials?</div>
+      </div>
+    </div>
+    <div class="mt-items">
+      <div class="mt-item">
+        <div class="mt-item-icon">⭕</div>
+        <div class="mt-item-info">
+          <div class="mt-item-name">Rubber joint ½"</div>
+          <div class="mt-item-note">For sink pipe connection</div>
+        </div>
+        <div class="mt-yn">
+          <button class="yn" onclick="ynPick(this,'yes','joint')">Yes</button>
+          <button class="yn" onclick="ynPick(this,'no','joint')">No</button>
+        </div>
+      </div>
+      <div class="mt-item">
+        <div class="mt-item-icon">🌀</div>
+        <div class="mt-item-info">
+          <div class="mt-item-name">Teflon tape</div>
+          <div class="mt-item-note">For thread sealing</div>
+        </div>
+        <div class="mt-yn">
+          <button class="yn" onclick="ynPick(this,'yes','teflon')">Yes</button>
+          <button class="yn" onclick="ynPick(this,'no','teflon')">No</button>
+        </div>
+      </div>
+      <div class="mt-item">
+        <div class="mt-item-icon">🧽</div>
+        <div class="mt-item-info">
+          <div class="mt-item-name">Absorbent cloth / sponge</div>
+          <div class="mt-item-note">To dry under cabinet</div>
+        </div>
+        <div class="mt-yn">
+          <button class="yn" onclick="ynPick(this,'yes','cloth')">Yes</button>
+          <button class="yn" onclick="ynPick(this,'no','cloth')">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUY BOX -->
+  <div class="buy-box fi" style="transition-delay:.09s" id="buy-box">
+    <div class="bb-title">🛒 Items to buy at the shop</div>
+    <div id="bb-items"></div>
+    <div class="bb-extra">
+      <div class="bb-extra-lbl">Anything else?</div>
+      <input class="bb-extra-input" type="text" placeholder="Describe anything else you need...">
+    </div>
+    <div class="bb-total">
+      <span class="bb-total-lbl">Estimated total</span>
+      <span class="bb-total-val" id="bb-total">Rp 0</span>
+    </div>
+    <div class="rex-box" id="rex-box">
+      <div class="rex-top">
+        <div class="rex-ava">🦊</div>
+        <div><div class="rex-name">Rex · Finance</div></div>
+        <div class="rex-live"><div class="rex-dot"></div><span class="rex-live-txt">Live</span></div>
+      </div>
+      <div class="rex-msg">This amount needs a transfer. <strong>Don't pay yet.</strong> I'm sending money to your account right now — wait for the confirmation below 👇</div>
+      <div class="rex-status proc" id="rex-status">⏳ Processing transfer...</div>
+    </div>
+    <div class="receipt-wrap">
+      <label>
+        <div class="receipt-upload">
+          <div class="ru-ico">🧾</div>
+          <div class="ru-txt"><strong>Photo of receipt</strong><span>After you've paid</span></div>
+        </div>
+        <input type="file" accept="image/*" capture="environment" onchange="addPhoto(this,'receipt-photos')">
+      </label>
+      <div class="photos-mini" id="receipt-photos"></div>
+    </div>
+  </div>
+
+  <!-- ROADMAP -->
+  <div class="block fi" style="transition-delay:.11s">
+    <div class="block-title">🗺️ Your route</div>
+    <div class="rmap">
+      <div class="rmap-step">
+        <div class="rmap-dot done">✓</div>
+        <div class="rmap-info"><div class="rmap-lbl">📍 Your location — Kerobokan</div></div>
+      </div>
+      <div class="rmap-step" id="shop-step" style="display:none;">
+        <div class="rmap-dot active">🛒</div>
+        <div class="rmap-info">
+          <div class="rmap-lbl">UD Sumber Teknik · Plumbing shop</div>
+          <div class="rmap-sub">Jl. Raya Kerobokan · 0.6 km</div>
+          <div class="rmap-eta" id="shop-eta">~4 min</div>
+        </div>
+      </div>
+      <div class="rmap-step">
+        <div class="rmap-dot">🏡</div>
+        <div class="rmap-info">
+          <div class="rmap-lbl">Villa Surya · Seminyak</div>
+          <div class="rmap-sub">Jl. Sunset Road 42 · Code: 4782</div>
+          <div class="rmap-eta" id="villa-eta">~8 min</div>
+        </div>
+      </div>
+    </div>
+    <div class="sofia-tracking">
+      <span>✨</span><span>Sofia is tracking your route and will notify the guest of your ETA — you don't need to do anything.</span>
+    </div>
+  </div>
+
+  <!-- DOORBELL -->
+  <div class="block fi" style="transition-delay:.13s">
+    <div class="block-title">🏡 At the villa</div>
+    <div class="block-sub">Door code: <strong>4782</strong> · If no one answers:</div>
+    <button class="doorbell-btn" onclick="sofiaCall()">🔔 Nobody's answering — Sofia, call the guest</button>
+    <div class="doorbell-msg" id="doorbell-msg">✨ On it — Sofia is calling the guest right now. Wait a moment, they'll open shortly 🙏</div>
+  </div>
+
+  <!-- 3 STEPS -->
+  <div class="intervention-wrap fi" style="transition-delay:.15s">
+    <div class="intervention-title">🔨 Intervention</div>
+
+    <div class="step-big s-blue" id="step1">
+      <div class="sbh" onclick="toggleSb('step1')">
+        <div class="sbh-num" id="s1n">📸</div>
+        <div class="sbh-info"><div class="sbh-name">Diagnostic photo</div><div class="sbh-sub">Before you touch anything</div></div>
+        <div class="sbh-badge" id="s1b">Open</div>
+      </div>
+      <div class="sbb" id="step1-body">
+        <div class="sbb-hint">Look at the problem first. Take a clear photo BEFORE you start — this protects you and the villa.</div>
+        <label>
+          <div class="photo-slot" id="photo-before">
+            <div class="ps-icon">📸</div>
+            <div class="ps-label">Photo BEFORE</div>
+            <div class="ps-sub">Tap to take</div>
+          </div>
+          <input type="file" accept="image/*" capture="environment" onchange="setSlotPhoto(this,'photo-before','step1','s1n','s1b')">
+        </label>
+      </div>
+    </div>
+
+    <div class="step-big s-orange" id="step2">
+      <div class="sbh" onclick="toggleSb('step2')">
+        <div class="sbh-num" id="s2n">🔧</div>
+        <div class="sbh-info"><div class="sbh-name">Repair</div><div class="sbh-sub">Fix, test, dry, clean up</div></div>
+        <div class="sbh-badge" id="s2b">Open</div>
+      </div>
+      <div class="sbb" id="step2-body">
+        <div class="sbb-hint">Turn off water → replace joint (wrap with teflon) → tighten carefully → turn water back on → wait 2 min → no drip = good → dry cabinet → clean up.</div>
+        <button class="step-btn" onclick="markStep('step2','s2n','s2b')">✓ Repaired & tested — no more leak</button>
+      </div>
+    </div>
+
+    <div class="step-big s-green" id="step3">
+      <div class="sbh" onclick="toggleSb('step3')">
+        <div class="sbh-num" id="s3n">✅</div>
+        <div class="sbh-info"><div class="sbh-name">Done — photo & close</div><div class="sbh-sub">After photo, tidy up, say goodbye</div></div>
+        <div class="sbh-badge" id="s3b">Open</div>
+      </div>
+      <div class="sbb" id="step3-body">
+        <div class="sbb-hint">Take an AFTER photo — clean shot of the repair. Leave everything spotless. Return any villa tools to where you found them.</div>
+        <label>
+          <div class="photo-slot" id="photo-after">
+            <div class="ps-icon">📸</div>
+            <div class="ps-label">Photo AFTER</div>
+            <div class="ps-sub">Tap to take</div>
+          </div>
+          <input type="file" accept="image/*" capture="environment" onchange="setSlotPhoto(this,'photo-after','step3','s3n','s3b')">
+        </label>
+        <div class="goodbye" id="goodbye" style="display:none;">
+          🙏 <strong>Great work Wayan!</strong> If the guest is around when you leave — just smile and say <em>"All fixed, no more leak"</em>. That's all they need. See you on the next one 🌴
+        </div>
+      </div>
+    </div>
+
+    <!-- MID-SHOP orange -->
+    <button class="midshop-btn" onclick="toggleMidshop()">
+      <span class="midshop-btn-icon">🚧</span>
+      <span>I need something — back to the shop</span>
+    </button>
+    <div class="midshop-section" id="midshop">
+      <div class="ms-title">What's missing?</div>
+      <div class="ms-sub">Select what you need — Sofia updates the guest, Rex handles the money.</div>
+      <div class="ms-chips">
+        <div class="ms-chip" onclick="this.classList.toggle('on')">Different joint size</div>
+        <div class="ms-chip" onclick="this.classList.toggle('on')">More teflon tape</div>
+        <div class="ms-chip" onclick="this.classList.toggle('on')">Sealant / silicone</div>
+        <div class="ms-chip" onclick="this.classList.toggle('on')">New pipe section</div>
+        <div class="ms-chip" onclick="this.classList.toggle('on')">Replacement valve</div>
+        <div class="ms-chip" onclick="this.classList.toggle('on')">Other</div>
+      </div>
+      <input class="ms-extra" type="text" placeholder="Describe what you need...">
+      <button class="ms-confirm" onclick="confirmMidshop()">✅ Sofia, I'm going to the shop — back soon</button>
+    </div>
+
+    <!-- LEVEL 4 red -->
+    <button class="l4-btn" onclick="showL4()">
+      <span class="l4-btn-icon">🚨</span>
+      <span>I can't fix this — need help</span>
+    </button>
+    <div class="l4-section" id="l4-section">
+      <div class="l4-head">
+        <div class="l4-sofia">✨</div>
+        <div><div class="l4-title">Sofia is taking over</div><div class="l4-sub">Don't worry — we handle it from here</div></div>
+      </div>
+      <div class="l4-msg">Wayan, no problem — some repairs need more equipment or a different specialist. I'm talking to the guest right now. You did your best, that's all we ask. Tell us what's needed:</div>
+      <div class="l4-opts">
+        <div class="l4-opt" onclick="this.classList.toggle('on')"><div class="l4-opt-icon">🔩</div><div><div class="l4-opt-name">Need a specific spare part</div><div class="l4-opt-sub">Not available at the local shop</div></div></div>
+        <div class="l4-opt" onclick="this.classList.toggle('on')"><div class="l4-opt-icon">👥</div><div><div class="l4-opt-name">Need another tukang</div><div class="l4-opt-sub">Too complex for one person</div></div></div>
+        <div class="l4-opt" onclick="this.classList.toggle('on')"><div class="l4-opt-icon">⚡</div><div><div class="l4-opt-name">Different specialist needed</div><div class="l4-opt-sub">Electrician, AC tech, pro plumber</div></div></div>
+        <div class="l4-opt" onclick="this.classList.toggle('on')"><div class="l4-opt-icon">🏚️</div><div><div class="l4-opt-name">Structural / major damage</div><div class="l4-opt-sub">Beyond normal repair scope</div></div></div>
+      </div>
+      <div class="l4-note">Sofia is messaging the guest in English. You don't need to explain anything — just wait for her next message to you.</div>
+    </div>
+  </div>
+
+  <!-- WELLBEING -->
+  <div class="wb-wrap fi" style="transition-delay:.18s">
+    <div class="wb-lbl">For you · Confidential · Manager only</div>
+    <div class="wb-title">How was your day? 🌸</div>
+    <div class="wb-sub">Just between you and the team. You matter to us.</div>
+    <div class="wb-good" id="wb-good" onclick="selGood()">
+      <div class="wb-good-icon">😊</div>
+      <div><div class="wb-good-text">All good — smooth mission!</div><div class="wb-good-sub">No issues, everything fine</div></div>
+    </div>
+    <div class="wb-rep" id="wb-rep" onclick="selRep()">
+      <div style="font-size:22px;">😢</div>
+      <div><div class="wb-rep-text">I have something to tell you</div><div class="wb-rep-sub">Something made me uncomfortable today</div></div>
+    </div>
+    <div class="wb-qcm" id="wb-qcm">
+      <div class="wb-step active" id="wb-s0">
+        <div class="wb-q">Who made you feel this way?</div>
+        <div class="wb-opts">
+          <div class="wb-opt" onclick="wbN(1,'guest')"><div class="wb-opt-icon">🧳</div>A guest</div>
+          <div class="wb-opt" onclick="wbN(1,'staff')"><div class="wb-opt-icon">👥</div>Another staff member</div>
+          <div class="wb-opt" onclick="wbN(1,'neighbor')"><div class="wb-opt-icon">🏘️</div>A neighbor</div>
+          <div class="wb-opt" onclick="wbN(1,'banjar')"><div class="wb-opt-icon">🤝</div>Banjar / community</div>
+          <div class="wb-opt" onclick="wbN(1,'other')"><div class="wb-opt-icon">❓</div>Other</div>
+        </div>
+      </div>
+      <div class="wb-step" id="wb-s1">
+        <div class="wb-q" id="wb-q1">What happened?</div>
+        <div class="wb-opts" id="wb-o1"></div>
+        <button class="wb-back" onclick="wbB(0)">← Back</button>
+      </div>
+      <div class="wb-step" id="wb-s2">
+        <div class="wb-q">How did it make you feel?</div>
+        <div class="wb-opts">
+          <div class="wb-opt" onclick="S.wbSeverity='uncomfortable';wbN(3)"><div class="wb-opt-icon">😟</div>Uncomfortable, a bit upset</div>
+          <div class="wb-opt" onclick="S.wbSeverity='bad';wbN(3)"><div class="wb-opt-icon">😔</div>Really bad, felt disrespected</div>
+          <div class="wb-opt" onclick="S.wbSeverity='serious';wbN(3)"><div class="wb-opt-icon">😨</div>Scared or felt unsafe</div>
+        </div>
+        <button class="wb-back" onclick="wbB(1)">← Back</button>
+      </div>
+      <div class="wb-step" id="wb-s3">
+        <div class="wb-q">Thank you for telling us 🫂</div>
+        <div class="wb-stars-lbl">How bad overall?<br><span style="font-size:10px;opacity:0.5;">1 = very bad · 5 = not too bad</span></div>
+        <div class="wb-stars"><span class="star" onclick="setStar(1)">⭐</span><span class="star" onclick="setStar(2)">⭐</span><span class="star" onclick="setStar(3)">⭐</span><span class="star" onclick="setStar(4)">⭐</span><span class="star" onclick="setStar(5)">⭐</span></div>
+        <div class="wb-note-txt">Add anything you want — any language. Or leave blank. Your manager will call you either way.</div>
+        <textarea class="wb-textarea" id="wb-final-text" placeholder="..."></textarea>
+        <button style="width:100%;padding:13px;border-radius:10px;background:var(--rose-btn);border:none;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;margin-top:10px;" onclick="sendWbReport()">🌸 Send report — I'm not alone</button>
+        <button class="wb-back" onclick="wbB(2)">← Back</button>
+      </div>
+      <div class="wb-step" id="wb-s4">
+        <div style="text-align:center;padding:8px 0;">
+          <div style="font-size:48px;margin-bottom:12px;">🫂</div>
+          <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:8px;">We hear you, Wayan.</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.75;margin-bottom:12px;">We are truly sorry this happened to you. You did nothing wrong. You are part of our family.<br><br>Your manager has been notified and <strong style="color:rgba(212,116,154,0.9);">will call you personally.</strong> You don't have to explain everything again. Just talk when you're ready.</div>
+          <div id="wb-red-alert-msg" style="display:none;margin-bottom:12px;padding:10px 14px;background:rgba(192,57,43,0.15);border:1px solid rgba(192,57,43,0.35);border-radius:8px;font-size:11px;color:#ff9090;line-height:1.6;">🚨 Given what you described — the agency and the villa owner have also been notified. They will take action. You are protected.</div>
+          <div style="padding:10px 14px;background:rgba(212,116,154,0.1);border:1px solid rgba(212,116,154,0.2);border-radius:8px;font-size:11px;color:rgba(212,116,154,0.85);line-height:1.65;font-style:italic;">"Most guests are wonderful people. The difficult ones are rare — and the other travellers are always sorry on their behalf. You deserve full respect, always. Thank you for trusting us." 🌸</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="submit-wrap fi" style="transition-delay:.20s">
+    <button class="submit-btn" onclick="doSubmit()">✅ Mission complete — Send report</button>
+  </div>
+
+</div>
+
+<!-- SUCCESS -->
+<div class="success" id="success">
+  <div class="success-burst">🔧</div>
+  <div class="success-h">Well done,<br><em>Wayan!</em></div>
+  <div class="success-p">Villa Surya is fixed ✅<br>Sofia notified the guest.<br>Rex handles your reimbursement now.</div>
+  <div class="success-stats">
+    <div class="ss"><div class="ss-num" id="s-steps">0</div><div class="ss-label">Steps done</div></div>
+    <div class="ss"><div class="ss-num" id="s-photos">0</div><div class="ss-label">Photos</div></div>
+    <div class="ss"><div class="ss-num" id="s-time">—</div><div class="ss-label">Duration</div></div>
+  </div>
+  <div class="success-notify">📲 Report sent · Sofia notified guest · Rex sending payment</div>
+  <div class="success-quote">"Every time you fix something,<br>a guest sleeps better. Thank you Wayan." 🌴</div>
+  <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px;">
+    <button class="success-next" onclick="location.reload()">← Next mission</button>
+    <button style="padding:11px 24px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.3);font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;" onclick="undoSubmit()">↩ Undo — go back to report</button>
+  </div>
+</div>
+
+<script>
+// ── LANGUAGE ──
+const LANG = {
+  en: {
+    greeting: (name, time) => {
+      const h = time.getHours();
+      const sal = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+      return `${sal},<br><em>${name}.</em> 👋`;
+    },
+    tagline: () => 'Ready to work today for the perfect Bali experience? 🌴'
+  },
+  id: {
+    greeting: (name, time) => {
+      const h = time.getHours();
+      const sal = h < 12 ? 'Selamat pagi' : h < 15 ? 'Selamat siang' : h < 19 ? 'Selamat sore' : 'Selamat malam';
+      return `${sal},<br><em>${name}.</em> 👋`;
+    },
+    tagline: () => 'Siap kerja hari ini untuk pengalaman Bali yang sempurna? 🌴'
+  },
+  bali: {
+    greeting: (name, time) => {
+      const h = time.getHours();
+      const sal = h < 12 ? 'Rahajeng semeng' : h < 15 ? 'Rahajeng tengai' : h < 19 ? 'Rahajeng sore' : 'Rahajeng wengi';
+      return `${sal},<br><em>${name}.</em> 👋`;
+    },
+    tagline: () => 'Sedia makarya mangkin? Dumogi sida ngurukang tamiu ring Bali 🌴'
+  }
+};
+let currentLang = localStorage.getItem('tukang-lang') || 'en';
+function applyLang() {
+  const now = new Date();
+  document.getElementById('hero-greeting').innerHTML = LANG[currentLang].greeting('Wayan', now);
+  document.getElementById('hero-tagline').textContent = LANG[currentLang].tagline();
+  const labels = {en:'EN', id:'ID', bali:'BALI'};
+  const next = currentLang === 'en' ? 'id' : currentLang === 'id' ? 'bali' : 'en';
+  document.getElementById('lang-active').textContent = labels[currentLang];
+  document.getElementById('lang-other').textContent = labels[next];
+}
+function toggleLang() {
+  const cycle = {en:'id', id:'bali', bali:'en'};
+  currentLang = cycle[currentLang];
+  localStorage.setItem('tukang-lang', currentLang);
+  applyLang();
+}
+applyLang();
+
+// ── STATE ──
+const S = {accepted:false,steps:new Set(),photos:0,start:null,missing:{},rexTimer:null,baseOk:false,wbSeverity:null,wbRating:0};
+const PRICES = {joint:10000,teflon:5000,cloth:3000};
+const NAMES = {joint:'Rubber joint ½"',teflon:'Teflon tape',cloth:'Absorbent cloth / sponge'};
+const WB_OPTS = {
+  guest:["Rude words or raised voice","Treated me as invisible","Comments about my appearance","Entered my space without consent","Proposed something uncomfortable","Touched me without permission","Other"],
+  staff:["Rude attitude","Pressure or manipulation","Disrespect in front of others","Unwanted contact","Other"],
+  neighbor:["Aggressive words","Threats","Other"],
+  banjar:["Pressure or demands","Disrespect","Other"],
+  other:["Hard to describe","Something else","I prefer to speak"]
+};
+
+// PASS MODAL
+const PASS_NEEDS_TIME = ['far','mission'];
+let passReason = null, passTime = null;
+function showPassModal() {
+  passReason = null; passTime = null;
+  document.getElementById('pass-step-1').style.display = 'block';
+  document.getElementById('pass-step-2').style.display = 'none';
+  document.getElementById('pass-confirm-btn').style.display = 'none';
+  document.getElementById('pass-other-text').style.display = 'none';
+  document.querySelectorAll('.pass-opt').forEach(o => o.classList.remove('sel'));
+  document.getElementById('pass-modal').style.display = 'flex';
+}
+function closePassModal() {
+  document.getElementById('pass-modal').style.display = 'none';
+}
+function selectPassReason(el, reason) {
+  passReason = reason;
+  document.querySelectorAll('.pass-opt').forEach(o => o.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('pass-other-text').style.display = reason === 'other' ? 'block' : 'none';
+  if(PASS_NEEDS_TIME.includes(reason)) {
+    document.getElementById('pass-step-2').style.display = 'block';
+    document.getElementById('pass-confirm-btn').style.display = 'none';
+  } else {
+    document.getElementById('pass-step-2').style.display = 'none';
+    document.getElementById('pass-confirm-btn').style.display = 'block';
+  }
+}
+function selectPassTime(el, time) {
+  passTime = time;
+  document.querySelectorAll('.pass-time-opt').forEach(o => o.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('pass-confirm-btn').style.display = 'block';
+}
+function confirmPass() {
+  document.getElementById('pass-modal').style.display = 'none';
+  const heroCard = document.querySelector('.mission-card');
+  const actions = document.querySelector('.mission-actions');
+  const timeMsg = passTime === 'tomorrow' ? ' Sofia will think of you tomorrow morning.' :
+                  passTime && passTime !== 'unknown' ? ` Sofia will ping you again in ~${passTime}.` :
+                  ' Just let us know when you\'re free.';
+  heroCard.innerHTML = `<div style="text-align:center;padding:14px 0;">
+    <div style="font-size:44px;margin-bottom:12px;">🙏</div>
+    <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:8px;">No worries, Wayan.</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.75;">Sofia is already finding someone else.${timeMsg}<br><br>Take care of yourself. See you soon. 🌴</div>
+  </div>`;
+  actions.style.display = 'none';
+  document.getElementById('accept-sub').style.display = 'none';
+}
+
+// ACCEPT
+function acceptMission() {
+  if(S.accepted) return;
+  S.accepted = true; S.start = Date.now();
+  const btn = document.getElementById('accept-btn');
+  btn.classList.add('on'); btn.innerHTML = '✅ Mission accepted'; btn.onclick = null;
+  document.getElementById('accept-sub').style.display = 'none';
+  setTimeout(() => {
+    document.getElementById('mbody').classList.add('show');
+    document.getElementById('mbody').scrollIntoView({behavior:'smooth',block:'start'});
+    const obs = new IntersectionObserver(ee => ee.forEach(e => { if(e.isIntersecting) e.target.classList.add('v'); }), {threshold:.05});
+    document.querySelectorAll('.mbody .fi').forEach(el => obs.observe(el));
+    drawOrbit();
+  }, 400);
+  if('vibrate' in navigator) navigator.vibrate([60,30,60]);
+}
+
+// BASE TOOLS
+function toggleBase() {
+  S.baseOk = !S.baseOk;
+  const rect = document.getElementById('base-tools');
+  rect.classList.toggle('on', S.baseOk);
+  document.getElementById('base-check').textContent = S.baseOk ? '✓' : '○';
+  document.getElementById('base-title').textContent = S.baseOk ? 'All standard tools ✓' : 'I have all my standard tools';
+  if('vibrate' in navigator) navigator.vibrate(30);
+}
+
+// YN MISSION TOOLS — retap deselects
+function ynPick(btn, val, item) {
+  const row = btn.closest('.mt-yn');
+  const alreadyActive = btn.classList.contains(val);
+  row.querySelectorAll('.yn').forEach(b => b.classList.remove('yes','no'));
+  if(!alreadyActive) {
+    btn.classList.add(val);
+    if(val === 'no') S.missing[item] = true; else delete S.missing[item];
+  } else {
+    // deselected — remove from missing
+    delete S.missing[item];
+  }
+  updateBuyBox();
+}
+function updateBuyBox() {
+  const keys = Object.keys(S.missing);
+  const box = document.getElementById('buy-box');
+  if(keys.length === 0) { box.classList.remove('show'); return; }
+  box.classList.add('show');
+  document.getElementById('mission-tools').classList.add('has-missing');
+  document.getElementById('shop-step').style.display = 'flex';
+  let total = 0, html = '';
+  keys.forEach(k => {
+    const p = PRICES[k] || 0; total += p;
+    html += `<div class="bb-item"><div class="bb-chk" onclick="this.classList.toggle('on')">✓</div><div class="bb-item-name">${NAMES[k]||k}</div><div class="bb-item-price">Rp ${p.toLocaleString('id-ID')}</div></div>`;
+  });
+  document.getElementById('bb-items').innerHTML = html;
+  document.getElementById('bb-total').textContent = 'Rp ' + total.toLocaleString('id-ID');
+  const rex = document.getElementById('rex-box');
+  if(total >= 75000) {
+    rex.classList.add('show');
+    if(!S.rexTimer) {
+      S.rexTimer = setTimeout(() => {
+        const st = document.getElementById('rex-status');
+        st.className = 'rex-status conf';
+        st.innerHTML = '✅ Transfer dikonfirmasi — Rp ' + total.toLocaleString('id-ID') + ' sudah dikirim. Kamu bisa bayar sekarang.';
+      }, 4000);
+    }
+  } else {
+    rex.classList.remove('show');
+    if(S.rexTimer) { clearTimeout(S.rexTimer); S.rexTimer = null; }
+  }
+}
+
+// PHOTOS
+function addPhoto(input, id) {
+  Array.from(input.files).forEach(file => {
+    const r = new FileReader(); r.onload = e => {
+      const el = document.createElement('div'); el.className = 'pm';
+      el.innerHTML = `<img src="${e.target.result}"><div class="pm-rm" onclick="this.parentElement.remove();S.photos=Math.max(0,S.photos-1)">✕</div>`;
+      document.getElementById(id).appendChild(el); S.photos++;
+    }; r.readAsDataURL(file);
+  }); input.value = '';
+}
+function setSlotPhoto(input, slotId, stepId, numId, badgeId) {
+  const file = input.files[0]; if(!file) return;
+  const r = new FileReader(); r.onload = e => {
+    const slot = document.getElementById(slotId);
+    slot.classList.add('has-photo'); slot.innerHTML = `<img src="${e.target.result}">`;
+    S.photos++; S.steps.add(stepId);
+    document.getElementById(numId).textContent = '✓';
+    document.getElementById(badgeId).textContent = '✓ Done';
+    document.getElementById(stepId).classList.add('done');
+    if(stepId === 'step3') {
+      const g = document.getElementById('goodbye'); g.style.display = 'block';
+      g.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+    if('vibrate' in navigator) navigator.vibrate(40);
+  }; r.readAsDataURL(file); input.value = '';
+}
+
+// STEPS
+function toggleSb(id) { document.getElementById(id+'-body').classList.toggle('open'); }
+function markStep(stepId, numId, badgeId) {
+  document.getElementById(stepId).classList.add('done');
+  document.getElementById(numId).textContent = '✓';
+  document.getElementById(badgeId).textContent = '✓ Done';
+  S.steps.add(stepId);
+  if('vibrate' in navigator) navigator.vibrate(40);
+}
+
+// DOORBELL
+function sofiaCall() {
+  document.getElementById('doorbell-msg').classList.add('show');
+  if('vibrate' in navigator) navigator.vibrate([30,20,30]);
+}
+
+// MID-SHOP — clears tool YN selections
+function toggleMidshop() {
+  // clear any tool YN selections
+  document.querySelectorAll('.yn').forEach(b => b.classList.remove('yes','no'));
+  S.missing = {};
+  document.getElementById('buy-box').classList.remove('show');
+  document.getElementById('midshop').classList.toggle('show');
+}
+function confirmMidshop() {
+  alert('✨ Sofia: Got it Wayan — I\'ll let the guest know you\'ll be back in ~15 min. Take your time 🙏');
+  document.getElementById('midshop').classList.remove('show');
+}
+
+// L4 — clears tool YN selections
+function showL4() {
+  document.querySelectorAll('.yn').forEach(b => b.classList.remove('yes','no'));
+  S.missing = {};
+  document.getElementById('buy-box').classList.remove('show');
+  document.getElementById('l4-section').classList.toggle('show');
+}
+
+// WELLBEING
+function selGood() { document.getElementById('wb-good').classList.toggle('on'); document.getElementById('wb-rep').classList.remove('on'); document.getElementById('wb-qcm').classList.remove('show'); }
+function selRep() {
+  document.getElementById('wb-rep').classList.toggle('on');
+  document.getElementById('wb-good').classList.remove('on');
+  document.getElementById('wb-qcm').classList.toggle('show', document.getElementById('wb-rep').classList.contains('on'));
+  document.querySelectorAll('.wb-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('wb-s0').classList.add('active');
+}
+function wbN(step, source) {
+  if(source) S.wbSource = source;
+  document.querySelectorAll('.wb-step').forEach(s => s.classList.remove('active'));
+  if(step === 1) {
+    const opts = WB_OPTS[source] || WB_OPTS.other;
+    document.getElementById('wb-q1').textContent = 'What happened? (tap all that apply)';
+    const cont = document.getElementById('wb-o1'); cont.innerHTML = '';
+    opts.forEach(o => {
+      const isOther = o === 'Other';
+      const d = document.createElement('div'); d.className = 'wb-opt';
+      d.innerHTML = `<div class="wb-opt-icon">${isOther?'✏️':'•'}</div><span>${o}</span>`;
+      d.onclick = () => {
+        d.classList.toggle('sel');
+        if(isOther) {
+          let ta = cont.querySelector('.wb-other-ta');
+          if(!ta){ ta=document.createElement('textarea'); ta.className='wb-textarea wb-other-ta'; ta.placeholder='Tell us in your own words...'; ta.style.marginTop='8px'; cont.insertBefore(ta, cont.querySelector('.wb-next-btn')); }
+          ta.style.display = d.classList.contains('sel') ? 'block' : 'none';
+        }
+      };
+      cont.appendChild(d);
+    });
+    const nb = document.createElement('button');
+    nb.className = 'wb-next-btn';
+    nb.style.cssText = 'margin-top:12px;background:rgba(212,116,154,0.2);border:1px solid rgba(212,116,154,0.4);border-radius:8px;color:rgba(212,116,154,0.9);padding:10px 14px;width:100%;font-family:\'Nunito\',sans-serif;font-size:12px;font-weight:800;cursor:pointer;';
+    nb.textContent = 'Continue →';
+    nb.onclick = () => wbN(2);
+    cont.appendChild(nb);
+    document.getElementById('wb-s1').classList.add('active');
+  } else {
+    if(step === 2) {
+      // store severity from step 2 choice when clicking step3
+    }
+    document.getElementById('wb-s'+step).classList.add('active');
+  }
+}
+function wbB(s) { document.querySelectorAll('.wb-step').forEach(x => x.classList.remove('active')); document.getElementById('wb-s'+s).classList.add('active'); }
+function setStar(n) { S.wbRating=n; document.querySelectorAll('.star').forEach((s,i) => s.classList.toggle('on', i<n)); }
+function wbSeverity(level) {
+  S.wbSeverity = level;
+  wbN(3);
+}
+function sendWbReport() {
+  document.querySelectorAll('.wb-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('wb-s4').classList.add('active');
+  if(S.wbSeverity === 'serious') document.getElementById('wb-red-alert-msg').style.display = 'block';
+  if('vibrate' in navigator) navigator.vibrate([60,30,60]);
+}
+
+// SUBMIT — reversible
+function doSubmit() {
+  const mins = Math.round((Date.now()-S.start)/60000);
+  const h = Math.floor(mins/60), m = mins%60;
+  document.getElementById('s-time').textContent = h>0 ? `${h}h${m}m` : `${mins}m`;
+  document.getElementById('s-steps').textContent = S.steps.size;
+  document.getElementById('s-photos').textContent = S.photos;
+  document.getElementById('mbody').style.display = 'none';
+  document.querySelector('.hero').style.display = 'none';
+  document.getElementById('success').classList.add('show');
+  window.scrollTo(0,0);
+  if('vibrate' in navigator) navigator.vibrate([80,40,80,40,120]);
+}
+function undoSubmit() {
+  document.getElementById('success').classList.remove('show');
+  document.getElementById('mbody').style.display = 'block';
+  document.querySelector('.hero').style.display = 'block';
+  window.scrollTo(0, document.getElementById('mbody').offsetTop - 60);
+}
+
+// ORBIT
+var CREW_T=[
+  {key:'tukang',   label:'Tukang',  big:true,  color:'rgba(231,76,60,.9)',   fb:'🔧'},
+  {key:'cleaner',  label:'Cleaner', big:false, color:'rgba(212,116,154,.8)', fb:'🧹'},
+  {key:'poolman',  label:'Pool',    big:false, color:'rgba(41,128,185,.8)',  fb:'🌊'},
+  {key:'gardener', label:'Garden',  big:false, color:'rgba(39,174,96,.8)',   fb:'🌿'},
+  {key:'driver',   label:'Driver',  big:false, color:'rgba(93,173,226,.8)',  fb:'🚗'},
+  {key:'massage',  label:'Massage', big:false, color:'rgba(212,116,154,.7)', fb:'💆'},
+  {key:'cooker',   label:'Cooker',  big:false, color:'rgba(201,168,76,.8)',  fb:'👨‍🍳'},
+  {key:'internet', label:'Internet',big:false, color:'rgba(0,166,147,.8)',   fb:'📶'}
+];
+var LOGOS_T={
+  tukang:'worker_handy_man_logo_1_340.png',cleaner:'clener_girl_logo_2__340.png',
+  poolman:'pool_man_logo_1_340.png',gardener:'garrdener_logo_1_340.png',
+  driver:'driver_logo_1_340.png',massage:'massage_girl_logo_1_340.png',
+  cooker:'cooker_logo_1_340.png',internet:'internet_man_logo_1_340.png'
+};
+var IMGS_T={};
+function preloadT(cb){var n=0;CREW_T.forEach(function(c){var img=new Image();img.onload=img.onerror=function(){IMGS_T[c.key]=(img.complete&&img.naturalWidth>0)?img:null;n++;if(n===CREW_T.length&&cb)cb();};img.src=LOGOS_T[c.key];});}
+function drawOrbit() {
+  const canvas = document.getElementById('orbitCanvas'); if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const DPR = window.devicePixelRatio||1;
+  canvas.width = 280*DPR; canvas.height = 280*DPR; canvas.style.width='280px'; canvas.style.height='280px';
+  ctx.scale(DPR,DPR);
+  const CX=140,CY=140,R_ORB=100,R_SEC=120,R_MIN=Math.round(R_SEC*0.9),R_HR=Math.round(R_SEC*0.5),R_OUT=130;
+  function frame() {
+    const now=new Date(),ms=now.getMilliseconds();
+    const sec=now.getSeconds()+ms/1000,min=now.getMinutes()+sec/60,hr=(now.getHours()%12)+min/60;
+    ctx.clearRect(0,0,280,280);
+    ctx.beginPath();ctx.arc(CX,CY,R_ORB,0,Math.PI*2);ctx.strokeStyle='rgba(231,76,60,0.12)';ctx.lineWidth=1;ctx.setLineDash([3,8]);ctx.stroke();ctx.setLineDash([]);
+    ctx.beginPath();ctx.arc(CX,CY,R_OUT,0,Math.PI*2);ctx.strokeStyle='rgba(201,168,76,0.10)';ctx.lineWidth=1;ctx.stroke();
+    for(var i=0;i<12;i++){var a=(i/12)*Math.PI*2-Math.PI/2,tl=i%3===0?9:4;ctx.beginPath();ctx.moveTo(CX+Math.cos(a)*(R_OUT-1),CY+Math.sin(a)*(R_OUT-1));ctx.lineTo(CX+Math.cos(a)*(R_OUT-1-tl),CY+Math.sin(a)*(R_OUT-1-tl));ctx.strokeStyle=i%3===0?'rgba(201,168,76,0.4)':'rgba(201,168,76,0.12)';ctx.lineWidth=i%3===0?1.5:1;ctx.stroke();}
+    ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+Math.cos((hr/12)*Math.PI*2-Math.PI/2)*R_HR,CY+Math.sin((hr/12)*Math.PI*2-Math.PI/2)*R_HR);ctx.strokeStyle='rgba(232,220,200,.95)';ctx.lineWidth=3;ctx.lineCap='round';ctx.stroke();
+    ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+Math.cos((min/60)*Math.PI*2-Math.PI/2)*R_MIN,CY+Math.sin((min/60)*Math.PI*2-Math.PI/2)*R_MIN);ctx.strokeStyle='rgba(232,220,200,.75)';ctx.lineWidth=1.8;ctx.lineCap='round';ctx.stroke();
+    ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+Math.cos((sec/60)*Math.PI*2-Math.PI/2)*R_SEC,CY+Math.sin((sec/60)*Math.PI*2-Math.PI/2)*R_SEC);ctx.strokeStyle='rgba(231,76,60,.9)';ctx.lineWidth=1;ctx.lineCap='round';ctx.stroke();
+    ctx.beginPath();ctx.arc(CX,CY,3.5,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,.9)';ctx.fill();
+    const t=Date.now()/1000,step=Math.PI*2/CREW_T.length,drift=-(sec/60)*Math.PI*2*0.5;
+    CREW_T.forEach(function(c,i){
+      const angle=i*step+drift,x=CX+Math.cos(angle)*R_ORB,y=CY+Math.sin(angle)*R_ORB,bubR=c.big?22:14;
+      if(c.big){var g=ctx.createRadialGradient(x,y,0,x,y,bubR+8);g.addColorStop(0,'rgba(231,76,60,0.2)');g.addColorStop(1,'transparent');ctx.beginPath();ctx.arc(x,y,bubR+8,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();}
+      ctx.beginPath();ctx.arc(x,y,bubR,0,Math.PI*2);ctx.fillStyle=c.big?'rgba(28,20,14,.95)':'rgba(248,244,240,.92)';ctx.fill();
+      ctx.strokeStyle=c.color;ctx.lineWidth=c.big?2:1.5;ctx.stroke();
+      var img=IMGS_T[c.key];
+      if(img){ctx.save();ctx.beginPath();ctx.arc(x,y,bubR-2,0,Math.PI*2);ctx.clip();ctx.drawImage(img,x-(bubR-2),y-(bubR-2),(bubR-2)*2,(bubR-2)*2);ctx.restore();}
+      else{ctx.font=(c.big?14:10)+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle=c.big?'#fff':'#333';ctx.fillText(c.fb,x,y);}
+      ctx.font=(c.big?9:7)+'px Nunito,sans-serif';ctx.textAlign='center';ctx.textBaseline='top';
+      ctx.fillStyle=c.big?'rgba(231,76,60,.9)':'rgba(50,42,34,.5)';ctx.fillText(c.label,x,y+bubR+3);
+    });
+    requestAnimationFrame(frame);
+  }
+  preloadT(null);frame();
+}
+
+// XENDIT functions
+function requestAdvance(){var btn=document.getElementById('btn-advance');if(btn.classList.contains('sent'))return;btn.classList.add('sent');btn.innerHTML='⏳ Rex sedang proses...';setTimeout(function(){btn.innerHTML='✅ Transfer dikirim — cek rekening';if('vibrate' in navigator)navigator.vibrate([60,30,60]);},2000);}
+function openReimb(){document.getElementById('reimb-area').classList.toggle('show');}
+function reimbPhoto(input){if(!input.files[0])return;var r=new FileReader();r.onload=function(e){var t=document.getElementById('reimb-thumb');t.src=e.target.result;t.style.display='block';document.getElementById('reimb-confirm-btn').classList.add('show');};r.readAsDataURL(input.files[0]);}
+function confirmReimb(){var btn=document.getElementById('reimb-confirm-btn');btn.textContent='⏳ Rex sedang review...';btn.style.background='var(--muted)';btn.onclick=null;setTimeout(function(){btn.textContent='✅ Penggantian disetujui';btn.style.background='var(--green)';document.getElementById('btn-reimb').classList.add('sent');document.getElementById('btn-reimb').innerHTML='✅ Biaya diganti Rex';if('vibrate' in navigator)navigator.vibrate([60,30,60]);},2000);}
+
+const obs = new IntersectionObserver(ee => ee.forEach(e => { if(e.isIntersecting) e.target.classList.add('v'); }), {threshold:.05});
+document.querySelectorAll('.fi').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Mon Équipe · Hidden Keys</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F0E8;--bg2:#EDE8DC;--bg3:#E2DDD0;
+  --dark:#1A1A14;--dark2:#28281A;--dark3:#0E0E08;
+  --text:#2A2218;--muted:#7A6A50;--muted2:#A89878;
+  --green:#27AE60;--green-soft:#E8F5EE;--green-mid:#A8D5B8;--green-dark:#1E8449;
+  --gold:#C9A84C;--gold-light:#E8C97A;
+  --orange:#E67E22;--orange-soft:#FEF0E3;--orange-mid:#F0A060;
+  --red:#C0392B;--red-soft:#FDECEA;
+  --blue:#2980B9;--blue-soft:#EBF5FB;
+  --violet:#8E44AD;--violet-soft:#F4ECF7;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.05);
+  --shadow:0 2px 14px rgba(0,0,0,0.09);--r:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:"Nunito",sans-serif;min-height:100vh;max-width:480px;margin:0 auto;}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(245,240,232,0.97);border-bottom:1px solid var(--border);padding:0 18px;height:54px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(12px);}
+.tb-logo{font-family:"DM Mono",monospace;font-size:10px;color:var(--gold);letter-spacing:2px;}
+.tb-back{font-size:11px;font-weight:700;color:var(--muted);background:none;border:1px solid var(--border);cursor:pointer;font-family:"Nunito",sans-serif;padding:5px 10px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:all .2s;}
+.tb-back:hover{color:var(--gold);border-color:var(--gold);}
+.tb-right{display:flex;align-items:center;gap:8px;}
+
+/* HERO */
+.hero{background:linear-gradient(160deg,#1C1C14 0%,#2A2810 100%);padding:24px 20px 22px;position:relative;overflow:hidden;}
+.hero-leaf{position:absolute;right:-20px;top:-20px;font-size:110px;opacity:0.04;transform:rotate(-20deg);pointer-events:none;}
+.hero-greeting{font-size:24px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:4px;}
+.hero-greeting em{color:var(--gold);font-style:italic;font-family:"Playfair Display",serif;font-size:26px;font-weight:400;}
+.hero-sub{font-size:12px;color:rgba(255,255,255,0.4);line-height:1.6;}
+.kpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;background:rgba(0,0,0,0.25);border-top:1px solid rgba(255,255,255,0.06);margin-top:18px;}
+.kpi-cell{padding:12px 10px;border-right:1px solid rgba(255,255,255,0.06);text-align:center;}
+.kpi-cell:last-child{border-right:none;}
+.kpi-val{font-family:"DM Mono",monospace;font-size:17px;font-weight:700;line-height:1;}
+.kpi-lbl{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:4px;}
+
+/* TABS */
+.tabs{display:flex;gap:0;background:var(--bg2);border-bottom:1px solid var(--border);}
+.tab{flex:1;padding:12px 8px;text-align:center;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;letter-spacing:.5px;}
+.tab.active{color:var(--text);border-bottom-color:var(--gold);}
+
+/* SECTION TITLE */
+.sec-title{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:10px;font-weight:700;}
+.sec-title::after{content:"";flex:1;height:1px;background:var(--border);}
+
+/* TAB PANELS */
+.tab-panel{display:none;padding:16px 18px 80px;}
+.tab-panel.active{display:block;}
+
+/* STAFF CARD — vue liste */
+.staff-card{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden;cursor:pointer;transition:all .2s;border-left:3px solid transparent;}
+.staff-card:hover{transform:translateY(-1px);box-shadow:0 4px 18px rgba(0,0,0,0.12);}
+.staff-card.st-ok{border-left-color:var(--green);}
+.staff-card.st-alert{border-left-color:var(--orange);}
+.staff-card.st-issue{border-left-color:var(--red);}
+.sc-head{display:flex;align-items:center;gap:12px;padding:14px 16px;}
+.sc-avatar{width:46px;height:46px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid var(--border);}
+.sc-avatar img{width:100%;height:100%;object-fit:cover;}
+.sc-info{flex:1;min-width:0;}
+.sc-name{font-size:14px;font-weight:800;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sc-role{font-size:10px;color:var(--muted);margin-top:2px;}
+.sc-villas{font-size:10px;color:var(--gold);margin-top:2px;font-weight:700;}
+.sc-right{flex-shrink:0;text-align:right;}
+.sc-salary{font-family:"DM Mono",monospace;font-size:13px;font-weight:700;color:var(--text);}
+.sc-salary-lbl{font-size:9px;color:var(--muted);margin-top:1px;}
+.sc-status{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;margin-top:4px;}
+.st-ok .sc-status{background:var(--green-soft);color:var(--green-dark);border:1px solid rgba(39,174,96,.2);}
+.st-alert .sc-status{background:var(--orange-soft);color:var(--orange);border:1px solid rgba(230,126,34,.2);}
+.st-issue .sc-status{background:var(--red-soft);color:var(--red);border:1px solid rgba(192,57,43,.2);}
+
+/* STAFF DETAIL PANEL (expanded) */
+.sc-detail{display:none;border-top:1px solid var(--border2);}
+.sc-detail.open{display:block;}
+.sc-detail-tabs{display:flex;gap:0;background:var(--bg2);}
+.sdt{flex:1;padding:8px 4px;text-align:center;font-size:10px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;}
+.sdt.active{color:var(--text);border-bottom-color:var(--gold-light);}
+.sdt-panel{display:none;padding:14px 16px;}
+.sdt-panel.active{display:block;}
+
+/* RH INFO */
+.rh-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border2);}
+.rh-row:last-child{border-bottom:none;}
+.rh-lbl{font-size:11px;color:var(--muted);}
+.rh-val{font-size:12px;font-weight:700;color:var(--dark);}
+
+/* ADVANCES / EXPENSES */
+.exp-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border2);}
+.exp-item:last-child{border-bottom:none;}
+.exp-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.exp-dot.approved{background:var(--green);}
+.exp-dot.pending{background:var(--orange);}
+.exp-dot.refused{background:var(--red);}
+.exp-info{flex:1;}
+.exp-item-name{font-size:12px;font-weight:700;color:var(--dark);}
+.exp-meta{font-size:10px;color:var(--muted);margin-top:1px;}
+.exp-amount{font-family:"DM Mono",monospace;font-size:12px;font-weight:700;flex-shrink:0;}
+.exp-amount.approved{color:var(--red);}
+.exp-amount.pending{color:var(--orange);}
+.exp-status{font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;margin-top:3px;display:inline-block;}
+.status-approved{background:var(--green-soft);color:var(--green-dark);}
+.status-pending{background:var(--orange-soft);color:var(--orange);}
+.status-refused{background:var(--red-soft);color:var(--red);}
+.approve-btn{padding:5px 10px;border-radius:8px;background:var(--green);border:none;color:#fff;font-family:"Nunito",sans-serif;font-size:10px;font-weight:800;cursor:pointer;transition:all .2s;margin-top:4px;}
+.approve-btn:hover{background:var(--green-dark);}
+.refuse-btn{padding:5px 10px;border-radius:8px;background:var(--red-soft);border:1px solid rgba(192,57,43,.3);color:var(--red);font-family:"Nunito",sans-serif;font-size:10px;font-weight:800;cursor:pointer;margin-top:4px;margin-left:4px;}
+
+/* INCIDENT */
+.inc-item{padding:10px 12px;border-radius:10px;margin-bottom:8px;border-left:3px solid;}
+.inc-item.inc-open{background:rgba(192,57,43,.06);border-left-color:var(--red);}
+.inc-item.inc-progress{background:rgba(230,126,34,.06);border-left-color:var(--orange);}
+.inc-item.inc-resolved{background:rgba(39,174,96,.04);border-left-color:var(--green);}
+.inc-title{font-size:12px;font-weight:800;color:var(--dark);}
+.inc-meta{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.5;}
+.inc-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;}
+.inc-tag{font-size:9px;padding:2px 8px;border-radius:10px;font-weight:700;}
+.tag-maintenance{background:rgba(230,126,34,.12);color:var(--orange);}
+.tag-guest{background:rgba(41,128,185,.12);color:var(--blue);}
+.tag-airbnb{background:rgba(255,90,64,.12);color:#FF5A40;}
+.tag-resolved{background:var(--green-soft);color:var(--green-dark);}
+.tag-open{background:var(--red-soft);color:var(--red);}
+.inc-cost{font-family:"DM Mono",monospace;font-size:11px;color:var(--red);font-weight:700;margin-top:4px;}
+
+/* SALARY BLOCK */
+.salary-block{background:linear-gradient(135deg,#1C1C14,#282816);border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid rgba(201,168,76,.15);}
+.sb-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.sb-row:last-child{margin-bottom:0;}
+.sb-lbl{font-size:11px;color:rgba(255,255,255,.4);}
+.sb-val{font-family:"DM Mono",monospace;font-size:14px;font-weight:700;color:#fff;}
+.sb-val.positive{color:var(--green);}
+.sb-val.negative{color:var(--red);}
+.sb-val.gold{color:var(--gold-light);}
+.sb-divider{height:1px;background:rgba(255,255,255,.07);margin:8px 0;}
+.pay-now-btn{width:100%;padding:12px;border-radius:10px;background:linear-gradient(135deg,var(--green-dark),var(--green));border:none;color:#fff;font-family:"Nunito",sans-serif;font-size:13px;font-weight:800;cursor:pointer;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .25s;}
+.pay-now-btn:hover{box-shadow:0 4px 16px rgba(39,174,96,.3);}
+.pay-now-btn.sent{background:rgba(39,174,96,.15);border:1px solid var(--green-mid);color:var(--green-dark);cursor:default;box-shadow:none;}
+.advance-btn{width:100%;padding:10px;border-radius:10px;background:rgba(41,128,185,.1);border:1.5px solid rgba(41,128,185,.3);color:var(--blue);font-family:"Nunito",sans-serif;font-size:12px;font-weight:800;cursor:pointer;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .25s;}
+.advance-btn:hover{background:rgba(41,128,185,.18);}
+
+/* FICHE INCIDENT — modale */
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;align-items:flex-end;}
+.modal-backdrop.open{display:flex;}
+.modal{background:var(--bg);border-radius:20px 20px 0 0;width:100%;max-height:85vh;overflow-y:auto;padding:20px;}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px;}
+.modal-title{font-size:16px;font-weight:800;color:var(--dark);margin-bottom:4px;}
+.modal-sub{font-size:11px;color:var(--muted);margin-bottom:16px;line-height:1.5;}
+.field-lbl{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;margin-top:12px;}
+.field-input{width:100%;padding:11px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg2);font-family:"Nunito",sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color .2s;}
+.field-input:focus{border-color:var(--gold);}
+.field-input::placeholder{color:var(--muted2);}
+.chips{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{padding:6px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid var(--border);background:var(--bg2);color:var(--muted);transition:all .2s;}
+.chip.on{border-color:var(--gold);background:rgba(201,168,76,.1);color:var(--dark);}
+.photo-row{display:flex;gap:8px;margin-top:6px;}
+.photo-slot{width:72px;height:72px;border-radius:10px;border:1.5px dashed rgba(0,0,0,.15);background:var(--bg2);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:10px;color:var(--muted);text-align:center;gap:3px;transition:all .2s;flex-shrink:0;}
+.photo-slot:hover{border-color:var(--gold);background:rgba(201,168,76,.05);}
+.photo-slot.has-photo{border-style:solid;border-color:var(--green);overflow:hidden;padding:0;}
+.photo-slot.has-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+.photo-slot input{display:none;}
+input[type=file]{display:none;}
+.submit-row{display:flex;gap:8px;margin-top:16px;}
+.submit-btn{flex:1;padding:13px;border-radius:12px;background:linear-gradient(135deg,var(--dark2),var(--dark));border:none;color:#fff;font-family:"Nunito",sans-serif;font-size:14px;font-weight:800;cursor:pointer;}
+.cancel-btn{padding:13px 16px;border-radius:12px;background:var(--bg2);border:1px solid var(--border);color:var(--muted);font-family:"Nunito",sans-serif;font-size:13px;font-weight:700;cursor:pointer;}
+
+/* EMPTY STATE */
+.empty{padding:28px 0;text-align:center;color:var(--muted);}
+.empty-icon{font-size:36px;margin-bottom:8px;}
+.empty-txt{font-size:12px;line-height:1.6;}
+
+/* FAB */
+.fab{position:fixed;bottom:24px;right:20px;width:52px;height:52px;border-radius:50%;background:var(--gold);border:none;color:#fff;font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(201,168,76,.45);z-index:200;display:flex;align-items:center;justify-content:center;transition:all .25s;}
+.fab:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(201,168,76,.55);}
+
+.fi{opacity:0;transform:translateY(12px);transition:all .35s ease;}
+.fi.v{opacity:1;transform:translateY(0);}
+.spacer{height:12px;}
+
+/* AIRBNB CLAIM */
+.claim-strip{margin-top:8px;padding:8px 12px;background:rgba(255,90,64,.07);border:1px solid rgba(255,90,64,.2);border-radius:8px;display:flex;align-items:center;gap:8px;}
+.claim-strip-txt{flex:1;font-size:11px;color:#C0392B;line-height:1.5;}
+.claim-btn{padding:5px 10px;border-radius:8px;background:#FF5A40;border:none;color:#fff;font-size:10px;font-weight:800;cursor:pointer;font-family:"Nunito",sans-serif;white-space:nowrap;}
+
+/* WELLBEING badge */
+.wb-badge{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(212,116,154,.1);color:#A84870;border:1px solid rgba(212,116,154,.2);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tb-logo">HIDDEN<span style="color:var(--gold)">.</span>KEYS</div>
+  <div class="tb-right">
+    <a class="tb-back" href="client.html">← Portfolio</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero fi">
+  <div class="hero-leaf">🌴</div>
+  <div class="hero-greeting">Mon <em>équipe</em> 👥</div>
+  <div class="hero-sub" id="hero-sub">8 membres actifs · toutes les villas</div>
+  <div class="kpi-row">
+    <div class="kpi-cell">
+      <div class="kpi-val" style="color:var(--gold-light);" id="kpi-staff">8</div>
+      <div class="kpi-lbl">Membres</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-val" style="color:var(--green);" id="kpi-ok">7</div>
+      <div class="kpi-lbl">En mission</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-val" style="color:var(--orange);" id="kpi-alerts">1</div>
+      <div class="kpi-lbl">Alertes</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-val" style="color:var(--red);" id="kpi-pending">2</div>
+      <div class="kpi-lbl">À approuver</div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('team')">👥 Équipe</div>
+  <div class="tab" onclick="switchTab('expenses')">🧾 Dépenses</div>
+  <div class="tab" onclick="switchTab('incidents')">🔧 Incidents</div>
+</div>
+
+<!-- TAB: ÉQUIPE -->
+<div class="tab-panel active" id="panel-team">
+  <div class="sec-title" style="margin-top:4px;">Équipe active</div>
+  <div id="staff-list"></div>
+</div>
+
+<!-- TAB: DÉPENSES -->
+<div class="tab-panel" id="panel-expenses">
+  <div class="sec-title" style="margin-top:4px;">À approuver</div>
+  <div id="pending-expenses"></div>
+  <div class="sec-title">Historique</div>
+  <div id="all-expenses"></div>
+</div>
+
+<!-- TAB: INCIDENTS -->
+<div class="tab-panel" id="panel-incidents">
+  <div class="sec-title" style="margin-top:4px;">Incidents actifs</div>
+  <div id="active-incidents"></div>
+  <div class="sec-title">Historique &amp; mémoire villa</div>
+  <div id="past-incidents"></div>
+</div>
+
+<!-- FAB: créer fiche incident -->
+<button class="fab" onclick="openIncidentModal()" title="Nouveau rapport">⚠️</button>
+
+<!-- MODAL: Fiche incident -->
+<div class="modal-backdrop" id="modal-incident">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">⚠️ Nouvelle fiche incident</div>
+    <div class="modal-sub">Rapport de dégât, panne, ou problème — transmis à Sofia puis à l'owner.</div>
+
+    <div class="field-lbl">Villa concernée</div>
+    <div class="chips" id="modal-villas">
+      <div class="chip on" onclick="toggleChip(this,'villa')">Villa Surya</div>
+      <div class="chip" onclick="toggleChip(this,'villa')">Villa Karma</div>
+      <div class="chip" onclick="toggleChip(this,'villa')">Villa Serenity</div>
+      <div class="chip" onclick="toggleChip(this,'villa')">Villa Indah</div>
+      <div class="chip" onclick="toggleChip(this,'villa')">Studio Bulan</div>
+    </div>
+
+    <div class="field-lbl">Type d'incident</div>
+    <div class="chips">
+      <div class="chip on" onclick="toggleChip(this,'type')">🔧 Maintenance</div>
+      <div class="chip" onclick="toggleChip(this,'type')">🧳 Dégât guest</div>
+      <div class="chip" onclick="toggleChip(this,'type')">🏚️ Structurel</div>
+      <div class="chip" onclick="toggleChip(this,'type')">🔁 Récurrent</div>
+    </div>
+
+    <div class="field-lbl">Description</div>
+    <textarea class="field-input" rows="3" placeholder="Décrivez le problème en détail..."></textarea>
+
+    <div class="field-lbl">Matériel / Coût estimé</div>
+    <input class="field-input" type="text" placeholder="ex: Pompe Grundfos CM3 · ~Rp 2.400.000">
+
+    <div class="field-lbl">Photos (avant / pendant / après)</div>
+    <div class="photo-row">
+      <label class="photo-slot" id="slot-before">
+        <span style="font-size:20px">📸</span>
+        <span>Avant</span>
+        <input type="file" accept="image/*" capture="environment" onchange="setModalPhoto(this,'slot-before')">
+      </label>
+      <label class="photo-slot" id="slot-during">
+        <span style="font-size:20px">🔧</span>
+        <span>Pendant</span>
+        <input type="file" accept="image/*" capture="environment" onchange="setModalPhoto(this,'slot-during')">
+      </label>
+      <label class="photo-slot" id="slot-after">
+        <span style="font-size:20px">✅</span>
+        <span>Après</span>
+        <input type="file" accept="image/*" capture="environment" onchange="setModalPhoto(this,'slot-after')">
+      </label>
+    </div>
+
+    <div class="field-lbl">Urgence</div>
+    <div class="chips">
+      <div class="chip" onclick="toggleChip(this,'urgency')">🟢 Peut attendre</div>
+      <div class="chip on" onclick="toggleChip(this,'urgency')">🟠 Cette semaine</div>
+      <div class="chip" onclick="toggleChip(this,'urgency')">🔴 Urgent</div>
+    </div>
+
+    <div class="field-lbl">Dégât guest ? (AirCover possible)</div>
+    <div class="chips">
+      <div class="chip" onclick="toggleChip(this,'airbnb')">Oui — demander AirCover</div>
+      <div class="chip on" onclick="toggleChip(this,'airbnb')">Non</div>
+    </div>
+
+    <div class="submit-row">
+      <button class="cancel-btn" onclick="closeModal()">Annuler</button>
+      <button class="submit-btn" onclick="submitIncident()">✅ Envoyer à Sofia</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════
+   mystaff.html — Vue owner/manager équipe
+   Données demo — à connecter hk-data.js
+   ════════════════════════════════════ */
+
+// STAFF_LOGOS — fichiers PNG du projet (identiques à manager.html)
+var STAFF_LOGOS = {
+  cleaner:  "clener_girl_logo_2__340.png",
+  poolman:  "pool_man_logo_1_340.png",
+  gardener: "garrdener_logo_1_340.png",
+  tukang:   "worker_handy_man_logo_1_340.png",
+  driver:   "driver_logo_1_340.png",
+  massage:  "massage_girl_logo_1_340.png",
+  cooker:   "cooker_logo_1_340.png",
+  internet: "internet_man_logo_1_340.png"
+};
+
+// DATA STAFF — à terme depuis HK_STAFF dans hk-data.js
+var STAFF_DATA = [
+  {id:"putu",     name:"Putu Sari",    role:"Cleaner",          emoji:"🧹", logo:"cleaner",  villas:["surya","serenity"], salary_idr:4200000, start:"2023-03", status:"ok",    contract:"Tetap",  xendit_advance:0,       wellbeing:"ok"},
+  {id:"nyoman",   name:"Nyoman Budi",  role:"Tukang / Maintenance",emoji:"🔧",logo:"tukang",  villas:["surya","karma"],   salary_idr:3500000, start:"2022-11", status:"alert", contract:"Tetap",  xendit_advance:500000,  wellbeing:"ok"},
+  {id:"made",     name:"Made Yasa",    role:"Pool Man",          emoji:"🌊", logo:"poolman",  villas:["karma","indah"],   salary_idr:3200000, start:"2023-07", status:"ok",    contract:"Tetap",  xendit_advance:0,       wellbeing:"ok"},
+  {id:"wayan",    name:"Wayan Arta",   role:"Gardener",          emoji:"🌿", logo:"gardener", villas:["surya","serenity"],salary_idr:2800000, start:"2023-01", status:"ok",    contract:"Tetap",  xendit_advance:0,       wellbeing:"ok"},
+  {id:"ketut",    name:"Ketut Putra",  role:"Driver",            emoji:"🚗", logo:"driver",   villas:["all"],             salary_idr:3000000, start:"2024-02", status:"ok",    contract:"Partime",xendit_advance:0,       wellbeing:"ok"},
+  {id:"ayu",      name:"Ayu Dewi",     role:"Massage",           emoji:"💆", logo:"massage",  villas:["indah","surya"],   salary_idr:0,       start:"2024-05", status:"ok",    contract:"Freelance",xendit_advance:0,     wellbeing:"ok"},
+  {id:"kadek",    name:"Kadek Raka",   role:"Cooker",            emoji:"👨‍🍳",logo:"cooker",   villas:["bulan","surya"],   salary_idr:2600000, start:"2023-09", status:"ok",    contract:"Tetap",  xendit_advance:0,       wellbeing:"concern"},
+  {id:"komang",   name:"Komang Adi",   role:"Internet / Tech",   emoji:"📶", logo:"internet", villas:["all"],             salary_idr:2000000, start:"2024-08", status:"ok",    contract:"Partime",xendit_advance:0,       wellbeing:"ok"}
+];
+
+// EXPENSES DEMO
+var EXPENSES_DATA = [
+  {id:"e01", staff:"nyoman",  villa:"surya",   date:"2026-04-14", category:"Maintenance", item:"Pompe Grundfos CM3 + joints", amount_idr:2400000, status:"pending", incident:"inc01"},
+  {id:"e02", staff:"putu",    villa:"serenity",date:"2026-04-13", category:"Électricité", item:"Facture PLN — avril",          amount_idr:680000,  status:"pending", incident:null},
+  {id:"e03", staff:"made",    villa:"karma",   date:"2026-04-12", category:"Piscine",     item:"Chlore 5kg + pH-",             amount_idr:320000,  status:"approved",incident:null},
+  {id:"e04", staff:"wayan",   villa:"surya",   date:"2026-04-10", category:"Jardinage",   item:"Engrais + bambou décoratif",   amount_idr:180000,  status:"approved",incident:null},
+  {id:"e05", staff:"ketut",   villa:"all",     date:"2026-04-09", category:"Carburant",   item:"Essence · 3 transfers DPS",   amount_idr:95000,   status:"approved",incident:null},
+  {id:"e06", staff:"kadek",   villa:"bulan",   date:"2026-04-08", category:"Cuisine",     item:"Ingrédients breakfast × 4",   amount_idr:145000,  status:"approved",incident:null},
+];
+
+// INCIDENTS DEMO
+var INCIDENTS_DATA = [
+  {id:"inc01", villa:"surya",   date:"2026-04-14", type:"maintenance",   status:"in_progress", reported_by:"nyoman", desc:"Pompe à eau principale en panne — pas d'eau chaude ch.2", material:"Pompe Grundfos CM3 + joints", cost_idr:2400000, airbnb_claim:false, photos:3, history_ref:null},
+  {id:"inc02", villa:"indah",   date:"2026-04-11", type:"degat_guest",   status:"open",        reported_by:"putu",   desc:"Table basse salon fissurée — probablement guest précédent", material:"Remplacement table", cost_idr:850000, airbnb_claim:true, photos:2, history_ref:null},
+  {id:"inc03", villa:"karma",   date:"2026-03-28", type:"recurrent",     status:"resolved",    reported_by:"made",   desc:"Tuile toit terrasse décollée après pluie — même endroit qu'octobre 2025", material:"Tuile + silicone", cost_idr:230000, airbnb_claim:false, photos:4, history_ref:"inc-old-03"},
+  {id:"inc04", villa:"serenity",date:"2026-03-15", type:"maintenance",   status:"resolved",    reported_by:"wayan",  desc:"Système irrigation jardin — tuyau percé côté est", material:"Tuyau flexible 10m + raccords", cost_idr:165000, airbnb_claim:false, photos:2, history_ref:null},
+];
+
+// UTILS
+function fmtIdr(n){ return "Rp "+Math.round(n).toLocaleString("id-ID"); }
+function fmtIdrK(n){ return n>=1000000?"Rp "+Math.round(n/1000000)+"jt":"Rp "+Math.round(n/1000)+"rb"; }
+function staffById(id){ return STAFF_DATA.find(function(s){return s.id===id;}); }
+function staffName(id){ var s=staffById(id); return s?s.name:id; }
+
+// TABS
+function switchTab(name){
+  document.querySelectorAll(".tab").forEach(function(t,i){
+    var names=["team","expenses","incidents"];
+    t.classList.toggle("active", names[i]===name);
+  });
+  document.querySelectorAll(".tab-panel").forEach(function(p){
+    p.classList.toggle("active", p.id==="panel-"+name);
+  });
+}
+
+// RENDER ÉQUIPE
+function renderTeam(){
+  var html="";
+  var alerts=0, pending=0;
+  STAFF_DATA.forEach(function(s){
+    if(s.status==="alert") alerts++;
+    var staffExpPending = EXPENSES_DATA.filter(function(e){return e.staff===s.id&&e.status==="pending";}).length;
+    if(staffExpPending>0) pending++;
+    var logo = STAFF_LOGOS[s.logo]||"";
+    var villasStr = s.villas[0]==="all" ? "Toutes les villas" : s.villas.map(function(v){return v.charAt(0).toUpperCase()+v.slice(1);}).join(" · ");
+    var salStr = s.salary_idr>0 ? fmtIdrK(s.salary_idr)+"/mois" : "Freelance";
+    var advStr = s.xendit_advance>0 ? '<span style="font-size:9px;color:var(--orange);font-weight:700;">⚠ Avance '+fmtIdrK(s.xendit_advance)+'</span>' : "";
+    var wbStr = s.wellbeing==="concern" ? '<span class="wb-badge">🌸 À écouter</span>' : "";
+    var stClass = s.status==="alert" ? "st-alert" : "st-ok";
+    var stLabel = s.status==="alert" ? "⚠ Alerte" : "✓ OK";
+    html += '<div class="staff-card '+stClass+' fi" id="sc-'+s.id+'">'
+      +'<div class="sc-head" onclick="toggleDetail(\''+s.id+'\')">'
+        +'<div class="sc-avatar">'+(logo?'<img src="'+logo+'" onerror="this.style.display=\'none\'">':"<span>"+s.emoji+"</span>")+'</div>'
+        +'<div class="sc-info">'
+          +'<div class="sc-name">'+s.name+'</div>'
+          +'<div class="sc-role">'+s.role+' · '+s.contract+'</div>'
+          +'<div class="sc-villas">'+villasStr+'</div>'
+          +(advStr||wbStr?'<div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap;">'+advStr+wbStr+'</div>':'')
+        +'</div>'
+        +'<div class="sc-right">'
+          +'<div class="sc-salary">'+salStr+'</div>'
+          +'<div class="sc-salary-lbl">Salaire</div>'
+          +'<div class="sc-status">'+stLabel+'</div>'
+        +'</div>'
+      +'</div>'
+      // DETAIL INLINE
+      +'<div class="sc-detail" id="detail-'+s.id+'">'
+        +'<div class="sc-detail-tabs">'
+          +'<div class="sdt active" onclick="switchDetail(\''+s.id+'\',\'rh\',this)">📋 RH</div>'
+          +'<div class="sdt" onclick="switchDetail(\''+s.id+'\',\'salary\',this)">💸 Salaire</div>'
+          +'<div class="sdt" onclick="switchDetail(\''+s.id+'\',\'expenses\',this)">🧾 Dépenses</div>'
+          +'<div class="sdt" onclick="switchDetail(\''+s.id+'\',\'incidents\',this)">🔧 Incidents</div>'
+        +'</div>'
+        +'<div class="sdt-panel active" id="sdp-'+s.id+'-rh">'+renderRH(s)+'</div>'
+        +'<div class="sdt-panel" id="sdp-'+s.id+'-salary">'+renderSalary(s)+'</div>'
+        +'<div class="sdt-panel" id="sdp-'+s.id+'-expenses">'+renderStaffExpenses(s.id)+'</div>'
+        +'<div class="sdt-panel" id="sdp-'+s.id+'-incidents">'+renderStaffIncidents(s.id)+'</div>'
+      +'</div>'
+    +'</div>';
+  });
+  document.getElementById("staff-list").innerHTML=html;
+  document.getElementById("kpi-alerts").textContent=alerts;
+  document.getElementById("kpi-pending").textContent=pending;
+  document.getElementById("kpi-staff").textContent=STAFF_DATA.length;
+  document.getElementById("kpi-ok").textContent=STAFF_DATA.filter(function(s){return s.status==="ok";}).length;
+  setTimeout(function(){ document.querySelectorAll(".fi").forEach(function(el){el.classList.add("v");}); },60);
+}
+
+function renderRH(s){
+  var months = Math.floor((new Date()-new Date(s.start+"-01"))/(1000*60*60*24*30.5));
+  return '<div class="rh-row"><span class="rh-lbl">Rôle</span><span class="rh-val">'+s.role+'</span></div>'
+    +'<div class="rh-row"><span class="rh-lbl">Contrat</span><span class="rh-val">'+s.contract+'</span></div>'
+    +'<div class="rh-row"><span class="rh-lbl">Depuis</span><span class="rh-val">'+s.start+' ('+months+' mois)</span></div>'
+    +'<div class="rh-row"><span class="rh-lbl">Villas</span><span class="rh-val">'+(s.villas[0]==="all"?"Toutes":s.villas.join(", "))+'</span></div>'
+    +'<div class="rh-row"><span class="rh-lbl">Téléphone</span><span class="rh-val" style="color:var(--blue);">+62 812 — —</span></div>'
+    +'<div class="rh-row"><span class="rh-lbl">Wellbeing</span><span class="rh-val">'+(s.wellbeing==="concern"?'<span class="wb-badge">🌸 À écouter</span>':'<span style="color:var(--green);font-weight:800;">✓ OK</span>')+'</span></div>';
+}
+
+function renderSalary(s){
+  var expMois = EXPENSES_DATA.filter(function(e){return e.staff===s.id&&e.status==="approved";}).reduce(function(acc,e){return acc+e.amount_idr;},0);
+  var net = s.salary_idr - s.xendit_advance;
+  if(s.salary_idr===0) return '<div class="empty"><div class="empty-icon">💆</div><div class="empty-txt">Mode freelance — rémunéré à la session.<br>Pas de fiche de paie mensuelle.</div></div>';
+  return '<div class="salary-block">'
+    +'<div class="sb-row"><span class="sb-lbl">Salaire brut</span><span class="sb-val gold">'+fmtIdr(s.salary_idr)+'</span></div>'
+    +'<div class="sb-divider"></div>'
+    +(s.xendit_advance>0?'<div class="sb-row"><span class="sb-lbl">Avance en cours</span><span class="sb-val negative">− '+fmtIdr(s.xendit_advance)+'</span></div>':'')
+    +'<div class="sb-row"><span class="sb-lbl">Remboursements</span><span class="sb-val" style="color:rgba(255,255,255,.5);">'+fmtIdr(expMois)+'</span></div>'
+    +'<div class="sb-divider"></div>'
+    +'<div class="sb-row"><span class="sb-lbl" style="color:rgba(255,255,255,.8);font-weight:800;">Net à payer</span><span class="sb-val positive">'+fmtIdr(net)+'</span></div>'
+    +'</div>'
+    +'<button class="pay-now-btn" id="paybtn-'+s.id+'" onclick="payNow(\''+s.id+'\')">💸 Payer via Xendit · Rex</button>'
+    +(s.xendit_advance>0?'<div style="margin-top:8px;padding:10px 12px;background:var(--orange-soft);border:1px solid rgba(230,126,34,.2);border-radius:8px;font-size:11px;color:var(--orange);">⚠ Avance active — sera déduite du prochain virement.</div>':'')
+    +'<button class="advance-btn" onclick="giveAdvance(\''+s.id+'\')">💳 Envoyer une avance</button>';
+}
+
+function renderStaffExpenses(staffId){
+  var exps = EXPENSES_DATA.filter(function(e){return e.staff===staffId;});
+  if(!exps.length) return '<div class="empty"><div class="empty-icon">🧾</div><div class="empty-txt">Aucune dépense enregistrée.</div></div>';
+  return exps.map(function(e){
+    return '<div class="exp-item">'
+      +'<div class="exp-dot '+e.status+'"></div>'
+      +'<div class="exp-info">'
+        +'<div class="exp-item-name">'+e.item+'</div>'
+        +'<div class="exp-meta">'+e.villa.charAt(0).toUpperCase()+e.villa.slice(1)+' · '+e.date+' · '+e.category+'</div>'
+        +(e.status==="pending"?'<div><button class="approve-btn" onclick="approveExp(\''+e.id+'\')">✓ Approuver</button><button class="refuse-btn" onclick="refuseExp(\''+e.id+'\')">✗</button></div>':'<div class="exp-status status-'+e.status+'">'+(e.status==="approved"?"✓ Approuvé":"✗ Refusé")+'</div>')
+      +'</div>'
+      +'<div style="text-align:right;"><div class="exp-amount '+e.status+'">'+fmtIdrK(e.amount_idr)+'</div></div>'
+    +'</div>';
+  }).join("");
+}
+
+function renderStaffIncidents(staffId){
+  var incs = INCIDENTS_DATA.filter(function(i){return i.reported_by===staffId;});
+  if(!incs.length) return '<div class="empty"><div class="empty-icon">✅</div><div class="empty-txt">Aucun incident signalé.</div></div>';
+  return incs.map(function(i){ return renderIncidentItem(i); }).join("");
+}
+
+// RENDER ONGLET DÉPENSES
+function renderExpensesTab(){
+  var pending = EXPENSES_DATA.filter(function(e){return e.status==="pending";});
+  var all = EXPENSES_DATA.filter(function(e){return e.status!=="pending";});
+  document.getElementById("pending-expenses").innerHTML = pending.length
+    ? pending.map(function(e){
+        var s=staffById(e.staff);
+        return '<div class="exp-item">'
+          +'<div class="exp-dot pending"></div>'
+          +'<div class="exp-info">'
+            +'<div class="exp-item-name">'+e.item+'</div>'
+            +'<div class="exp-meta">'+(s?s.name:e.staff)+' · '+(e.villa.charAt(0).toUpperCase()+e.villa.slice(1))+' · '+e.date+'</div>'
+            +'<div><button class="approve-btn" onclick="approveExp(\''+e.id+'\')">✓ Approuver</button><button class="refuse-btn" onclick="refuseExp(\''+e.id+'\')">✗ Refuser</button></div>'
+          +'</div>'
+          +'<div style="text-align:right;"><div class="exp-amount pending">'+fmtIdrK(e.amount_idr)+'</div></div>'
+        +'</div>';
+      }).join("")
+    : '<div class="empty"><div class="empty-icon">✅</div><div class="empty-txt">Aucune dépense en attente.</div></div>';
+
+  var totalApproved = all.reduce(function(acc,e){return acc+e.amount_idr;},0);
+  document.getElementById("all-expenses").innerHTML = (totalApproved>0?'<div style="padding:8px 10px;background:var(--bg2);border-radius:8px;font-size:11px;color:var(--muted);margin-bottom:10px;">Total approuvé ce mois : <strong style="color:var(--red);">'+fmtIdr(totalApproved)+'</strong></div>':'')
+    + (all.length ? all.map(function(e){
+        var s=staffById(e.staff);
+        return '<div class="exp-item">'
+          +'<div class="exp-dot '+e.status+'"></div>'
+          +'<div class="exp-info">'
+            +'<div class="exp-item-name">'+e.item+'</div>'
+            +'<div class="exp-meta">'+(s?s.name:e.staff)+' · '+(e.villa.charAt(0).toUpperCase()+e.villa.slice(1))+' · '+e.date+'</div>'
+            +'<div class="exp-status status-'+e.status+'">'+(e.status==="approved"?"✓ Approuvé":"✗ Refusé")+'</div>'
+          +'</div>'
+          +'<div class="exp-amount '+e.status+'">'+fmtIdrK(e.amount_idr)+'</div>'
+        +'</div>';
+      }).join("") : "");
+}
+
+// RENDER ONGLET INCIDENTS
+function renderIncidentItem(i){
+  var s=staffById(i.reported_by);
+  var typeMap={maintenance:"🔧 Maintenance",degat_guest:"🧳 Dégât guest",structurel:"🏚️ Structurel",recurrent:"🔁 Récurrent"};
+  var stClass={open:"inc-open",in_progress:"inc-progress",resolved:"inc-resolved"}[i.status]||"inc-open";
+  var stTag={open:"tag-open",in_progress:"tag-maintenance",resolved:"tag-resolved"}[i.status]||"tag-open";
+  var stLbl={open:"🔴 Ouvert",in_progress:"🟠 En cours",resolved:"✅ Résolu"}[i.status]||"?";
+  return '<div class="inc-item '+stClass+'">'
+    +'<div class="inc-title">'+i.villa.charAt(0).toUpperCase()+i.villa.slice(1)+' — '+i.desc.substring(0,60)+(i.desc.length>60?"…":"")+'</div>'
+    +'<div class="inc-meta">'+(s?s.name:i.reported_by)+' · '+i.date+' · '+i.photos+' photo'+(i.photos>1?"s":"")+'</div>'
+    +'<div class="inc-tags">'
+      +'<span class="inc-tag '+stTag+'">'+stLbl+'</span>'
+      +'<span class="inc-tag tag-maintenance">'+(typeMap[i.type]||i.type)+'</span>'
+      +(i.history_ref?'<span class="inc-tag" style="background:rgba(142,68,173,.1);color:var(--violet);">🔁 Récurrent</span>':'')
+    +'</div>'
+    +'<div class="inc-cost">'+fmtIdrK(i.cost_idr)+'</div>'
+    +(i.airbnb_claim?'<div class="claim-strip"><span class="claim-strip-txt">Dégât guest — AirCover peut rembourser ce dommage.</span><button class="claim-btn" onclick="claimAirbnb(\''+i.id+'\')">Réclamer</button></div>':'')
+    +(i.status!=="resolved"?'<button style="margin-top:8px;padding:5px 10px;border-radius:8px;background:var(--green-soft);border:1px solid rgba(39,174,96,.2);color:var(--green-dark);font-family:\'Nunito\',sans-serif;font-size:10px;font-weight:800;cursor:pointer;" onclick="resolveIncident(\''+i.id+'\')">✓ Marquer résolu</button>':'')
+  +'</div>';
+}
+
+function renderIncidentsTab(){
+  var active = INCIDENTS_DATA.filter(function(i){return i.status!=="resolved";});
+  var past   = INCIDENTS_DATA.filter(function(i){return i.status==="resolved";});
+  document.getElementById("active-incidents").innerHTML = active.length
+    ? active.map(renderIncidentItem).join("")
+    : '<div class="empty"><div class="empty-icon">✅</div><div class="empty-txt">Aucun incident actif.</div></div>';
+
+  var pastHtml = past.map(renderIncidentItem).join("");
+  // Mémoire villa — pattern récurrents
+  var recurrents = INCIDENTS_DATA.filter(function(i){return i.type==="recurrent";});
+  if(recurrents.length){
+    pastHtml += '<div style="margin-top:10px;padding:12px 14px;background:rgba(142,68,173,.06);border:1px solid rgba(142,68,173,.15);border-radius:10px;">'
+      +'<div style="font-size:11px;font-weight:800;color:var(--violet);margin-bottom:6px;">🔁 Mémoire Sofia — Patterns détectés</div>'
+      + recurrents.map(function(i){return '<div style="font-size:11px;color:var(--text);padding:4px 0;border-bottom:1px solid rgba(0,0,0,.04);">• '+i.villa+' : '+i.desc.substring(0,70)+'</div>';}).join("")
+    +'</div>';
+  }
+  document.getElementById("past-incidents").innerHTML = pastHtml||'<div class="empty"><div class="empty-icon">📂</div><div class="empty-txt">Aucun historique.</div></div>';
+}
+
+// INTERACTIONS
+function toggleDetail(id){
+  var d=document.getElementById("detail-"+id);
+  if(d) d.classList.toggle("open");
+}
+
+function switchDetail(staffId, tab, el){
+  event.stopPropagation();
+  var allPanels=document.querySelectorAll("#detail-"+staffId+" .sdt-panel");
+  allPanels.forEach(function(p){p.classList.remove("active");});
+  var allTabs=document.querySelectorAll("#detail-"+staffId+" .sdt");
+  allTabs.forEach(function(t){t.classList.remove("active");});
+  var panel=document.getElementById("sdp-"+staffId+"-"+tab);
+  if(panel) panel.classList.add("active");
+  if(el) el.classList.add("active");
+}
+
+function approveExp(id){
+  var e=EXPENSES_DATA.find(function(x){return x.id===id;});
+  if(e){e.status="approved"; renderTeam(); renderExpensesTab();}
+}
+function refuseExp(id){
+  var e=EXPENSES_DATA.find(function(x){return x.id===id;});
+  if(e){e.status="refused"; renderTeam(); renderExpensesTab();}
+}
+function resolveIncident(id){
+  var i=INCIDENTS_DATA.find(function(x){return x.id===id;});
+  if(i){i.status="resolved"; renderIncidentsTab();}
+}
+function claimAirbnb(id){
+  var i=INCIDENTS_DATA.find(function(x){return x.id===id;});
+  if(i){alert("📲 Sofia va contacter l'équipe AirCover pour incident "+id+" — fiche transmise.");}
+}
+function payNow(staffId){
+  var btn=document.getElementById("paybtn-"+staffId);
+  if(!btn||btn.classList.contains("sent")) return;
+  btn.classList.add("sent");
+  btn.textContent="⏳ Rex traite le virement…";
+  setTimeout(function(){btn.textContent="✅ Virement envoyé — Rex";if("vibrate" in navigator)navigator.vibrate([60,30,60]);},1800);
+}
+function giveAdvance(staffId){
+  var amt = prompt("Montant de l'avance en IDR :");
+  if(!amt||isNaN(parseInt(amt))) return;
+  var s=staffById(staffId);
+  if(s){ s.xendit_advance=parseInt(amt); alert("💳 Avance de Rp "+parseInt(amt).toLocaleString()+" envoyée à "+s.name+" via Rex."); renderTeam(); }
+}
+
+// MODAL INCIDENT
+function openIncidentModal(){ document.getElementById("modal-incident").classList.add("open"); }
+function closeModal(){ document.getElementById("modal-incident").classList.remove("open"); }
+function submitIncident(){
+  closeModal();
+  // Simule ajout
+  INCIDENTS_DATA.unshift({id:"inc-new",villa:"surya",date:new Date().toISOString().slice(0,10),type:"maintenance",status:"open",reported_by:"",desc:"Nouveau rapport transmis à Sofia.",material:"",cost_idr:0,airbnb_claim:false,photos:0,history_ref:null});
+  renderIncidentsTab();
+  // Feedback
+  var f=document.createElement("div");
+  f.style.cssText="position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1C1C14;color:#fff;padding:12px 20px;border-radius:10px;font-size:12px;font-weight:700;z-index:300;border:1px solid rgba(201,168,76,.3);";
+  f.textContent="✅ Fiche transmise à Sofia — owner notifié si urgent";
+  document.body.appendChild(f);
+  setTimeout(function(){f.remove();},2800);
+}
+function toggleChip(el, group){
+  // Single select per group
+  var parent=el.parentElement;
+  var siblings=parent.querySelectorAll(".chip");
+  siblings.forEach(function(s){s.classList.remove("on");});
+  el.classList.add("on");
+}
+function setModalPhoto(input, slotId){
+  if(!input.files[0]) return;
+  var r=new FileReader();
+  r.onload=function(e){
+    var slot=document.getElementById(slotId);
+    slot.classList.add("has-photo");
+    slot.innerHTML='<img src="'+e.target.result+'">';
+  };
+  r.readAsDataURL(input.files[0]);
+}
+
+// INIT
+window.addEventListener("DOMContentLoaded", function(){
+  renderTeam();
+  renderExpensesTab();
+  renderIncidentsTab();
+});
+</script>
+</body>
+</html>
