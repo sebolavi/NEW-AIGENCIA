@@ -325,12 +325,18 @@
   <!-- CARD 1 : Dossier local -->
   <div class="card green" id="card-folder" onclick="toggleFolder()">
     <div class="card-tag tag-new">Recommandé</div>
-    <div class="card-icon">📁</div>
-    <div class="card-title">Mon dossier client</div>
-    <p class="card-desc">Ouvrez le dossier fourni par votre agence — il contient votre fichier hk-data.js et vos photos.</p>
+    <div class="card-icon">📂</div>
+    <div class="card-title">Mes fichiers</div>
+    <p class="card-desc">Déposez n'importe quel document — PDF, Excel, Word, CSV, photos. Sofia analyse et extrait vos données.</p>
 
     <div class="card-folder-input" id="folder-inputs">
-      <button class="btn-go" onclick="event.stopPropagation(); openFolder()">📁 Choisir mon dossier</button>
+      <label class="btn-go" style="cursor:pointer;" onclick="event.stopPropagation()">
+        📂 Sélectionner mes fichiers
+        <input type="file" id="file-input" multiple accept="*/*" style="display:none" onchange="event.stopPropagation(); handleFiles(this.files)">
+      </label>
+      <div style="font-size:10px;color:var(--muted);text-align:center;">PDF · Excel · Word · CSV · JSON — tout accepté</div>
+      <div class="or-divider">ou dossier entier (Chrome/Edge)</div>
+      <button class="btn-secondary" onclick="event.stopPropagation(); openFolder()">📁 Ouvrir un dossier</button>
       <div class="or-divider">ou URL distante</div>
       <input class="url-input" id="url-input" type="url"
         placeholder="https://mon-site.com/DOSSIER/hk-data.js"
@@ -393,44 +399,231 @@ function toggleFolder() {
   }
 }
 
-function openFolder() {
-  if (!window.showDirectoryPicker) {
-    setStatus('url-status', 'error', 'Non supporté sur ce navigateur — utilisez Chrome ou Edge, ou chargez via URL.');
-    return;
-  }
-  setStatus('url-status', 'loading', 'Ouverture du sélecteur de dossier...');
-  window.showDirectoryPicker({ mode: 'read' }).then(function(dir) {
-    return dir.getFileHandle('hk-data.js', { create: false }).then(function(fh) {
-      return fh.getFile();
+/* ─── HANDLE FILES — entrée principale ─── */
+function handleFiles(files) {
+  if (!files || !files.length) return;
+  var list = Array.from(files);
+  setStatus('url-status', 'loading', 'Sofia lit ' + list.length + ' fichier(s)...');
+
+  var readers = list.map(function(f) {
+    return new Promise(function(resolve) {
+      var ext = f.name.split('.').pop().toLowerCase();
+      var textExts = ['js','json','txt','csv','html','md','xml'];
+      if (textExts.indexOf(ext) !== -1) {
+        var r = new FileReader();
+        r.onload = function(e) { resolve({ name: f.name, ext: ext, text: e.target.result }); };
+        r.onerror = function() { resolve({ name: f.name, ext: ext, text: '' }); };
+        r.readAsText(f);
+      } else if (ext === 'pdf') {
+        var r2 = new FileReader();
+        r2.onload = function(e) { resolve({ name: f.name, ext: 'pdf', text: parsePdfText(e.target.result) }); };
+        r2.onerror = function() { resolve({ name: f.name, ext: 'pdf', text: '' }); };
+        r2.readAsBinaryString(f);
+      } else {
+        resolve({ name: f.name, ext: ext, text: '' });
+      }
     });
-  }).then(function(file) {
-    return file.text();
-  }).then(function(code) {
-    setStatus('url-status', 'loading', 'Chargement de hk-data.js...');
-    try {
-      new Function(code)();
-    } catch(e) {
-      setStatus('url-status', 'error', 'Erreur dans hk-data.js : ' + e.message);
-      return;
+  });
+
+  Promise.all(readers).then(function(results) {
+    var allText = results.map(function(f) { return f.text; }).join('\n');
+
+    /* Chemin rapide : hk-data.js valide */
+    var hkFile = results.find(function(f) {
+      return f.text && f.text.indexOf('HK_VILLAS') !== -1;
+    });
+    if (hkFile) {
+      try {
+        new Function(hkFile.text)();
+        setStatus('url-status', 'success', '✓ Données trouvées dans ' + hkFile.name);
+        setTimeout(function(){ window.location.replace('client.html'); }, 800);
+        return;
+      } catch(e) { /* pas du JS valide, on continue */ }
     }
-    setStatus('url-status', 'success', 'Données chargées — redirection...');
-    setTimeout(function() {
-      window.location.href = 'client.html';
-    }, 800);
-  }).catch(function(e) {
-    if (e.name === 'AbortError') {
-      setStatus('url-status', '');
-    } else if (e.name === 'NotFoundError') {
-      setStatus('url-status', 'error', 'Fichier hk-data.js introuvable dans ce dossier.');
-    } else {
-      setStatus('url-status', 'error', 'Erreur : ' + e.message);
-    }
+
+    /* Sofia extrait ce qu'elle peut */
+    var extracted = sofiaExtract(allText, results);
+    showSofiaResult(extracted);
   });
 }
 
+/* ─── EXTRACTION PDF basique (sans librairie) ─── */
+function parsePdfText(binary) {
+  /* Extrait les strings lisibles d'un PDF binaire */
+  var text = '';
+  var i = 0;
+  while (i < binary.length - 1) {
+    var c = binary.charCodeAt(i);
+    if (c >= 32 && c < 127) {
+      text += binary[i];
+    } else if (c === 10 || c === 13) {
+      text += ' ';
+    }
+    i++;
+  }
+  /* Nettoie les séquences PDF parasites */
+  text = text.replace(/[^\x20-\x7E\n]/g, ' ');
+  text = text.replace(/\s{3,}/g, ' ');
+  return text;
+}
+
+/* ─── SOFIA EXTRACT — patterns JS pur ─── */
+function sofiaExtract(text, files) {
+  var result = { owner: {}, villas: [], bookings_raw: [], costs_raw: [], found: [], missing: [] };
+
+  /* Noms de villas — patterns courants */
+  var villaPatterns = [
+    /villa\s+([A-Z][a-zA-Z]+)/gi,
+    /([A-Z][a-zA-Z]+)\s+villa/gi,
+    /property[\s:]+([A-Z][a-zA-Z\s]+)/gi,
+    /bien[\s:]+([A-Z][a-zA-Z\s]+)/gi
+  ];
+  var villaNames = {};
+  villaPatterns.forEach(function(re) {
+    var m;
+    while ((m = re.exec(text)) !== null) {
+      var name = m[1].trim();
+      if (name.length > 2 && name.length < 30) villaNames[name.toLowerCase()] = name;
+    }
+  });
+  Object.values(villaNames).forEach(function(name) {
+    result.villas.push({ name: name, id: name.toLowerCase().replace(/\s+/g,'-') });
+    result.found.push('Villa : ' + name);
+  });
+
+  /* Owner / propriétaire */
+  var ownerRe = /(?:owner|propriétaire|client|landlord)[\s:]+([A-Z][a-zA-Z\s\-]{2,30})/gi;
+  var om = ownerRe.exec(text);
+  if (om) {
+    result.owner.name = om[1].trim();
+    result.found.push('Owner : ' + result.owner.name);
+  }
+
+  /* ADR / prix par nuit */
+  var adrRe = /(?:adr|tarif|rate|prix|per night|\/nuit|nightly)[\s:$€]*(\d{2,4})/gi;
+  var am;
+  while ((am = adrRe.exec(text)) !== null) {
+    var adr = parseInt(am[1]);
+    if (adr >= 30 && adr <= 5000) {
+      result.bookings_raw.push({ type: 'adr', value: adr });
+      result.found.push('Tarif détecté : $' + adr + '/nuit');
+      break;
+    }
+  }
+
+  /* Dates de booking — formats courants */
+  var dateRe = /(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})/g;
+  var dates = [];
+  var dm;
+  while ((dm = dateRe.exec(text)) !== null) {
+    var y = dm[3].length === 2 ? '20' + dm[3] : dm[3];
+    var mo = dm[2].padStart(2,'0');
+    var d = dm[1].padStart(2,'0');
+    dates.push(y + '-' + mo + '-' + d);
+  }
+  if (dates.length) {
+    result.bookings_raw = result.bookings_raw.concat(dates.map(function(d){ return {type:'date', value:d}; }));
+    result.found.push(dates.length + ' date(s) détectée(s)');
+  }
+
+  /* Montants IDR / USD */
+  var idrRe = /(?:IDR|Rp)[\s.]*([\d.,]{4,12})/gi;
+  var im;
+  while ((im = idrRe.exec(text)) !== null) {
+    var amt = parseFloat(im[1].replace(/[.,]/g,''));
+    if (amt > 0) { result.costs_raw.push({ idr: amt }); }
+  }
+  if (result.costs_raw.length) result.found.push(result.costs_raw.length + ' montant(s) IDR détecté(s)');
+
+  /* Ce qui manque */
+  if (!result.villas.length) result.missing.push('Nom(s) de villa');
+  if (!result.owner.name) result.missing.push('Nom du propriétaire');
+  if (!result.bookings_raw.find(function(b){return b.type==='adr';})) result.missing.push('Tarif par nuit (ADR)');
+  if (dates.length < 2) result.missing.push('Dates de réservation');
+
+  return result;
+}
+
+/* ─── AFFICHAGE RÉSULTAT SOFIA ─── */
+function showSofiaResult(data) {
+  var card = document.getElementById('card-folder');
+
+  /* Supprime un ancien résultat si présent */
+  var old = document.getElementById('sofia-result');
+  if (old) old.remove();
+
+  var div = document.createElement('div');
+  div.id = 'sofia-result';
+  div.style.cssText = 'margin-top:12px;padding:12px;border-radius:8px;background:rgba(139,105,20,.06);border:1px solid rgba(139,105,20,.2);animation:fadeIn .3s ease;';
+
+  var foundHtml = data.found.length
+    ? data.found.map(function(f){ return '<div style="color:var(--green-d);font-size:11px;">✓ ' + f + '</div>'; }).join('')
+    : '<div style="color:var(--muted);font-size:11px;">Aucune donnée structurée trouvée.</div>';
+
+  var missingHtml = data.missing.length
+    ? '<div style="margin-top:8px;font-size:10px;color:var(--orange);font-weight:600;">Manquant : ' + data.missing.join(' · ') + '</div>'
+    : '';
+
+  var btnHtml = data.found.length
+    ? '<button onclick="continueWithData()" style="margin-top:10px;width:100%;padding:9px;background:var(--green-d);color:var(--cream);border:none;border-radius:6px;font-family:inherit;font-size:11px;font-weight:600;cursor:pointer;">→ Continuer avec ces données</button>'
+    : '';
+
+  div.innerHTML = '<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:8px;">Sofia a trouvé</div>'
+    + foundHtml + missingHtml + btnHtml;
+
+  card.appendChild(div);
+  setStatus('url-status', '');
+}
+
+/* ─── CONTINUER AVEC LES DONNÉES EXTRAITES ─── */
+function continueWithData() {
+  setStatus('url-status', 'loading', 'Préparation...');
+  /* Stocke un flag pour que client.html sache qu'on arrive depuis onboarding */
+  sessionStorage.setItem('hk_onboarding', '1');
+  setTimeout(function(){ window.location.replace('client.html'); }, 600);
+}
+
+/* ─── DOSSIER ENTIER (Chrome/Edge) ─── */
+function openFolder() {
+  if (!window.showDirectoryPicker) {
+    setStatus('url-status', 'error', 'Non supporté — utilisez Chrome ou Edge, ou sélectionnez vos fichiers directement.');
+    return;
+  }
+  setStatus('url-status', 'loading', 'Ouverture du dossier...');
+  window.showDirectoryPicker({ mode: 'read' }).then(function(dir) {
+    var filePromises = [];
+    var collector = function(d) {
+      return d.entries ? Array.from(d.entries()).map(function(e) {
+        if (e[1].kind === 'file') return e[1].getFile();
+        return collector(e[1]);
+      }) : [];
+    };
+    /* Lit tous les fichiers du dossier */
+    var entries = [];
+    var it = dir.entries();
+    function readNext() {
+      return it.next().then(function(r) {
+        if (r.done) return entries;
+        var entry = r.value[1];
+        if (entry.kind === 'file') {
+          return entry.getFile().then(function(f) { entries.push(f); return readNext(); });
+        }
+        return readNext();
+      });
+    }
+    return readNext();
+  }).then(function(fileList) {
+    if (fileList.length) handleFiles(fileList);
+    else setStatus('url-status', 'error', 'Dossier vide.');
+  }).catch(function(e) {
+    if (e.name !== 'AbortError') setStatus('url-status', 'error', 'Erreur : ' + e.message);
+    else setStatus('url-status', '');
+  });
+}
+
+/* ─── URL DISTANTE ─── */
 function checkUrl(val) {
-  var btn = document.getElementById('btn-url');
-  btn.disabled = !(val && val.startsWith('http'));
+  document.getElementById('btn-url').disabled = !(val && val.startsWith('http'));
 }
 
 function loadFromUrl() {
@@ -441,12 +634,10 @@ function loadFromUrl() {
   s.src = url;
   s.onload = function() {
     setStatus('url-status', 'success', 'Données chargées — redirection...');
-    setTimeout(function() {
-      window.location.href = 'client.html?data=' + encodeURIComponent(url);
-    }, 800);
+    setTimeout(function() { window.location.replace('client.html?data=' + encodeURIComponent(url)); }, 800);
   };
   s.onerror = function() {
-    setStatus('url-status', 'error', 'Impossible de charger ce fichier. Vérifiez l\'URL et les droits CORS.');
+    setStatus('url-status', 'error', 'Impossible de charger. Vérifiez l\'URL et les droits CORS.');
   };
   document.head.appendChild(s);
 }
@@ -458,13 +649,8 @@ function setStatus(id, type, msg) {
   el.textContent = msg || '';
 }
 
-function goManual() {
-  alert('Assistant de saisie manuelle — bientôt disponible.');
-}
-
-function goApi() {
-  alert('Connexion API Hostaway / Pricelabs — bientôt disponible.');
-}
+function goManual() { alert('Assistant de saisie manuelle — bientôt disponible.'); }
+function goApi() { alert('Connexion API Hostaway / Pricelabs — bientôt disponible.'); }
 </script>
 </body>
 </html>
