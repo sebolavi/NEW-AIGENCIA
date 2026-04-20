@@ -193,9 +193,9 @@ function tryAutoLoad(){
     loadDataScript(dataUrl, onDataLoaded);
     return true;
   }
-  // 2. Même dossier que la page : DOSSIER-DEMO-JEAN-LOUP/hk-data.js (chemin relatif)
-  var autoPath="DOSSIER-DEMO-JEAN-LOUP/hk-data.js";
-  window.HK_BASE = "DOSSIER-DEMO-JEAN-LOUP/"; // hk-data.js le resout lui-meme
+  // 2. Même dossier que la page : hk-data.js (chemin relatif)
+  var autoPath="hk-data.js";
+  window.HK_BASE = ""; // hk-data.js le resout lui-meme
   var s=document.createElement("script");
   s.src=autoPath;
   s.onload=onDataLoaded;
